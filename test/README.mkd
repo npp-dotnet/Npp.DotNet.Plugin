@@ -1,0 +1,30 @@
+Npp.DotNet.Plugin.Tests
+-----------------------
+
+### Memory
+
+This is currently the only test project.
+It checks the alignment of some potentially problematic Scintilla structures.
+It was inspired by past issues caused by wrongly sized fields in the CLR `struct` used to hold notification data.
+
+See:
+
+- <https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/issues/101>
+- <https://github.com/oleg-shilo/cs-script.npp/issues/74#issuecomment-1939553735>
+
+
+### Requirements
+
+Install the tools listed in the [general build requirements].
+
+
+### Building
+
+See [the central README] for a guide to building and running the tests in Visual Studio.
+
+See [the minimal demo's README] for the command-line workflow.
+
+
+[general build requirements]: ../README.mkd/#requirements
+[the central README]: ../README.mkd/#tests
+[the minimal demo's README]: ../examples/minimal/README.mkd/#testing

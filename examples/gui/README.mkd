@@ -1,0 +1,41 @@
+
+### :warning: Native DLLs built from this project are currently non-functional :warning:
+
+Npp.DotNet.Plugin.Gui.Demo
+--------------------------
+
+A demonstration of a native plugin built with the .NET SDK, using Windows Forms
+
+### Requirements
+
+Install the tools listed in the [general build requirements].
+
+
+### Building
+
+Launch the Visual Studio [Developer Command Prompt or PowerShell] from the Windows Start Menu.
+
+Change into the same directory as this README and run:
+
+    dotnet publish -f net8.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
+
+The command line arguments are the following:
+
+|                             |                           |
+| :-------------------------- | :------------------------ |
+| `$(BUILD_CONFIGURATION)`    | `Release` OR `Debug`      |
+| `$(TARGET_RUNTIME)`         | `win-x64` OR `win-arm64`  |
+| `$(PLUGIN_FOLDER_PATH)`     | the full path to the plugin folder created above |
+
+
+### Running the plugin
+
+__*Plugins built from this project will crash Notepad++ on start-up!*__
+
+If you would like to help further the development of Native AOT plugins, choose "Debug" for the `$(BUILD_CONFIGURATION)` above.
+Start a [portable Notepad++] with a debugger attached, and try to capture a stack trace before the fatal error occurs.
+
+
+[portable Notepad++]: ../minimal/README.mkd/#user-content-portable-npp
+[general build requirements]: ../../README.mkd/#requirements
+[Developer Command Prompt or PowerShell]: https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell

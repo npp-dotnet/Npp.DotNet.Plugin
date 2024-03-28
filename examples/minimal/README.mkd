@@ -1,0 +1,54 @@
+Npp.DotNet.Plugin.Demo
+----------------------
+
+A minimal demonstration of a native plugin built with the .NET SDK (_without_ Windows Forms)
+
+### Requirements
+
+Install the tools listed in the [general build requirements].
+
+
+### Building
+
+Make a folder named `Npp.DotNet.Plugin.Demo` in the `plugins` directory of a 64-bit Notepad++ installation:
+
+  + __Fully installed versions *(requires admin rights)*__
+    * `%ProgramFiles%\Notepad++\plugins\Npp.DotNet.Plugin.Demo`
+
+  + __Portable versions__ <a id="portable-npp" aria-label="Portable Notepad++"></a>
+    * Locate the folder where `notepad++.exe` is installed
+    * `$(PORTABLE_INSTALLATION_PATH)\plugins\Npp.DotNet.Plugin.Demo`
+
+Launch the Visual Studio [Developer Command Prompt or PowerShell] from the Windows Start Menu.
+
+Change into the same directory as this README and run:
+
+    dotnet publish -f net8.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
+
+The command line arguments are the following:
+
+|                             |                           |
+| :-------------------------- | :------------------------ |
+| `$(BUILD_CONFIGURATION)`    | `Release` OR `Debug`      |
+| `$(TARGET_RUNTIME)`         | `win-x64` OR `win-arm64`  |
+| `$(PLUGIN_FOLDER_PATH)`     | the full path to the plugin folder created above |
+
+
+### Running the plugin
+
+Start the Notepad++ application. In the "Plugins" menu, look for ".NET Demo Plugin" and try one of the commands.
+
+
+### Testing
+
+Change directories into the [test](../../test) subtree and run:
+
+    dotnet msbuild /t:Build /p:SharedRuntimeIdentifier=$(TARGET_RUNTIME)
+
+replacing `$(TARGET_RUNTIME)` with one of the options above. Then run:
+
+    dotnet test
+
+
+[general build requirements]: ../../README.mkd/#requirements
+[Developer Command Prompt or PowerShell]: https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell

@@ -1,0 +1,125 @@
+
+<div align="center">
+  <h2><b><em>work in progress</em></b></h2>
+</div>
+
+[![Build Status]][gh-actions]
+
+## What's in here
+
+This project is a tentative demonstration of the .NET SDK as a potential toolchain for Notepad++ plugin development.
+More concretely, it's a Windows-focused experiment with the [Native AOT] publish-time option introduced in .NET 7.
+
+Since Native AOT [does not support][rts] 32-bit runtimes, only 64-bit targets will be supported.
+
+
+## Requirements
+
+- Visual Studio, 2022 edition or later. If you are not going to use the IDE, installing the [Visual Studio Build Tools][vstools] can save disk space
+
+- the .NET SDK, version 8.0.100 or later, installed by selecting the [.NET Desktop Development][0] workload from the [Visual Studio Installer][1]
+
+- the Visual C++ build tools and development libraries, installed by selecting the [Desktop Development with C++][3] workload from the [Visual Studio Installer][1]. Make sure to install the SDKs for both x86_64 and ARM64 targets
+
+
+## Development
+
+> [!Note]
+> Native AOT applies to the `dotnet publish` workflow.
+> Under any configuration, running `dotnet build` generates .NET assemblies,
+> useful only for validating the code or project configuration.
+
+A refactored version of [K. B. Graversen] and [Mark Olson]'s plugin class library is built from the project under the [lib](lib) subtree. Building any of the companion projects in this repository will build the library automatically.
+
+A functional plugin demo can be built from the project under the [examples/minimal] subtree.
+
+The demo project's output can be validated by running the test project under the [test](test) subtree.
+
+An experimental, *non-functioning* plugin can be built from the project under the [examples/gui] subtree.
+See the [known issues](doc/ISSUES.mkd#windows-forms) to learn more.
+
+### Using Visual Studio
+
+#### Demo plugins
+
+Double-click the solution file at the root of the source tree.
+
+Activate one of the `*.Demo` projects by clicking on it in the Solution Explorer.
+
+Select "Build" from the main menu, then "Publish Selection". Alternatively, right-click on a `*.Demo` project and select "Publish..." from the context menu.
+
+Default profiles have been provided for the x64 and ARM64 runtimes. To change the default profile, click the <kbd>&#x25BD;</kbd> button beside the current profile's file name, e.g., `FolderProfile.pubxml`:
+
+<br/>
+
+![Select a Publish Profile](doc/img/vs2022-select-publish-profile.png)
+
+<br/>
+
+A profile can also be configured using the IDE's edit controls. For example, to have the native DLL written directly to the plugin load path of a Notepad++ installation, set the "Target location" to the load path's directory:
+
+<br/>
+
+![Configure Target Location](doc/img/vs2022-config-profile-target-loc.png)
+
+<br/>
+
+To start a build, click the <kbd>Publish</kbd> button.
+
+#### Tests
+
+Double-click the solution file at the root of the [test](test) subtree.
+
+Select "Build" and "Build Solution" from the main menu, or right-click on the solution name in the Solution Explorer and select "Build Solution" from the context menu.
+
+Select "Test" and "Run All Tests" from the main menu, or right-click on the solution name in the Solution Explorer and select "Run Tests" from the context menu.
+
+### Using the `dotnet` CLI
+
+Instructions are in the README of each demo project.
+
+For the basic working demo and test application, see [examples/minimal/README.mkd].
+
+For the experimental demo, see [examples/gui/README.mkd].
+
+
+## Licence
+
+Except where noted, the source code of Npp.DotNet.Plugin is distributed under the terms of the [Apache License, Version 2.0][apache-2.0].
+
+The [original source code][csv] of the [Npp.DotNet.Plugin.SettingsBase] class and the [Npp.DotNet.Plugin.Winforms.SettingsDialog] class is
+distributed under [additional licensing terms][csv-license].
+
+This README and all other documentation, including images, are distributed under a [CC0 v1.0 Public Domain Dedication][CC0].
+
+
+<!-- intro -->
+[Native AOT]: https://learn.microsoft.com/dotnet/core/deploying/native-aot
+[rts]: https://learn.microsoft.com/dotnet/core/deploying/native-aot/?tabs=net8%2Cwindows#platformarchitecture-restrictions
+
+<!-- development -->
+[0]: https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community/#net-desktop-development
+[1]: https://learn.microsoft.com/visualstudio/install/modify-visual-studio/#launch-the-installer-to-modify-your-installation
+[2]: https://dotnet.microsoft.com/download/dotnet/
+[3]: https://learn.microsoft.com/cpp/build/vscpp-step-0-installation
+[vstools]: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
+[K. B. Graversen]: https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
+[Mark Olson]: https://github.com/molsonkiko/NppCSharpPluginPack
+
+<!-- license -->
+[apache-2.0]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/Apache-2.0.txt
+[CC0]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/CC0-1.0.txt
+[csv]: https://github.com/jokedst/CsvQuery/blob/master/CsvQuery/PluginInfrastructure/SettingsBase.cs
+[csv-license]: LICENSES/LicenseRef-CsvQuery.md
+
+<!-- source refs -->
+[Npp.DotNet.Plugin.SettingsBase]: lib/Npp.DotNet.Plugin/Kbg.NppPluginNET.Contrib/SettingsBase.cs
+[Npp.DotNet.Plugin.Winforms.SettingsDialog]: lib/Npp.DotNet.Plugin/Winforms/SettingsDialog.cs
+[examples/minimal/README.mkd]: examples/minimal/README.mkd
+[examples/gui/README.mkd]: examples/gui/README.mkd
+[examples/minimal]: examples/minimal
+[examples/gui]: examples/gui
+
+<!-- badges -->
+[Build Status]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml/badge.svg
+[gh-actions]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml

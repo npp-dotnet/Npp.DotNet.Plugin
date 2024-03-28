@@ -1,0 +1,11 @@
+
+Npp.DotNet.Plugin includes software developed by:
+
+ * Kasper B. Graversen
+   https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
+
+ * Mark Johnston Olson
+   https://github.com/molsonkiko/NppCSharpPluginPack
+
+ * Joakim Wennergren
+   https://github.com/jokedst/CsvQuery

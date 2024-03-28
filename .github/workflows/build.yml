@@ -1,0 +1,58 @@
+# SPDX-FileCopyrightText: Public Domain
+# SPDX-License-Identifier: CC0-1.0
+
+name: Native AOT Build
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+jobs:
+  REUSE_compliance_check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: REUSE Compliance Check
+      uses: fsfe/reuse-action@v3
+
+  publish_aot:
+    strategy:
+      matrix:
+        target_runtime: [ x64, arm64 ]
+        build_config: [ Release, Debug ]
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      PLUGIN_NAME: 'Npp.DotNet.Plugin.Demo'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: >
+            8.0.x
+            7.0.x
+
+      - name: Restore projects
+        run: |
+          dotnet restore
+          dotnet restore test
+
+      - name: Run tests
+        if: ${{ matrix.build_config == 'Debug' }}
+        working-directory: ./test
+        run: |
+          dotnet msbuild /t:Build /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
+          dotnet test
+
+      - name: Build demo plugin
+        run: |
+          dotnet publish -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+
+      - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
+        if: matrix.build_config == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
+          path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.dll

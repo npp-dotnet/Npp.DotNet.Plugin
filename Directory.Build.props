@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<TargetNamespace>Npp.DotNet.Plugin</TargetNamespace>
+		<NativeTarget>$(TargetNamespace).Demo</NativeTarget>
+		<SharedConfiguration>$(Configuration)</SharedConfiguration>
+		<SharedConfiguration Condition=" '$(Configuration)' == '' ">Debug</SharedConfiguration>
+		<SharedRuntimeIdentifier>$(RuntimeIdentifier)</SharedRuntimeIdentifier>
+		<SharedRuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</SharedRuntimeIdentifier>
+		<SharedFramework>$(TargetFramework)</SharedFramework>
+		<SharedFramework Condition=" '$(TargetFramework)' == '' ">net8.0-windows</SharedFramework>
+	</PropertyGroup>
+
+</Project>

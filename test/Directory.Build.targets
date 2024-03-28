@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<LibraryRoot>$(MSBuildProjectDirectory)\..\..\lib</LibraryRoot>
+		<PluginRoot>$(MSBuildProjectDirectory)\..\..\examples\minimal</PluginRoot>
+		<BuildNeeded Condition="!Exists('$(PluginRoot)\bin\$(SharedConfiguration)\$(SharedFramework)\$(SharedRuntimeIdentifier)\native\$(NativeTarget).dll')">true</BuildNeeded>
+	</PropertyGroup>
+
+	<Target Name="BuildLibrary" AfterTargets="BeforeBuild">
+		<MSBuild Projects="$(LibraryRoot)\$(TargetNamespace).csproj"
+				Targets="Restore;Build"
+				Properties="Configuration=$(SharedConfiguration);RuntimeIdentifier=$(SharedRuntimeIdentifier);TargetFramework=$(SharedFramework)" />
+	</Target>
+
+	<Target Name="GenerateNativeModule" AfterTargets="BuildLibrary">
+		<MSBuild Projects="$(PluginRoot)\$(NativeTarget).csproj"
+				Targets="Restore;Rebuild"
+				Properties="Configuration=$(SharedConfiguration);RuntimeIdentifier=$(SharedRuntimeIdentifier);TargetFramework=$(SharedFramework)" />
+	</Target>
+
+	<Target Name="GenerateNativeDll" AfterTargets="GenerateNativeModule" Condition="'$(BuildNeeded)' == 'true'">
+		<MSBuild Projects="$(PluginRoot)\$(NativeTarget).csproj"
+				Targets="Publish"
+				Properties="Configuration=$(SharedConfiguration);RuntimeIdentifier=$(SharedRuntimeIdentifier);TargetFramework=$(SharedFramework);PublishAot=true;SelfContained=true" />
+	</Target>
+
+	<Target Name="CopyDlls" AfterTargets="GenerateNativeDll">
+		<Copy SourceFiles="$(PluginRoot)\bin\$(SharedConfiguration)\$(SharedFramework)\$(SharedRuntimeIdentifier)\native\$(NativeTarget).dll"
+			DestinationFolder="$(OutputPath)"/>
+		<Copy SourceFiles="$(LibraryRoot)\bin\$(SharedConfiguration)\$(SharedFramework)\$(SharedRuntimeIdentifier)\$(TargetNamespace).dll"
+			DestinationFolder="$(OutputPath)"/>
+	</Target>
+
+</Project>

@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <VersionPrefix>0.0.1.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+    <Authors>Kasper B. Graversen, Mark Johnston Olson, Joakim Wennergren, Robert Di Pardo</Authors>
+    <Copyright>(c) 2016-2024 Kasper B. Graversen and Contributors</Copyright>
+    <Description>AOT-ready port of the .NET Framework plugin template for Notepad++</Description>
+    <PackageIcon>brand.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/npp-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/npp-dotnet/npp.dotnet.plugin</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+    <PackageTags>dotnet;native;aot;notepad-plusplus</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net48;net481;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net7.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(_IsPacking)' == 'true' ">
+    <AssemblyOriginatorKeyFile>Npp.DotNet.Plugin.snk</AssemblyOriginatorKeyFile>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedAllSources>true</EmbedAllSources>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)\..\COPYRIGHT" Pack="true" PackagePath="/"/>
+    <None Include="$(MSBuildProjectDirectory)\..\NOTICE.txt" Pack="true" PackagePath="/"/>
+    <None Include="$(MSBuildProjectDirectory)\..\LICENSES/*" Pack="true" PackagePath="/LICENSES"/>
+    <None Include="README.mkd" Pack="true" PackagePath="/"/>
+    <None Include="brand.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

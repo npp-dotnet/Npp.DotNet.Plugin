@@ -1,0 +1,66 @@
+
+Known Issues with Using Native AOT for Plugin Development
+---------------------------------------------------------
+
+## Windows Forms
+
+A modern .NET port of Windows Forms has been [available](https://github.com/dotnet/winforms) for some time. The fact that it [only runs on Windows](https://github.com/dotnet/winforms/issues/10028#issuecomment-1743842457) is a legacy of the original Framework version, which is tightly coupled with older Windows technologies like the COM interface.
+
+To be a candidate for Native AOT, a library must be "[trimmable]", which in turn depends on avoiding dynamic type resolution, or reflection, as much as possible. Another obstacle to trimming is [COM marshalling], which Windows Forms are "heavily reliant" upon.[^1]
+
+Microsoft's documentation suggests [COM wrappers] as a strategy to provide the static type guarantees that COM marshalling ordinarily precludes. Third-party attempts to bring trimmable COM marshalling to Windows Forms have [already appeared](https://github.com/kant2002/WinFormsComInterop), but support is [still lacking](https://github.com/kant2002/WinFormsComInterop/issues/62) for a long-term-support framework (currently .NET 8). Fortunately, it looks like Microsoft intends to eventually [refactor Windows Forms](https://github.com/dotnet/winforms/issues/4649) for Native AOT.
+
+To make this technical discussion more concrete (and, hopefully, to invite contributions), this repository includes a broken [demo project](../examples/gui#readme) using Windows Forms. A Native AOT build should complete successfully, but with several warnings from the IL compiler ("ILC"), e.g.,
+
+<details>
+<summary>Publishing a WinForms project with Native AOT</summary>
+<pre>
+<code>
+C:\git\Npp.DotNet.Plugin>dotnet publish examples\gui -r win-x64 -f net8.0-windows -c Release
+MSBuild version 17.9.6+a4ecab324 for .NET
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Npp.DotNet.Plugin -> C:\git\npp.dotnet.plugin\lib\bin\Release\net8.0-windows\Npp.DotNet.Plugin.dll
+  Npp.DotNet.Plugin.Gui.Demo -> C:\git\npp.dotnet.plugin\examples\gui\bin\Release\net8.0-windows\win-x64\Npp.DotNet.Plugin.Gui.Demo.dll
+  Optimizing assemblies for size may change the behavior of the app. Be sure to test after publishing. See: https://aka.ms/dotnet-illink
+  Generating native code
+  ILC: Method '[PresentationFramework]System.Windows.Documents.MsSpellCheckLib.RCW+SpellCheckerFactoryCoClass..ctor()' will always throw because: Invalid IL or CLR metadata in 'Void SpellCheckerFactoryCoClass..ctor()'
+  ILC: Method '[PresentationFramework]System.Windows.Documents.MsSpellCheckLib.RCW+SpellCheckerFactoryCoClass.UnregisterUserDictionary(string,string)' will always throw because: Invalid
+  IL or CLR metadata in 'Void SpellCheckerFactoryCoClass.UnregisterUserDictionary(System.String, System.String)'
+  ILC: Method '[PresentationFramework]System.Windows.Documents.MsSpellCheckLib.RCW+SpellCheckerFactoryCoClass.RegisterUserDictionary(string,string)' will always throw because: Invalid IL
+   or CLR metadata in 'Void SpellCheckerFactoryCoClass.RegisterUserDictionary(System.String, System.String)'
+  ILC: Method '[PresentationFramework]System.Windows.Documents.MsSpellCheckLib.RCW+SpellCheckerFactoryCoClass.CreateSpellChecker(string)' will always throw because: Invalid IL or CLR met
+  adata in 'ISpellChecker SpellCheckerFactoryCoClass.CreateSpellChecker(System.String)'
+  ILC: Method '[WindowsBase]MS.Internal.Security.AttachmentService+AttachmentServices..ctor()' will always throw because: Invalid IL or CLR metadata in 'Void AttachmentServices..ctor()'
+  ILC: Method '[PresentationCore]MS.Internal.AppModel.CustomCredentialPolicy+InternetSecurityManager..ctor()' will always throw because: Invalid IL or CLR metadata in 'Void InternetSecur
+  ityManager..ctor()'
+  ILC: Method '[System.DirectoryServices]System.DirectoryServices.UnsafeNativeMethods+PropertyEntry..ctor()' will always throw because: Invalid IL or CLR metadata in 'Void PropertyEntry.
+  .ctor()'
+  ILC: Method '[System.DirectoryServices]System.DirectoryServices.UnsafeNativeMethods+PropertyValue..ctor()' will always throw because: Invalid IL or CLR metadata in 'Void PropertyValue.
+  .ctor()'
+     Creating library bin\Release\net8.0-windows\win-x64\native\Npp.DotNet.Plugin.Gui.Demo.lib and object bin\Release\net8.0-windows\win-x64\native\Npp.DotNet.Plugin.Gui.Demo.exp
+  Npp.DotNet.Plugin.Gui.Demo -> C:\git\npp.dotnet.plugin\examples\gui\bin\Release\net8.0-windows\win-x64\publish\
+</code>
+</pre>
+</details>
+
+The warnings are significant. A module that is not properly trimmed is basically a .NET assembly. Without a compatible runtime, it crashes when starting up. If placed in the plugin path, it will throw an unhandled exception as soon as Notepad++ loads it, bringing down the main UI thread before the first window can appear.
+
+
+## Lack of AOT-compatible third-party .NET libraries
+
+Many .NET plugins for Notepad++ depend on libraries. The IL compiler has no fault tolerance for .NET assemblies intended to run on .NET Framework, and each dependency increases the chances of a build failure. The status of third-party libraries compatible with modern .NET is completely unknown, as no .NET plugin has ever been successfully ported to a recent framework. Also keep in mind that simply targeting modern .NET does not guarantee AOT compatibility. The particular [requirements for trimming compatibility] may not be achievable for some libraries.
+
+
+## Bulky DLLs
+
+Native AOT generates self-contained applications. Even after being trimmed, the remaining portion of the .NET runtime required to execute the app will be at least a few megabytes in size, and this will be statically linked with the binary. That's a substantial difference from a typical .NET Framework assembly, which usually weighs in at less than 1MB, with all of its runtime code residing in core system libraries.
+
+
+[^1]: https://learn.microsoft.com/dotnet/core/deploying/trimming/incompatibilities#windows-forms
+
+
+[COM marshalling]: https://learn.microsoft.com/dotnet/core/deploying/trimming/incompatibilities/#built-in-com-marshalling
+[COM wrappers]: https://learn.microsoft.com/dotnet/standard/native-interop/com-wrappers
+[requirements for trimming compatibility]: https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming/#recommendations
+[trimmable]: https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming
