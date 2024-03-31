@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Npp.DotNet.Plugin.Demo", "e
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Npp.DotNet.Plugin.Gui.Demo", "examples\gui\Npp.DotNet.Plugin.Gui.Demo.csproj", "{E2E382E9-FFEE-4F58-AE93-820918B64805}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{15BB6840-A0C1-4387-89C1-CB1977FF6DB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npp.DotNet.Plugin.FSharp.Demo", "examples\fsharp\Npp.DotNet.Plugin.FSharp.Demo.csproj", "{8190AFC0-D0C5-4284-9556-D385336BC311}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,11 +35,18 @@ Global
 		{20485CDE-81BE-45FF-9315-2328872F7E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20485CDE-81BE-45FF-9315-2328872F7E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20485CDE-81BE-45FF-9315-2328872F7E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8190AFC0-D0C5-4284-9556-D385336BC311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8190AFC0-D0C5-4284-9556-D385336BC311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8190AFC0-D0C5-4284-9556-D385336BC311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8190AFC0-D0C5-4284-9556-D385336BC311}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {531E49D9-09A7-4511-A40D-0FFF6BF23599}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8190AFC0-D0C5-4284-9556-D385336BC311} = {15BB6840-A0C1-4387-89C1-CB1977FF6DB1}
 	EndGlobalSection
 EndGlobal

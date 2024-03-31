@@ -7,7 +7,7 @@ Files: *.json doc/** lib/*.png COPYRIGHT README* NOTICE*
 Copyright: Public Domain
 License: CC0-1.0
 
-Files: *.pubxml *.sln *.props *.targets *.snk lib/*.csproj examples/**/*.csproj test/**/*.csproj
+Files: *.pubxml *.sln *.props *.targets *.snk lib/*.csproj examples/**/*.csproj examples/**/*.fsproj test/**/*.csproj
 Copyright: 2024 Robert Di Pardo
 License: Apache-2.0
 

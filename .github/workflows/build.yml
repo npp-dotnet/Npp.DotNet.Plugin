@@ -24,6 +24,7 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
+      PLUGIN_NS: 'Npp.DotNet.Plugin'
       PLUGIN_NAME: 'Npp.DotNet.Plugin.Demo'
 
     steps:
@@ -56,3 +57,10 @@ jobs:
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
           path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.dll
+
+      - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
+        if: matrix.build_config == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
+          path: examples/fsharp/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll
