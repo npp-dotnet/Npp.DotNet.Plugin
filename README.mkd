@@ -68,11 +68,13 @@ To start a build, click the <kbd>Publish</kbd> button.
 
 #### Tests
 
-Double-click the solution file at the root of the [test](test) subtree.
+Exapand the "test" subfolder in the Solution Explorer.
 
-Select "Build" and "Build Solution" from the main menu, or right-click on the solution name in the Solution Explorer and select "Build Solution" from the context menu.
+Activate a test project by clicking on it (e.g. `Memory`).
 
-Select "Test" and "Run All Tests" from the main menu, or right-click on the solution name in the Solution Explorer and select "Run Tests" from the context menu.
+Select "Build" and "Build `$(PROJECT)`" from the main menu, or right-click on the project name in the Solution Explorer and select "Build" from the context menu.
+
+Select "Test" and "Run All Tests" from the main menu, or right-click on the project name in the Solution Explorer and select "Run Tests" from the context menu.
 
 ### Using the `dotnet` CLI
 

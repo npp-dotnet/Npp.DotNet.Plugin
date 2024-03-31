@@ -4,12 +4,13 @@
 	<PropertyGroup>
 		<TargetNamespace>Npp.DotNet.Plugin</TargetNamespace>
 		<NativeTarget>$(TargetNamespace).Demo</NativeTarget>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 		<SharedConfiguration>$(Configuration)</SharedConfiguration>
-		<SharedConfiguration Condition=" '$(Configuration)' == '' ">Debug</SharedConfiguration>
+		<RuntimeIdentifier Condition=" '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifier)' == '' ">win-x64</RuntimeIdentifier>
 		<SharedRuntimeIdentifier>$(RuntimeIdentifier)</SharedRuntimeIdentifier>
 		<SharedRuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</SharedRuntimeIdentifier>
+		<TargetFramework Condition=" '$(TargetFramework)' == '' ">net8.0-windows</TargetFramework>
 		<SharedFramework>$(TargetFramework)</SharedFramework>
-		<SharedFramework Condition=" '$(TargetFramework)' == '' ">net8.0-windows</SharedFramework>
 	</PropertyGroup>
 
 </Project>

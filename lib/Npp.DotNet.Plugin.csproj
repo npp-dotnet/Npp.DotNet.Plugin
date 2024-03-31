@@ -18,6 +18,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>net48;net481;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <RuntimeIdentifiers>win-arm64;win-x64</RuntimeIdentifiers>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

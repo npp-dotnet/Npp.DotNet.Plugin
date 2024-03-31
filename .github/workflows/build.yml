@@ -49,7 +49,7 @@ jobs:
 
       - name: Build demo plugin
         run: |
-          dotnet publish -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet publish examples -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release'
