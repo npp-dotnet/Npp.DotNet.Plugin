@@ -1,4 +1,4 @@
-Npp.DotNet.Plugin.FSharp.Demo
+Npp.DotNet.Plugin.VBNet.Demo
 -----------------------------
 
 A native plugin implemented in Visual Basic .NET, with some necessary C# glue code, and _without_ Windows Forms
