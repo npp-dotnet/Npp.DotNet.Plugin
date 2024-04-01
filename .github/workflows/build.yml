@@ -47,8 +47,9 @@ jobs:
           dotnet msbuild /t:Build /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
           dotnet test
 
-      - name: Build demo plugin
+      - name: Build demo plugins
         run: |
+          dotnet build
           dotnet publish examples -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}

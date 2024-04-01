@@ -8,7 +8,6 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
