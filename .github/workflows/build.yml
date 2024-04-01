@@ -58,6 +58,13 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
           path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.dll
 
+      - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
+        if: matrix.build_config == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
+          path: examples/vbnet/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
+
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release'
         uses: actions/upload-artifact@v4

@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: Public Domain
+# SPDX-License-Identifier: CC0-1.0
+
+*.[vV][bB]                      text eol=crlf
+*.[vV][bB][pP][rR][oO][jJ]      text eol=crlf
