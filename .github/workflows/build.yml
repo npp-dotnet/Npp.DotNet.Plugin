@@ -20,6 +20,7 @@ jobs:
       matrix:
         target_runtime: [ x64, arm64 ]
         build_config: [ Release, Debug ]
+        plugin_demo: [ minimal, gui, fsharp, vbnet ]
     runs-on: windows-latest
     env:
       DOTNET_NOLOGO: true
@@ -41,7 +42,7 @@ jobs:
           dotnet restore test
 
       - name: Run tests
-        if: ${{ matrix.build_config == 'Debug' }}
+        if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
           dotnet msbuild /t:Build /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
@@ -49,25 +50,25 @@ jobs:
 
       - name: Build demo plugins
         run: |
-          dotnet build
-          dotnet publish examples -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet build examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet publish examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
-        if: matrix.build_config == 'Release'
+        if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
           path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
-        if: matrix.build_config == 'Release'
+        if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
           path: examples/vbnet/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
-        if: matrix.build_config == 'Release'
+        if: matrix.build_config == 'Release' && matrix.plugin_demo == 'fsharp'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
