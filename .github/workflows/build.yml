@@ -4,6 +4,8 @@
 name: Native AOT Build
 on:
   push:
+    branches-ignore:
+      - 'dependabot/**'
   pull_request:
     branches:
       - main

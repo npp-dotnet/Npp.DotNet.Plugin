@@ -9,7 +9,6 @@ updates:
       interval: "weekly"
     groups:
       dev-dependencies:
-        dependency-type: "development"
         patterns:
           - "*"
 
