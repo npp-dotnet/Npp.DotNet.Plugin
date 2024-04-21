@@ -3,7 +3,7 @@ Upstream-Name: npp-dotnet/npp.dotnet.plugin
 Upstream-Contact: Robert Di Pardo <https://github.com/rdipardo>
 Source: https://github.com/npp-dotnet/npp.dotnet.plugin.git
 
-Files: *.json doc/** lib/*.png COPYRIGHT README* NOTICE*
+Files: *.json doc/** lib/*.png **/CODEOWNERS COPYRIGHT README* NOTICE*
 Copyright: Public Domain
 License: CC0-1.0
 
