@@ -26,7 +26,7 @@ namespace Npp.DotNet.Plugin
 		bool OpenFile(string path);
 		bool SaveCurrentFile();
 		string GetConfigDirectory();
-		int[] GetNppVersion();
+		(int, int, int) GetNppVersion();
 		string[] GetOpenFileNames();
 		void SetStatusBarSection(string message, StatusBarSection section);
 	}
@@ -157,20 +157,19 @@ namespace Npp.DotNet.Plugin
 			return sbIniFilePath.ToString();
 		}
 
-		/// <summary>
-		/// 3-int array: {major, minor, bugfix}<br></br>
-		/// Thus GetNppVersion() would return {8, 5, 0} for version 8.5.0
-		/// and {7, 7, 1} for version 7.7.1
-		/// </summary>
-		/// <returns></returns>
-		public int[] GetNppVersion()
+		/// <returns>
+		/// 3-int tuple: (major, minor, bugfix)<br></br>
+		/// Thus GetNppVersion() would return (8, 5, 0) for version 8.5.0
+		/// and (7, 7, 1) for version 7.7.1
+		/// </returns>
+		public (int, int, int) GetNppVersion()
 		{
 			int version = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (int)NppMsg.NPPM_GETNPPVERSION);
 			int major = version >> 16;
-			int minor = Math.DivRem(version & 0xffff, 10, out int bugfix);
-			if (minor == 0)
-				(bugfix, minor) = (minor, bugfix);
-			return new int[] { major, minor, bugfix };
+			int minor = Math.DivRem((version & 0xffff) * 10, 10, out int bugfix);
+			while (minor > 9)
+				minor = Math.DivRem(minor, 10, out bugfix);
+			return (major, minor, bugfix);
 		}
 
 		public string[] GetOpenFileNames()

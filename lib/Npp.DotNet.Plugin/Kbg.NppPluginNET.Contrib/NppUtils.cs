@@ -37,11 +37,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         public static readonly Random Random = new Random();
 
-        public static readonly int[] NppVersion = Notepad.GetNppVersion();
+        public static readonly (int, int, int) NppVersion = Notepad.GetNppVersion();
 
         public static readonly string NppVersionStr = NppVersionString(true);
 
-        public static readonly bool NppVersionAtLeast8 = NppVersion[0] >= 8;
+        public static readonly bool NppVersionAtLeast8 = NppVersion.Item1 >= 8;
 
         public static string AssemblyVersionString
         {
@@ -158,8 +158,8 @@ namespace Npp.DotNet.Plugin
 
         private static string NppVersionString(bool include32bitVs64bit)
         {
-            int[] nppVer = Notepad.GetNppVersion();
-            string nppVerStr = $"{nppVer[0]}.{nppVer[1]}.{nppVer[2]}";
+            (int major, int minor, int revision) = Notepad.GetNppVersion();
+            string nppVerStr = $"{major}.{minor}.{revision}";
             return include32bitVs64bit ? $"{nppVerStr} {IntPtr.Size * 8}bit" : nppVerStr;
         }
 
