@@ -36,9 +36,9 @@ namespace Npp.DotNet.Plugin.Demo
         public override void OnSetInfo()
         {
             var sKey = new ShortcutKey(TRUE, FALSE, TRUE, 123); // Ctrl + Shift + F12
-            int currentIndex = Utils.SetCommand(0, "Say \"&Hello\"", HelloNpp, sKey);
-            currentIndex = Utils.MakeSeparator(currentIndex);
-            _ = Utils.SetCommand(currentIndex, "&About", DisplayInfo);
+            Utils.SetCommand("Say \"&Hello\"", HelloNpp, sKey);
+            Utils.MakeSeparator();
+            Utils.SetCommand("&About", DisplayInfo);
         }
 
         /// <inheritdoc cref="IDotNetPlugin.OnBeNotified" />

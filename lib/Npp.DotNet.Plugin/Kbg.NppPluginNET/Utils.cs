@@ -11,10 +11,10 @@ namespace Npp.DotNet.Plugin
 {
     public static class Utils
     {
-        public static int SetCommand(int index, string commandName, PluginFunc functionPointer, ShortcutKey shortcut, bool checkOnInit)
+        public static int SetCommand(string commandName, PluginFunc functionPointer, ShortcutKey shortcut, bool checkOnInit)
         {
             FuncItem funcItem = default;
-            funcItem.CmdID = index;
+            funcItem.CmdID = PluginData.FuncItems.Items.Count;
             funcItem.ItemName = commandName;
             if (functionPointer != null)
                 funcItem.PFunc = new PluginFunc(functionPointer);
@@ -25,19 +25,19 @@ namespace Npp.DotNet.Plugin
             return PluginData.FuncItems.Items.Count;
         }
 
-        public static int SetCommand(int index, string commandName, PluginFunc functionPointer)
+        public static int SetCommand(string commandName, PluginFunc functionPointer)
         {
-            return SetCommand(index, commandName, functionPointer, default, false);
+            return SetCommand(commandName, functionPointer, default, false);
         }
 
-        public static int SetCommand(int index, string commandName, PluginFunc functionPointer, ShortcutKey shortcut)
+        public static int SetCommand(string commandName, PluginFunc functionPointer, ShortcutKey shortcut)
         {
-            return SetCommand(index, commandName, functionPointer, shortcut, false);
+            return SetCommand(commandName, functionPointer, shortcut, false);
         }
 
-        public static int MakeSeparator(int index)
+        public static int MakeSeparator()
         {
-            return SetCommand(index, "-", null);
+            return SetCommand("-", null);
         }
 
         /// <summary>

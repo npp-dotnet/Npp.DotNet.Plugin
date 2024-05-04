@@ -55,12 +55,15 @@ type Main =
 
         let sKey = ShortcutKey(TRUE, FALSE, TRUE, 116uy) // Ctrl + Shift + F5...harp!
 
-        let nextIndex =
-            Utils.SetCommand(0, "Say \"&Hello\"", helloNpp, sKey)
-            |> Utils.MakeSeparator
-
-        Utils.SetCommand(nextIndex, "&About", displayInfo)
-        |> ignore
+        [ ("Say \"&Hello\"", Some(helloNpp), Some(sKey))
+          ("-", None, None)
+          ("&About", Some(displayInfo), None) ]
+        |> List.iter ((fun (name, fn: (unit -> unit) option, key) ->
+                match (fn, key) with
+                | (Some (f), Some (k)) -> Utils.SetCommand(name, f, k)
+                | (Some (f), _) -> Utils.SetCommand(name, f)
+                | _ -> Utils.MakeSeparator())
+            >> ignore)
 
     override __.OnBeNotified(notification: ScNotification) =
         if notification.Header.HwndFrom = PluginData.NppData.NppHandle then

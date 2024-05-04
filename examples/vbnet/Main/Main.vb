@@ -33,9 +33,9 @@ Public Class Main
 #Region "2. Implement the plugin interface"
     Public Overrides Sub OnSetInfo()
         Dim sKey As New ShortcutKey([TRUE], [FALSE], [TRUE], 121) ' Ctrl + Shift + F10
-        Dim currentIndex As Integer = Utils.SetCommand(0, "Say ""&Hello""", AddressOf HelloNpp, sKey)
-        currentIndex = Utils.MakeSeparator(currentIndex)
-        Utils.SetCommand(currentIndex, "&About", AddressOf DisplayInfo)
+        Utils.SetCommand("Say ""&Hello""", AddressOf HelloNpp, sKey)
+        Utils.MakeSeparator()
+        Utils.SetCommand("&About", AddressOf DisplayInfo)
     End Sub
 
     Public Overrides Sub OnBeNotified(Notification As ScNotification)

@@ -153,38 +153,38 @@ namespace Kbg.Demo.Namespace
             //            ShortcutKey *shortcut,                // optional. Define a shortcut to trigger this command
             //            bool check0nInit                      // optional. Make this menu item be checked visually
             //            );
-            Utils.SetCommand(0, "Hello Notepad++", hello);
-            Utils.SetCommand(1, "Hello (with FX)", helloFX);
-            Utils.SetCommand(2, "What is Notepad++?", WhatIsNpp);
+            Utils.SetCommand("Hello Notepad++", hello);
+            Utils.SetCommand("Hello (with FX)", helloFX);
+            Utils.SetCommand("What is Notepad++?", WhatIsNpp);
 
             // Here you insert a separator
-            Utils.MakeSeparator(3);
+            Utils.MakeSeparator();
 
             // Shortcut :
             // Following makes the command bind to the shortcut Alt-F
-            Utils.SetCommand(4, "Current Full Path", insertCurrentFullPath, new ShortcutKey(false, true, false, Keys.F));
-            Utils.SetCommand(5, "Current File Name", insertCurrentFileName);
-            Utils.SetCommand(6, "Current Directory", insertCurrentDirectory);
-            Utils.SetCommand(7, "Date && Time - short format", insertShortDateTime);
-            Utils.SetCommand(8, "Date && Time - long format", insertLongDateTime);
+            Utils.SetCommand("Current Full Path", insertCurrentFullPath, new ShortcutKey(false, true, false, Keys.F));
+            Utils.SetCommand("Current File Name", insertCurrentFileName);
+            Utils.SetCommand("Current Directory", insertCurrentDirectory);
+            Utils.SetCommand("Date && Time - short format", insertShortDateTime);
+            Utils.SetCommand("Date && Time - long format", insertLongDateTime);
 
-            Utils.SetCommand(9, "Close HTML/XML tag automatically", checkInsertHtmlCloseTag, new ShortcutKey(false, true, false, Keys.Q), doCloseTag);
+            Utils.SetCommand("Close HTML/XML tag automatically", checkInsertHtmlCloseTag, new ShortcutKey(false, true, false, Keys.Q), doCloseTag);
 
-            Utils.MakeSeparator(10);
+            Utils.MakeSeparator();
 
-            Utils.SetCommand(11, "Get File Names Demo", getFileNamesDemo);
-            Utils.SetCommand(12, "Get Session File Names Demo", getSessionFileNamesDemo);
-            Utils.SetCommand(13, "Save Current Session Demo", saveCurrentSessionDemo);
+            Utils.SetCommand("Get File Names Demo", getFileNamesDemo);
+            Utils.SetCommand("Get Session File Names Demo", getSessionFileNamesDemo);
+            Utils.SetCommand("Save Current Session Demo", saveCurrentSessionDemo);
 
-            Utils.MakeSeparator(14);
+            Utils.MakeSeparator();
 
-            Utils.SetCommand(15, "Dockable Dialog Demo", DockableDlgDemo); idFrmGotToLine = 15;
+            Utils.SetCommand("Dockable Dialog Demo", DockableDlgDemo); idFrmGotToLine = 15;
 
-            Utils.MakeSeparator(16)
-                ;
-            Utils.SetCommand(17, "Print Scroll and Row Information", PrintScrollInformation);
+            Utils.MakeSeparator();
 
-            Utils.SetCommand(18, "Use NanInf class for -inf, inf, nan!!", PrintNanInf);
+            Utils.SetCommand("Print Scroll and Row Information", PrintScrollInformation);
+
+            Utils.SetCommand("Use NanInf class for -inf, inf, nan!!", PrintNanInf);
         }
 
         /// <summary>
