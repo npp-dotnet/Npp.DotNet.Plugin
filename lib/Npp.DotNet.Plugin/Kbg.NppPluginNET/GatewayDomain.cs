@@ -1,7 +1,8 @@
 ﻿/*
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>
+ *                         2023 Bas de Reuver ("BdR76") <bdr1976@gmail.com>
  *
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: Apache-2.0 OR GPL-3.0-or-later
  */
 
 using System;
@@ -47,6 +48,35 @@ namespace Npp.DotNet.Plugin
         {
             get { return Red + (Green << 8) + (Blue << 16); }
         }
+    }
+
+    /// <summary>
+    /// Colours are set using the RGB format (Red, Green, Blue). The intensity of each colour is set in the range 0 to 255.
+    /// If you have three such intensities, they are combined as: red | (green &lt;&lt; 8) | (blue &lt;&lt; 16).
+    /// If you set all intensities to 255, the colour is white. If you set all intensities to 0, the colour is black.
+    /// When you set a colour, you are making a request. What you will get depends on the capabilities of the system and the current screen mode.
+    /// </summary>
+    public class ColourAlpha
+    {
+        public readonly int Red, Green, Blue, Alpha;
+
+        public ColourAlpha(Int64 rgba)
+        {
+            Red = (byte)rgba & 0xFF;
+            Green = (byte)(rgba >> 8) & 0xFF;
+            Blue = (byte)(rgba >> 16) & 0xFF;
+            Alpha = (byte)(rgba >> 24) & 0xFF;
+        }
+
+        public ColourAlpha(byte red, byte green, byte blue, byte alpha)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            Alpha = alpha;
+        }
+
+        public int Value => Red + (Green << 8) + (Blue << 16) + (Alpha << 24);
     }
 
     /// <summary>

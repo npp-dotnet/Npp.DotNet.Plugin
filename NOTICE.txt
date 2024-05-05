@@ -9,3 +9,6 @@ Npp.DotNet.Plugin includes software developed by:
 
  * Joakim Wennergren
    https://github.com/jokedst/CsvQuery
+
+ * Bas de Reuver ("BdR76")
+   https://github.com/BdR76/CSVLint

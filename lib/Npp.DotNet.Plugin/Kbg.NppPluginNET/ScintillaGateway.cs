@@ -1,7 +1,8 @@
 ﻿/*
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>
+ *                         2023 Bas de Reuver ("BdR76") <bdr1976@gmail.com>
  *
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: Apache-2.0 OR GPL-3.0-or-later
  */
 
 using System;
@@ -829,34 +830,83 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_STYLESETCHARACTERSET, (UIntPtr)style, (IntPtr)characterSet);
         }
 
+        /// <summary>
+        /// Set the colour of an element. Translucency (alpha) may or may not be significant
+        /// and this may depend on the platform. The alpha byte should commonly be 0xff for opaque.
+        /// (Scintilla feature 2753)
+        /// </summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        /// <param name="colourElement">A translucent colour.</param>
+        public void SetElementColour(uint element, ColourAlpha colourElement)
+        {
+            Win32.SendMessage(_scintilla, SciMsg.SCI_SETELEMENTCOLOUR, element, colourElement.Value);
+        }
+
+        /// <summary>Get the colour of an element. (Scintilla feature 2754)</summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        public ColourAlpha GetElementColour(uint element)
+        {
+            return new ColourAlpha((int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTCOLOUR, element, Unused));
+        }
+
+        /// <summary>Use the default or platform-defined colour for an element. (Scintilla feature 2755)</summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        public void ResetElementColour(uint element)
+        {
+            Win32.SendMessage(_scintilla, SciMsg.SCI_RESETELEMENTCOLOUR, element, Unused);
+        }
+
+        /// <summary>
+        /// Get whether an element has been set by SetElementColour.
+        /// When false, a platform-defined or default colour is used.
+        /// (Scintilla feature 2756)
+        /// </summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        public bool GetElementIsSet(uint element)
+        {
+            return 1 == (int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTISSET, element, Unused);
+        }
+
+        /// <summary>Get whether an element supports translucency. (Scintilla feature 2757)</summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        public bool GetElementAllowsTranslucent(uint element)
+        {
+            return 1 == (int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTALLOWSTRANSLUCENT, element, Unused);
+        }
+
+        /// <summary>Get the colour of an element. (Scintilla feature 2758)</summary>
+        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
+        public ColourAlpha GetElementBaseColour(uint element)
+        {
+            return new ColourAlpha((int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTBASECOLOUR, element, Unused));
+        }
+
         /// <summary>Set a style to be a hotspot or not. (Scintilla feature 2409)</summary>
         public void StyleSetHotSpot(int style, bool hotspot)
         {
             SendMessage(_scintilla, SciMsg.SCI_STYLESETHOTSPOT, (UIntPtr)style, new IntPtr(hotspot ? 1 : 0));
         }
 
-        /// <summary>Set the foreground colour of the main and additional selections and whether to use this setting. (Scintilla feature 2067)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETSELFORE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetSelFore(bool useSetting, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETSELFORE, new UIntPtr(useSetting ? 1U : 0U), fore.Value);
         }
 
-        /// <summary>Set the background colour of the main and additional selections and whether to use this setting. (Scintilla feature 2068)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETSELBACK"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetSelBack(bool useSetting, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETSELBACK, new UIntPtr(useSetting ? 1U : 0U), back.Value);
         }
 
-        /// <summary>Get the alpha of the selection. (Scintilla feature 2477)</summary>
-        public Alpha GetSelAlpha()
-        {
-            return (Alpha)SendMessage(_scintilla, SciMsg.SCI_GETSELALPHA, UnusedW, Unused);
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETSELALPHA"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Alpha GetSelAlpha() => default;
 
-        /// <summary>Set the alpha of the selection. (Scintilla feature 2478)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETSELALPHA"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetSelAlpha(Alpha alpha)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETSELALPHA, (UIntPtr)alpha, Unused);
         }
 
         /// <summary>Is the selection end of line filled? (Scintilla feature 2479)</summary>
@@ -871,10 +921,10 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_SETSELEOLFILLED, new UIntPtr(filled ? 1U : 0U), Unused);
         }
 
-        /// <summary>Set the foreground colour of the caret. (Scintilla feature 2069)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETCARETFORE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetCaretFore(Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETCARETFORE, (UIntPtr)fore.Value, Unused);
         }
 
         /// <summary>When key+modifier combination keyDefinition is pressed perform sciCommand. (Scintilla feature 2070)</summary>
@@ -1087,28 +1137,25 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETMAXLINESTATE, UnusedW, Unused);
         }
 
-        /// <summary>Is the background of the line containing the caret in a different colour? (Scintilla feature 2095)</summary>
-        public bool GetCaretLineVisible()
-        {
-            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETCARETLINEVISIBLE, UnusedW, Unused);
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEVISIBLE"/>
+        /// <returns><see langword="true"/></returns>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public bool GetCaretLineVisible() => true;
 
-        /// <summary>Display the background of the line containing the caret in a different colour. (Scintilla feature 2096)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETCARETLINEVISIBLE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetCaretLineVisible(bool show)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETCARETLINEVISIBLE, new UIntPtr(show ? 1U : 0U), Unused);
         }
 
-        /// <summary>Get the colour of the background of the line containing the caret. (Scintilla feature 2097)</summary>
-        public Colour GetCaretLineBack()
-        {
-            return new Colour((int)SendMessage(_scintilla, SciMsg.SCI_GETCARETLINEBACK, UnusedW, Unused));
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACK"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Colour GetCaretLineBack() => new Colour(0xffffff);
 
-        /// <summary>Set the colour of the background of the line containing the caret. (Scintilla feature 2098)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACK"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetCaretLineBack(Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETCARETLINEBACK, (UIntPtr)back.Value, Unused);
         }
 
         /// <summary>
@@ -1486,11 +1533,9 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETCODEPAGE, UnusedW, Unused);
         }
 
-        /// <summary>Get the foreground colour of the caret. (Scintilla feature 2138)</summary>
-        public Colour GetCaretFore()
-        {
-            return new Colour((int)SendMessage(_scintilla, SciMsg.SCI_GETCARETFORE, UnusedW, Unused));
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETCARETFORE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Colour GetCaretFore() => new Colour(0);
 
         /// <summary>In read-only mode? (Scintilla feature 2140)</summary>
         public bool GetReadOnly()
@@ -3361,29 +3406,25 @@ namespace Npp.DotNet.Plugin
             return (Wrap)SendMessage(_scintilla, SciMsg.SCI_GETPRINTWRAPMODE, UnusedW, Unused);
         }
 
-        /// <summary>Set a fore colour for active hotspots. (Scintilla feature 2410)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETHOTSPOTACTIVEFORE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetHotspotActiveFore(bool useSetting, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETHOTSPOTACTIVEFORE, new UIntPtr(useSetting ? 1U : 0U), fore.Value);
         }
 
-        /// <summary>Get the fore colour for active hotspots. (Scintilla feature 2494)</summary>
-        public Colour GetHotspotActiveFore()
-        {
-            return new Colour((int)SendMessage(_scintilla, SciMsg.SCI_GETHOTSPOTACTIVEFORE, UnusedW, Unused));
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETHOTSPOTACTIVEFORE"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Colour GetHotspotActiveFore() => new Colour(0);
 
-        /// <summary>Set a back colour for active hotspots. (Scintilla feature 2411)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETHOTSPOTACTIVEBACK"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetHotspotActiveBack(bool useSetting, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETHOTSPOTACTIVEBACK, new UIntPtr(useSetting ? 1U : 0U), back.Value);
         }
 
-        /// <summary>Get the back colour for active hotspots. (Scintilla feature 2495)</summary>
-        public Colour GetHotspotActiveBack()
-        {
-            return new Colour((int)SendMessage(_scintilla, SciMsg.SCI_GETHOTSPOTACTIVEBACK, UnusedW, Unused));
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETHOTSPOTACTIVEBACK"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Colour GetHotspotActiveBack() => new Colour(0xffffff);
 
         /// <summary>Enable / Disable underlining active hotspots. (Scintilla feature 2412)</summary>
         public void SetHotspotActiveUnderline(bool underline)
@@ -3813,17 +3854,15 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_SELECTIONDUPLICATE, UnusedW, Unused);
         }
 
-        /// <summary>Set background alpha of the caret line. (Scintilla feature 2470)</summary>
+        /// <inheritdoc cref="SciMsg.SCI_SETCARETLINEBACKALPHA"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetCaretLineBackAlpha(Alpha alpha)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETCARETLINEBACKALPHA, (UIntPtr)alpha, Unused);
         }
 
-        /// <summary>Get the background alpha of the caret line. (Scintilla feature 2471)</summary>
-        public Alpha GetCaretLineBackAlpha()
-        {
-            return (Alpha)SendMessage(_scintilla, SciMsg.SCI_GETCARETLINEBACKALPHA, UnusedW, Unused);
-        }
+        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACKALPHA"/>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public Alpha GetCaretLineBackAlpha() => default;
 
         /// <summary>Set the style of the caret to be drawn. (Scintilla feature 2512)</summary>
         public void SetCaretStyle(CaretStyle caretStyle)
@@ -4795,21 +4834,15 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Set the lexing language of the document based on string name. (Scintilla feature 4006)</summary>
+        [Obsolete("Use SCI_SETILEXER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETILEXER", true)]
         public unsafe void SetLexerLanguage(string language)
         {
-            fixed (byte* languagePtr = Encoding.UTF8.GetBytes(language))
-            {
-                SendMessage(_scintilla, SciMsg.SCI_SETLEXERLANGUAGE, UnusedW, (IntPtr)languagePtr);
-            }
         }
 
         /// <summary>Load a lexer library (dll / so). (Scintilla feature 4007)</summary>
+        [Obsolete("SCI_LOADLEXERLIBRARY was removed in Scintilla 5.0: https://www.scintilla.org/ScintillaDoc.html#SCI_CREATELOADER", true)]
         public unsafe void LoadLexerLibrary(string path)
         {
-            fixed (byte* pathPtr = Encoding.UTF8.GetBytes(path))
-            {
-                SendMessage(_scintilla, SciMsg.SCI_LOADLEXERLIBRARY, UnusedW, (IntPtr)pathPtr);
-            }
         }
 
         /// <summary>
@@ -5085,30 +5118,24 @@ namespace Npp.DotNet.Plugin
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_SETKEYSUNICODE")]
         public void SetKeysUnicode(bool keysUnicode)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETKEYSUNICODE, new UIntPtr(keysUnicode ? 1U : 0U), Unused);
         }
 
         /// <inheritdoc cref="SetKeysUnicode" />
+        /// <returns><see langword="true"/></returns>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETKEYSUNICODE")]
-        public bool GetKeysUnicode()
-        {
-            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETKEYSUNICODE, UnusedW, Unused);
-        }
+        public bool GetKeysUnicode() => true;
 
         /// <summary>
         /// Single phase drawing SC_PHASES_ONE, is deprecated and should be replaced with 2-phase SC_PHASES_TWO or multi-phase SC_PHASES_MULTIPLE drawing.
         /// </summary>
+        /// <returns><see langword="true"/></returns>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]
-        public bool GetTwoPhaseDraw()
-        {
-            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETTWOPHASEDRAW, UnusedW, Unused);
-        }
+        public bool GetTwoPhaseDraw() => true;
 
         /// <inheritdoc cref="GetTwoPhaseDraw" />
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_SETTWOPHASEDRAW")]
         public void SetTwoPhaseDraw(bool twoPhase)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETTWOPHASEDRAW, new UIntPtr(twoPhase ? 1U : 0U), Unused);
         }
 
         /* --Autogenerated -- end of section automatically generated from Scintilla.iface */
