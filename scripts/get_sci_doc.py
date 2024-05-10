@@ -15,6 +15,23 @@ from urllib import request, error as urllib_error
 
 import deprecated
 
+class CommentLineStyle():
+    """
+    A documentation comment line style.
+    """
+    def __init__(self, tokens=r'///', indent_with=8):
+        self.indent = ' ' * indent_with
+        self.prefix = f"{self.indent}{tokens}"
+
+    def __str__(self):
+        return self.prefix
+
+    def format(self, text: str) -> str:
+        """
+        Format one or more lines of comment text.
+        """
+        return '\n'.join([f"{self} {line}" for line in text.splitlines() if bool(line.strip())])
+
 class ScintillaDefinitions(HTMLParser):
     """
     Maps message names to their descriptions in Scintilla's HTML documentation.
@@ -22,9 +39,11 @@ class ScintillaDefinitions(HTMLParser):
     def __init__(self):
         super().__init__()
         self.text_wrapper = TextWrapper(width=120)
+        self.style = CommentLineStyle()
         self.defs = {}
         self.current_symbol = ''
         self.skip_content = False
+        self.code_span = False
         self.feed(fetch_docs())
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str]]):
@@ -47,15 +66,16 @@ class ScintillaDefinitions(HTMLParser):
             if _tag == 'br' and bool(self.current_symbol):
                 self.defs[self.current_symbol] += '<br/>'
 
+            self.code_span = _tag == 'code'
             # revisit parent element
             self.handle_starttag('p', [])
 
     def handle_data(self, data: str):
         """
-        Called once for the text context of each element.
+        Called once for the text content of each element.
         """
-        # description should be more than just the symbol's name
-        doc = re.sub(fr'^({self.current_symbol})$', '', data).strip()
+        # except in <code> span, descriptions should be more than just the symbol's name
+        doc = data if self.code_span else re.sub(fr'^({self.current_symbol})$', '', data).strip()
         if not self.skip_content and bool(self.current_symbol) and bool(doc):
             self.defs[self.current_symbol] += f"{doc}\r\n"
 
@@ -71,8 +91,6 @@ class ScintillaDefinitions(HTMLParser):
         """
         Return a formatted XML comment for the given symbol, if found.
         """
-        indent =  ' ' * 8
-        prefix = fr"{indent}///"
         doc_lines = []
 
         def xmlify(s: str) -> str:
@@ -87,11 +105,11 @@ class ScintillaDefinitions(HTMLParser):
                 bool(re.search(r'(discouraged)', doc, re.IGNORECASE))
 
             if summary and summary[0].strip():
-                doc_lines.append(fr"{prefix} <summary>")
+                doc_lines.append(self.style.format('<summary>'))
                 signature = xmlify(summary[0].strip())
 
                 if signature:
-                    doc_lines.append(f"{prefix} {signature}")
+                    doc_lines.append(self.style.format(signature))
 
                     is_obsolete = \
                         bool(re.search(r'(deprecated)', signature, re.IGNORECASE)) or is_obsolete
@@ -100,13 +118,13 @@ class ScintillaDefinitions(HTMLParser):
                     doc_lines[-1] += '<br/>'
                     for ln in self.text_wrapper.wrap('\n'.join(summary[1:])):
                         doc_line = re.sub(r'\s+((?!-&gt;)\W )', r'\1', xmlify(ln)).strip()
-                        doc_lines.append(f"{prefix} {doc_line}")
+                        doc_lines.append(self.style.format(doc_line))
 
-                doc_lines.append(fr"{prefix} </summary>")
+                doc_lines.append(self.style.format('</summary>'))
 
             if is_obsolete:
                 doc_lines.append(
-                    indent +\
+                    self.style.indent +\
                     deprecated.MESSAGES.get(
                         sym,
                         f'[Obsolete("https://www.scintilla.org/ScintillaDoc.html#{sym}")]'))
