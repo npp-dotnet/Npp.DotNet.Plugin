@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+using Figgle;
 using System.Runtime.InteropServices;
 using static Npp.DotNet.Plugin.Win32;
 
@@ -12,6 +13,8 @@ namespace Npp.DotNet.Plugin.Demo
     /// <summary>
     /// Extends <see cref="DotNetPlugin"/>.
     /// </summary>
+    [GenerateFiggleText("HelloTo", "slant", "Hello, Notepad++ ...")]
+    [GenerateFiggleText("HelloFrom", "slant", "from .NET!")]
     partial class Main : DotNetPlugin
     {
         #region "1. Initialize"
@@ -96,7 +99,8 @@ namespace Npp.DotNet.Plugin.Demo
         static void HelloNpp()
         {
             NppUtils.Notepad.FileNew();
-            NppUtils.Editor.SetText("Hello, Notepad++ ... from .NET!");
+            NppUtils.Editor.SetText(HelloTo);
+            NppUtils.AddLine(HelloFrom);
         }
 
         /// <summary>

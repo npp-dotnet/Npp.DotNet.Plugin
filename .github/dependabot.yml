@@ -4,7 +4,9 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
-    directory: "/test/Memory"
+    directories:
+      - "/examples/minimal"
+      - "/test/Memory"
     schedule:
       interval: "weekly"
     groups:
