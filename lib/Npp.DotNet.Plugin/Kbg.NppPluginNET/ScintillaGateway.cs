@@ -5055,6 +5055,7 @@ namespace Npp.DotNet.Plugin
             return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_DESCRIPTIONOFSTYLE, (UIntPtr)style);
         }
 
+#if !SCI_DISABLE_PROVISIONAL
         /// <summary>Retrieve bidirectional text display state. (Scintilla feature 2708)</summary>
         public Bidirectional GetBidirectional()
         {
@@ -5066,6 +5067,7 @@ namespace Npp.DotNet.Plugin
         {
             SendMessage(_scintilla, SciMsg.SCI_SETBIDIRECTIONAL, (UIntPtr)bidirectional, Unused);
         }
+#endif
 
         /// <summary>Retrieve line character index state. (Scintilla feature 2710)</summary>
         public LineCharacterIndexType GetLineCharacterIndex()

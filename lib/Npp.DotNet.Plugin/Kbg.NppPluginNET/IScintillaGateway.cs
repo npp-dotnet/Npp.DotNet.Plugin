@@ -2652,11 +2652,13 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe string DescriptionOfStyle(int style);
 
+#if !SCI_DISABLE_PROVISIONAL
         /// <summary>Retrieve bidirectional text display state. (Scintilla feature 2708)</summary>
         Bidirectional GetBidirectional();
 
         /// <summary>Set bidirectional text display state. (Scintilla feature 2709)</summary>
         void SetBidirectional(Bidirectional bidirectional);
+#endif
 
         /// <summary>Retrieve line character index state. (Scintilla feature 2710)</summary>
         LineCharacterIndexType GetLineCharacterIndex();

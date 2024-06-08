@@ -1099,6 +1099,43 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/de25873cb3352ee59d883e95e80c91806944e348">8.5.6</a>
         /// </remarks>
         NPPM_ALLOCATEINDICATOR = NPPMSG + 113,
+        /// <summary>
+        /// int NPPM_GETTABCOLORID (int view, int tabIndex)<br/>
+        /// Gets the tab color id for the given view and tab index.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: 0 for <see cref="MAIN_VIEW"/>, 1 for <see cref="SUB_VIEW"/>, -1 for currently-active view</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: zero-based tab index, i.e., use 0 for first tab, 1 for second tab, etc.; use -1 for active tab</para>
+        /// </summary>
+        /// <returns>the tab color id value</returns>
+        /// <remarks>
+        /// <example>
+        /// The return value is one of:
+        /// <code>
+        ///     -1 (no color)
+        ///      0 (yellow)
+        ///      1 (green)
+        ///      2 (blue)
+        ///      3 (orange)
+        ///      4 (pink)
+        /// </code>
+        /// </example>
+        /// <example>
+        /// There is no symmetric plugin command for setting the tab color.
+        /// Plugins can use <see cref="NPPM_MENUCOMMAND"/> to set active tab's color
+        /// with the desired tab color using these menu-command ids:
+        /// <code>
+        ///     44110 (no color)
+        ///     44111 (yellow)
+        ///     44112 (green)
+        ///     44113 (blue)
+        ///     44114 (orange)
+        ///     44115 (pink)
+        /// </code>
+        /// </example>
+        /// <para>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9244cd09430c82ecff805ea862c9133d5cb56ded">8.6.8</a>
+        /// </para>
+        /// </remarks>
+        NPPM_GETTABCOLORID = NPPMSG + 114,
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>
