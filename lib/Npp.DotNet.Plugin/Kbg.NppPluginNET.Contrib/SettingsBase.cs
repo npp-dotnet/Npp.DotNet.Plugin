@@ -182,10 +182,11 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary> Opens the config file directly in Notepad++ </summary>
-        public void OpenFile()
+        public void OpenFile(string filename = null)
         {
-            if (!File.Exists(_iniFilePath)) SaveToIniFile();
-            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DOOPEN, 0U, _iniFilePath);
+            var path = filename ?? _iniFilePath;
+            if (!File.Exists(path)) SaveToIniFile(path);
+            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DOOPEN, 0U, path);
         }
     }
 }

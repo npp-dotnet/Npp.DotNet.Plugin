@@ -43,6 +43,8 @@ namespace Npp.DotNet.Plugin
 
         public static readonly bool NppVersionAtLeast8 = NppVersion.Item1 >= 8;
 
+        public static string ConfigDirectory => Notepad.GetConfigDirectory();
+
         public static string AssemblyVersionString
         {
             get

@@ -31,6 +31,7 @@ namespace Npp.DotNet.Plugin.Demo
         {
             Instance = new Main();
             PluginData.PluginNamePtr = Marshal.StringToHGlobalUni(PluginName);
+            Config = new PluginOptions();
         }
         #endregion
 
@@ -40,6 +41,7 @@ namespace Npp.DotNet.Plugin.Demo
         {
             var sKey = new ShortcutKey(TRUE, FALSE, TRUE, 123); // Ctrl + Shift + F12
             Utils.SetCommand("Say \"&Hello\"", HelloNpp, sKey);
+            Utils.SetCommand("Plugin &settings", OpenConfigFile);
             Utils.MakeSeparator();
             Utils.SetCommand("&About", DisplayInfo);
         }
@@ -54,11 +56,17 @@ namespace Npp.DotNet.Plugin.Demo
                 {
                     case NppMsg.NPPN_READY:
                         // do some late-phase initialization
+                        Config?.Load();
                         break;
                     case NppMsg.NPPN_TBMODIFICATION:
                         // create your toolbar icon(s)
                         break;
+                    case NppMsg.NPPN_FILESAVED:
+                        if (string.Compare(Config.FilePath, NppUtils.GetCurrentPath(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                            Config?.Load();
+                        break;
                     case NppMsg.NPPN_SHUTDOWN:
+                        Config?.Save();
                         // clean up resources
                         PluginData.PluginNamePtr = IntPtr.Zero;
                         break;
@@ -116,11 +124,17 @@ namespace Npp.DotNet.Plugin.Demo
                     (uint)(MsgBox.ICONQUESTION | MsgBox.OK)
                 );
         }
+
+        /// <summary>
+        /// Open the plugin's INI file in Notepad++.
+        /// </summary>
+        static void OpenConfigFile() => Config?.Open();
         #endregion
 
         /// <summary><see cref="Main"/> should be a singleton class</summary>
         private Main() { }
         private static readonly Main Instance;
+        private static readonly PluginOptions Config;
         private static readonly string PluginName = ".NET Demo Plugin\0";
     }
 }
