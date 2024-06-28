@@ -1,8 +1,8 @@
 ﻿/*
  * SPDX-FileCopyrightText: 2024 Mark Johnston Olson <https://github.com/molsonkiko>
  *                         2017-2020 Joakim Wennergren <joakim.wennergren@neovici.se>
- *
- * SPDX-License-Identifier: Apache-2.0 OR LicenseRef-CsvQuery
+ *                         2020-2024 Bas de Reuver ("BdR76") <bdr1976@gmail.com>
+ * SPDX-License-Identifier: Apache-2.0 OR LicenseRef-CsvQuery OR GPL-3.0-or-later
  */
 
 using System;
@@ -17,8 +17,12 @@ namespace Npp.DotNet.Plugin
 {
     /// <summary>
     /// Utilities for storing, viewing, and updating the settings of the plugin.<br/>
-    /// Extracted from <a href="https://github.com/jokedst/CsvQuery/blob/master/CsvQuery/PluginInfrastructure/SettingsBase.cs">CsvQuery/</a>.
+    /// Extracted from <a href="https://github.com/BdR76/CSVLint/blob/master/CSVLintNppPlugin/PluginInfrastructure/SettingsBase.cs">CSVLint</a>.
     /// </summary>
+#if NET7_0_OR_GREATER
+    // https://learn.microsoft.com/dotnet/core/deploying/trimming/fixing-warnings#functionality-with-requirements-on-its-input
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicProperties)]
+#endif
     public class SettingsBase
     {
         protected readonly INotepadPPGateway _npp;
@@ -65,24 +69,38 @@ namespace Npp.DotNet.Plugin
                 .Distinct()
                 .ToDictionary(section => section, section => GetKeys(filename, section));
 
-            //var loaded = GetKeys(filename, "General");
-            foreach (var propertyInfo in GetType().GetProperties())
+            foreach (var propertyInfo in GetType().GetProperties().Where(x => x.CanWrite))
             {
                 var category = ((CategoryAttribute)propertyInfo.GetCustomAttributes(typeof(CategoryAttribute), false).FirstOrDefault())?.Category ?? "General";
                 var name = propertyInfo.Name;
                 if (loaded.TryGetValue(category, out Dictionary<string, string> value) && value.TryGetValue(name, out string rawString) && !string.IsNullOrEmpty(rawString))
                 {
-                    if (bool.TryParse(rawString, out bool boolVal))
+                    try
                     {
-                        propertyInfo.SetValue(this, boolVal, null);
+                        if (propertyInfo.PropertyType.IsEnum)
+                            propertyInfo.SetValue(this, ParseEnumProperty(propertyInfo.PropertyType, rawString), null);
+                        else if (int.TryParse(rawString, out int intVal))
+                        {
+                            // Parse 0 as false, !0 as true
+                            if (propertyInfo.PropertyType == typeof(bool))
+                                propertyInfo.SetValue(this, intVal != 0, null);
+                            else
+                                propertyInfo.SetValue(this, intVal, null);
+                        }
+                        else if (double.TryParse(rawString, out double dblVal))
+                            propertyInfo.SetValue(this, dblVal, null);
+                        else if (bool.TryParse(rawString, out bool boolVal))
+                            propertyInfo.SetValue(this, boolVal, null);
+                        else
+                            propertyInfo.SetValue(this, rawString, null);
                     }
-                    else if (int.TryParse(rawString, out int intVal))
+                    catch (Exception e)
                     {
-                        propertyInfo.SetValue(this, boolVal, null);
-                    }
-                    else
-                    {
-                        propertyInfo.SetValue(this, rawString, null);
+                        _ = Win32.MsgBoxDialog(
+                                IntPtr.Zero,
+                                $"Setting property {propertyInfo.Name}=\"{rawString}\" failed with message:\r\n\r\n{e.Message}\0",
+                                $"{e.GetType().Name}\0",
+                                (uint)Win32.MsgBox.ICONERROR);
                     }
                 }
             }
@@ -107,7 +125,7 @@ namespace Npp.DotNet.Plugin
                     .GroupBy(x => ((CategoryAttribute)x.GetCustomAttributes(typeof(CategoryAttribute), false).FirstOrDefault())?.Category ?? "General"))
                 {
                     fp.WriteLine(Environment.NewLine + "[{0}]", section.Key);
-                    foreach (var propertyInfo in section.OrderBy(x => x.Name))
+                    foreach (var propertyInfo in section.Where(x => x.CanWrite).OrderBy(x => x.Name))
                     {
                         if (propertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault() is DescriptionAttribute description)
                             fp.WriteLine("; " + description.Description.Replace(Environment.NewLine, Environment.NewLine + "; "));
@@ -115,6 +133,36 @@ namespace Npp.DotNet.Plugin
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Parses a named enum value, ignoring case, or the underlying numeric value.
+        /// </summary>
+        /// <param name="TEnum">Some enum type.</param>
+        /// <param name="propertyStr">A name defined by <paramref name="TEnum"/>, or a number.</param>
+        /// <returns>
+        /// For example, if <paramref name="TEnum"/> is <see cref="Win32.MsgBox"/>, the result is <see cref="Win32.MsgBox.OK"/> when
+        /// <paramref name="propertyStr"/> is <c>"Ok"</c> or <c>"0"</c>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if <paramref name="propertyStr"/> is not a value of <paramref name="TEnum"/>.
+        /// </exception>
+        private static object ParseEnumProperty(Type TEnum, string propertyStr)
+        {
+            string valueStr =
+#if NETCOREAPP
+                Enum.TryParse(TEnum, propertyStr, true, out object _)
+                ? propertyStr
+                : uint.TryParse(propertyStr, out uint intVal) && Enum.TryParse(TEnum, $"{intVal}", false, out _)
+#else // .NET Framework
+                (Enum.GetNames(TEnum)?.Any(n => string.Compare(n, propertyStr, StringComparison.OrdinalIgnoreCase) == 0)).GetValueOrDefault(false)
+                ? propertyStr
+                : uint.TryParse(propertyStr, out uint intVal)
+#endif
+                    ? $"{intVal}"
+                    : throw new ArgumentException($"Invalid value \"{propertyStr}\" for enum {TEnum.FullName}");
+
+            return Enum.Parse(TEnum, valueStr, true);
         }
 
         /// <summary>
