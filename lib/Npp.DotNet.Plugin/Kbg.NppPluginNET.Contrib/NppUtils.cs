@@ -97,7 +97,7 @@ namespace Npp.DotNet.Plugin
             }
 
             StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)msg, 0, path);
+            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)msg, (uint)path.Capacity, path);
 
             return path.ToString();
         }

@@ -77,9 +77,7 @@ namespace Npp.DotNet.Plugin
 		/// </summary>
 		public string GetCurrentFilePath()
 		{
-			var path = new StringBuilder(2000);
-			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLCURRENTPATH, UnusedW, path);
-			return path.ToString();
+			return NppUtils.GetCurrentPath(NppUtils.PathType.FULL_CURRENT_PATH);
 		}
 
 		/// <summary>
@@ -98,7 +96,7 @@ namespace Npp.DotNet.Plugin
 				+ 1;
 			var res = new StringBuilder(len);
 			_ = Win32.SendMessage(
-				PluginData.NppData.NppHandle, (uint)message, (uint)len, res.ToString());
+				PluginData.NppData.NppHandle, (uint)message, (uint)res.Capacity, res);
 			return res.ToString();
 		}
 
@@ -126,7 +124,8 @@ namespace Npp.DotNet.Plugin
 		/// </summary>
 		public string GetFilePath(UIntPtr bufferId)
 		{
-			var path = new StringBuilder(2000);
+			int len = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (uint)bufferId).ToInt32() + 1;
+			var path = new StringBuilder(len);
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufferId, path);
 			return path.ToString();
 		}
@@ -152,9 +151,7 @@ namespace Npp.DotNet.Plugin
 		/// </summary>
 		public string GetConfigDirectory()
 		{
-			var sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-			return sbIniFilePath.ToString();
+			return GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 		}
 
 		/// <returns>
