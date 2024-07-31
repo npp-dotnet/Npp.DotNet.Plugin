@@ -8,7 +8,7 @@ updates:
       - "/examples/minimal"
       - "/test/Memory"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       dev-dependencies:
         patterns:
