@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: Public Domain
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+SPDX-PackageName = "Npp.DotNet.Plugin"
+SPDX-PackageSupplier = "Robert Di Pardo <https://github.com/rdipardo>"
+SPDX-PackageDownloadLocation = "https://github.com/npp-dotnet/npp.dotnet.plugin.git"
+
+[[annotations]]
+path = ["**.json", "doc/**", "lib/**.png", "**/CODEOWNERS", "COPYRIGHT", "README**", "NOTICE**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Public Domain"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["**.pubxml", "**.sln", "**.props", "**.targets", "**.snk", "lib/**.csproj", "examples/**/**.csproj", "examples/**/**.fsproj", "examples/**/**.vbproj", "test/**/**.csproj"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Robert Di Pardo"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["lib/**/Winforms/Classes/**.resx", "lib/**/Winforms/Classes/**.Designer.cs"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Mark Johnston Olson"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["examples/gui/Properties/**", "examples/gui/Forms/**.resx", "examples/gui/Forms/**.Designer.cs"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016 Kasper B. Graversen, 2023 Mark Johnston Olson, 2024 Robert Di Pardo"
+SPDX-License-Identifier = "Apache-2.0"
