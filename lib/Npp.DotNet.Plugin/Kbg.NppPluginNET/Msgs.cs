@@ -1136,6 +1136,17 @@ namespace Npp.DotNet.Plugin
         /// </para>
         /// </remarks>
         NPPM_GETTABCOLORID = NPPMSG + 114,
+        /// <summary>
+        /// int NPPM_SETUNTITLEDNAME(BufferID id, const TCHAR* newName)<br/>
+        /// Rename the tab name for an untitled tab.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: id - BufferID of the tab. -1 for currently active tab</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: newName - the desired new name of the tab</para>
+        /// </summary>
+        /// <returns>TRUE upon success; FALSE upon failure</returns>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/b3daf0a98220ffc6e206133aa645d5a2d1d63a4f">8.6.9</a>
+        /// </remarks>
+        NPPM_SETUNTITLEDNAME = NPPMSG + 115,
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>
