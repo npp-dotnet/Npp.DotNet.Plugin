@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)../../../lib/Npp.DotNet.Plugin.csproj" />
+    <ProjectReference Include="../../../lib/Npp.DotNet.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
