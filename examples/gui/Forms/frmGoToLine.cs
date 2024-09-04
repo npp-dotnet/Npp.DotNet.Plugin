@@ -7,6 +7,7 @@
 
 using Npp.DotNet.Plugin;
 using Npp.DotNet.Plugin.Winforms.Classes;
+using static Npp.DotNet.Plugin.Win32;
 
 namespace Kbg.Demo.Namespace
 {
@@ -18,6 +19,36 @@ namespace Kbg.Demo.Namespace
         {
             this.editor = editor;
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Intercepts the default WndProc to prevent an infinite redraw loop when the form undocks.
+        /// </summary>
+        /// <param name="wmNotifyMsg">A window notification message structure.</param>
+        /// <remarks>See <see href="https://sourceforge.net/p/notepad-plus/discussion/482781/thread/ab626469/#4458"/></remarks>
+        protected override void WndProc(ref Message wmNotifyMsg)
+        {
+            switch (wmNotifyMsg.Msg)
+            {
+                case WM_NOTIFY:
+                    TagNMHDR nmdr = (TagNMHDR)wmNotifyMsg.GetLParam(typeof(TagNMHDR))!;
+
+                    if (nmdr.hwndFrom == PluginData.NppData.NppHandle)
+                    {
+                        switch ((DockMgrMsg)(nmdr.code & 0xFFFFU))
+                        {
+                            case DockMgrMsg.DMN_DOCK:
+                                break;
+                            case DockMgrMsg.DMN_FLOAT:
+                                RemoveControlParent();
+                                break;
+                            case DockMgrMsg.DMN_CLOSE:
+                                break;
+                        }
+                    }
+                    break;
+            }
+            base.WndProc(ref wmNotifyMsg);
         }
 
         private void button1_Click(object sender, EventArgs e)

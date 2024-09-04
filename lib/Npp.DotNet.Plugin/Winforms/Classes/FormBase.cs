@@ -30,8 +30,8 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// </summary>
         private bool IsLoaded { get; set; }
 
-        private static WindowLongGetter _wndLongGetter = GetWindowLongPtr;
-        private static WindowLongSetter _wndLongSetter = SetWindowLongPtr;
+        private static WindowLongGetter WndLongGetter { get; set; } = GetWindowLongPtr;
+        private static WindowLongSetter WndLongSetter { get; set; } = SetWindowLongPtr;
 
         /// <summary>
         /// superclass of all forms in the application.<br></br>
@@ -45,13 +45,10 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             IsModal = isModal;
             IsDocking = isDocking;
             Callbacks.RegisterFormIfModeless(this, isModal);
-            if (IsDocking)
+            if (!Environment.Is64BitProcess)
             {
-                if (!Environment.Is64BitProcess) // we are 32-bit
-                {
-                    _wndLongGetter = GetWindowLong;
-                    _wndLongSetter = SetWindowLong;
-                }
+                WndLongGetter = GetWindowLong;
+                WndLongSetter = SetWindowLong;
             }
         }
 
@@ -111,53 +108,38 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             return base.ProcessDialogKey(keyData);
         }
 
-        /// <summary>
-        /// this fixes a bug where Notepad++ can hang in the following situation:<br></br>
-        /// 1. you are in a docking form<br></br>
-        /// 2. you click a button that is a child of another control (e.g., a GroupBox)<br></br>
-        /// 3. that button would cause a new form to appear<br></br>
-        /// see https://github.com/BdR76/CSVLint/pull/88/commits
-        /// </summary>
-        protected override void WndProc(ref Message m)
+        protected void AddControlParent()
         {
-            if (IsDocking)
+            if (this.HasChildren)
             {
-                switch (m.Msg)
+                long extAttrs = (long)WndLongGetter(this.Handle, GWL_EXSTYLE);
+                if (WS_EX_CONTROLPARENT != (extAttrs & WS_EX_CONTROLPARENT))
                 {
-                    case WM_NOTIFY:
-                        var nmdr = (TagNMHDR)m.GetLParam(typeof(TagNMHDR));
-
-                        if (nmdr.hwndFrom == PluginData.NppData.NppHandle)
-                        {
-                            switch ((DockMgrMsg)(nmdr.code & 0xFFFFU))
-                            {
-                                case DockMgrMsg.DMN_DOCK:   // we are being docked
-                                    break;
-                                case DockMgrMsg.DMN_FLOAT:  // we are being _un_docked
-                                    RemoveControlParent(this);
-                                    break;
-                                case DockMgrMsg.DMN_CLOSE:  // we are being closed
-                                    break;
-                            }
-                        }
-                        break;
+                    SetControlParent(this, extAttrs | WS_EX_CONTROLPARENT);
                 }
             }
-            base.WndProc(ref m);
         }
 
-        private void RemoveControlParent(Control parent)
+        protected void RemoveControlParent()
+        {
+            if (this.HasChildren)
+            {
+                long extAttrs = (long)WndLongGetter(this.Handle, GWL_EXSTYLE);
+                if (WS_EX_CONTROLPARENT == (extAttrs & WS_EX_CONTROLPARENT))
+                {
+                    SetControlParent(this, extAttrs & ~WS_EX_CONTROLPARENT);
+                }
+            }
+        }
+
+        private static void SetControlParent(Control parent, long wsExMask)
         {
             if (parent.HasChildren)
             {
-                long extAttrs = (long)_wndLongGetter(parent.Handle, GWL_EXSTYLE);
-                if (WS_EX_CONTROLPARENT == (extAttrs & WS_EX_CONTROLPARENT))
-                {
-                    _wndLongSetter(parent.Handle, GWL_EXSTYLE, new IntPtr(extAttrs & ~WS_EX_CONTROLPARENT));
-                }
+                WndLongSetter(parent.Handle, GWL_EXSTYLE, new IntPtr(wsExMask));
                 foreach (Control c in parent.Controls)
                 {
-                    RemoveControlParent(c);
+                    SetControlParent(c, wsExMask);
                 }
             }
         }

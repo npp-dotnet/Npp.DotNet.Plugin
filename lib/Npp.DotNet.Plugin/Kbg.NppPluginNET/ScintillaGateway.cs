@@ -1,8 +1,7 @@
 ﻿/*
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>
- *                         2023 Bas de Reuver ("BdR76") <bdr1976@gmail.com>
  *
- * SPDX-License-Identifier: Apache-2.0 OR GPL-3.0-or-later
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 using System;
@@ -828,57 +827,6 @@ namespace Npp.DotNet.Plugin
         public void StyleSetCharacterSet(int style, CharacterSet characterSet)
         {
             SendMessage(_scintilla, SciMsg.SCI_STYLESETCHARACTERSET, (UIntPtr)style, (IntPtr)characterSet);
-        }
-
-        /// <summary>
-        /// Set the colour of an element. Translucency (alpha) may or may not be significant
-        /// and this may depend on the platform. The alpha byte should commonly be 0xff for opaque.
-        /// (Scintilla feature 2753)
-        /// </summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        /// <param name="colourElement">A translucent colour.</param>
-        public void SetElementColour(uint element, ColourAlpha colourElement)
-        {
-            Win32.SendMessage(_scintilla, SciMsg.SCI_SETELEMENTCOLOUR, element, colourElement.Value);
-        }
-
-        /// <summary>Get the colour of an element. (Scintilla feature 2754)</summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        public ColourAlpha GetElementColour(uint element)
-        {
-            return new ColourAlpha((int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTCOLOUR, element, Unused));
-        }
-
-        /// <summary>Use the default or platform-defined colour for an element. (Scintilla feature 2755)</summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        public void ResetElementColour(uint element)
-        {
-            Win32.SendMessage(_scintilla, SciMsg.SCI_RESETELEMENTCOLOUR, element, Unused);
-        }
-
-        /// <summary>
-        /// Get whether an element has been set by SetElementColour.
-        /// When false, a platform-defined or default colour is used.
-        /// (Scintilla feature 2756)
-        /// </summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        public bool GetElementIsSet(uint element)
-        {
-            return 1 == (int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTISSET, element, Unused);
-        }
-
-        /// <summary>Get whether an element supports translucency. (Scintilla feature 2757)</summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        public bool GetElementAllowsTranslucent(uint element)
-        {
-            return 1 == (int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTALLOWSTRANSLUCENT, element, Unused);
-        }
-
-        /// <summary>Get the colour of an element. (Scintilla feature 2758)</summary>
-        /// <param name="element"><c>SC_ELEMENT_*</c> code. See <see href="https://www.scintilla.org/ScintillaDoc.html#ElementColours"/></param>
-        public ColourAlpha GetElementBaseColour(uint element)
-        {
-            return new ColourAlpha((int)Win32.SendMessage(_scintilla, SciMsg.SCI_GETELEMENTBASECOLOUR, element, Unused));
         }
 
         /// <summary>Set a style to be a hotspot or not. (Scintilla feature 2409)</summary>

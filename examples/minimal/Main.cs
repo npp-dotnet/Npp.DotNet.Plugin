@@ -128,13 +128,13 @@ namespace Npp.DotNet.Plugin.Demo
         /// <summary>
         /// Open the plugin's INI file in Notepad++.
         /// </summary>
-        static void OpenConfigFile() => Config?.Open();
+        static void OpenConfigFile() => Config?.OpenFile();
         #endregion
 
         /// <summary><see cref="Main"/> should be a singleton class</summary>
         private Main() { }
         private static readonly Main Instance;
         private static readonly PluginOptions Config;
-        private static readonly string PluginName = ".NET Demo Plugin\0";
+        public static readonly string PluginName = ".NET Demo Plugin\0";
     }
 }

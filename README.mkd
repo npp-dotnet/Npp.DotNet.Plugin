@@ -89,9 +89,6 @@ For the experimental demo, see [examples/gui/README.mkd].
 
 Except where noted, the source code of Npp.DotNet.Plugin is distributed under the terms of the [Apache License, Version 2.0][apache-2.0].
 
-The [original source code][csv] of the [Npp.DotNet.Plugin.SettingsBase] class and the [Npp.DotNet.Plugin.Winforms.SettingsDialog] class is
-distributed under [additional licensing terms][csv-license].
-
 This README and all other documentation, including images, are distributed under a [CC0 v1.0 Public Domain Dedication][CC0].
 
 
@@ -111,8 +108,6 @@ This README and all other documentation, including images, are distributed under
 <!-- license -->
 [apache-2.0]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/Apache-2.0.txt
 [CC0]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/CC0-1.0.txt
-[csv]: https://github.com/jokedst/CsvQuery/blob/master/CsvQuery/PluginInfrastructure/SettingsBase.cs
-[csv-license]: LICENSES/LicenseRef-CsvQuery.md
 
 <!-- source refs -->
 [Npp.DotNet.Plugin.SettingsBase]: lib/Npp.DotNet.Plugin/Kbg.NppPluginNET.Contrib/SettingsBase.cs

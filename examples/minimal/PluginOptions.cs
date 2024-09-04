@@ -7,14 +7,14 @@ using System.ComponentModel;
 
 namespace Npp.DotNet.Plugin.Demo
 {
-    class PluginOptions : SettingsBase
+    class PluginOptions : DefaultSettings
     {
         #region "Examples of possible plugin options"
         [Description("A sample text property (en-US)"), Category("Strings")]
         public string DefaultMessage { get; set; } = "Hello, World!";
 
         [Description("A sample text property (ja-JP)"), Category("Strings")]
-        public string LocalizedMessage { get; set; } = "こにちは、皆さん‼";
+        public string LocalizedMessage { get; set; } = "こんにちは、皆さん‼";
 
         [Description("A sample enum property"), Category("Enum")]
         public ConsoleColor Color { get; set; } = ConsoleColor.Green;
@@ -33,7 +33,7 @@ namespace Npp.DotNet.Plugin.Demo
         {
             get
             {
-                var folderName = _pluginName.Trim(new char[] { '\0', ' ' });
+                var folderName = Main.PluginName.Trim(new char[] { '\0', ' ' });
                 var configDir = new DirectoryInfo(Path.Combine(NppUtils.ConfigDirectory, folderName));
                 if (!configDir.Exists)
                     configDir = Directory.CreateDirectory(Path.Combine(NppUtils.ConfigDirectory, folderName));
@@ -41,8 +41,8 @@ namespace Npp.DotNet.Plugin.Demo
             }
         }
 
-        public void Load() => ReadFromIniFile(FilePath);
-        public void Save() => SaveToIniFile(FilePath);
-        public void Open() => OpenFile(FilePath);
+        public void Load() => base.Load(FilePath);
+        public void Save() => base.Save(FilePath);
+        public override void OpenFile() => NppUtils.Notepad.OpenFile(FilePath);
     }
 }

@@ -9,7 +9,7 @@ A .NET (Core) library for developing Notepad++ plugins
 
 ### License
 
-    (c) 2016-2024 Kasper B. Graversen, Mark Johnston Olson, Joakim Wennergren, Bas de Reuver, Robert Di Pardo
+    (c) 2016-2024 Kasper B. Graversen, Mark Johnston Olson, Robert Di Pardo
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ A .NET (Core) library for developing Notepad++ plugins
     limitations under the License.
 
 
-See the [COPYRIGHT] and [NOTICE] for complete details regarding source code attribution and permitted usage.
+See the [COPYING] and [NOTICE] files for complete details regarding source code attribution and permitted usage.
 
 
-[COPYRIGHT]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/COPYRIGHT
+[COPYING]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/COPYING
 [NOTICE]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/NOTICE.txt
 [Current Version]: https://img.shields.io/nuget/vpre/Npp.DotNet.Plugin?color=blueviolet&logo=nuget
 [nuget-org]: https://www.nuget.org/packages/Npp.DotNet.Plugin

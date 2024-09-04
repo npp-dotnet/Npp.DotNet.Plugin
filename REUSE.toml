@@ -7,7 +7,12 @@ SPDX-PackageSupplier = "Robert Di Pardo <https://github.com/rdipardo>"
 SPDX-PackageDownloadLocation = "https://github.com/npp-dotnet/npp.dotnet.plugin.git"
 
 [[annotations]]
-path = ["**.json", "doc/**", "lib/**.png", "**/CODEOWNERS", "COPYRIGHT", "README**", "NOTICE**"]
+path = ["COPYING"]
+SPDX-FileCopyrightText = "2004 Apache Software Foundation"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["**.json", "doc/**", "lib/**.png", "**/CODEOWNERS", "README**", "NOTICE**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Public Domain"
 SPDX-License-Identifier = "CC0-1.0"
