@@ -35,7 +35,7 @@ namespace Npp.DotNet.Plugin
         L_MMIXAL, L_NIM, L_NNCRONTAB, L_OSCRIPT, L_REBOL,
         L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VISUALPROLOG,
         L_TYPESCRIPT, L_JSON5, L_MSSQL, L_GDSCRIPT, L_HOLLYWOOD,
-        L_GOLANG, L_RAKU,
+        L_GOLANG, L_RAKU, L_TOML,
         // Don't use L_JS, use L_JAVASCRIPT instead
         // The end of enumerated language type, so it should be always at the end
         L_EXTERNAL
@@ -748,7 +748,7 @@ namespace Npp.DotNet.Plugin
         /// int NPPM_GETLANGUAGENAME(LangType langType, TCHAR* langName)<br/>
         /// Get programming language name from the given language type (<see cref="LangType"/> enum).
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: langType is the number of <see cref="LangType"/></para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: langName is the buffer to recieve the language name string</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: langName is the buffer to receive the language name string</para>
         /// You should call this function 2 times - the first time you pass langName as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then send <see cref="NPPM_GETLANGUAGENAME"/> the 2nd time
         /// by passing allocated buffer as argument langName
@@ -759,7 +759,7 @@ namespace Npp.DotNet.Plugin
         /// INT NPPM_GETLANGUAGEDESC(int langType, TCHAR *langDesc)<br/>
         /// Get programming language short description from the given language type (<see cref="LangType"/> enum).
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: langType is the number of <see cref="LangType"/></para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: langDesc is the buffer to recieve the language description string</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: langDesc is the buffer to receive the language description string</para>
         ///
         /// You should call this function 2 times - the first time you pass langDesc as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then send <see cref="NPPM_GETLANGUAGENAME"/> the 2nd time
@@ -927,7 +927,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_GETEXTERNALLEXERAUTOINDENTMODE(const TCHAR* languageName, ExternalLexerAutoIndentMode* autoIndentMode)<br/>
         /// Get ExternalLexerAutoIndentMode for an installed external programming language.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: languageName is external language name to search</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: autoIndentMode could recieve one of three following values</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: autoIndentMode could receive one of three following values</para>
         ///              - Standard (0) means Notepad++ will keep the same TAB indentation between lines;
         ///              - C_Like (1) means Notepad++ will perform a C-Language style indentation for the selected external language;
         ///              - Custom (2) means a Plugin will be controlling auto-indentation for the current language.
@@ -938,7 +938,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_SETEXTERNALLEXERAUTOINDENTMODE(const TCHAR* languageName, ExternalLexerAutoIndentMode autoIndentMode)<br/>
         /// Set ExternalLexerAutoIndentMode for an installed external programming language.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: languageName is external language name to set</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: autoIndentMode could recieve one of three following values</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: autoIndentMode could receive one of three following values</para>
         ///             - Standard (0) means Notepad++ will keep the same TAB indentation between lines;
         ///             - C_Like (1) means Notepad++ will perform a C-Language style indentation for the selected external language;
         ///             - Custom (2) means a Plugin will be controlling auto-indentation for the current language.
@@ -1017,7 +1017,7 @@ namespace Npp.DotNet.Plugin
         /// Users should call it with commandLineStr as NULL to get the required number of TCHAR (not including the terminating nul character),
         /// allocate commandLineStr buffer with the <returns>value + 1, then call it again to get the current command line string.</returns>
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is "commandLineStr" buffer length</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: commandLineStr recieves all copied command line string</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: commandLineStr receives all copied command line string</para>
         /// <returns>the number of TCHAR copied/to copy</returns>
         /// since 8.4.2
         /// https://github.com/notepad-plus-plus/notepad-plus-plus/commit/0f8d5724afb0a540e8b4024252945ab60bc88c71
@@ -1147,6 +1147,19 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/b3daf0a98220ffc6e206133aa645d5a2d1d63a4f">8.6.9</a>
         /// </remarks>
         NPPM_SETUNTITLEDNAME = NPPMSG + 115,
+        /// <summary>
+        /// int NPPM_GETNATIVELANGFILENAME(size_t strLen, char* nativeLangFileName)<br/>
+        /// Get the Current native language file name string. Use it after getting <see cref="NPPN_READY"/> notification to find out which native language is used.
+        /// Users should call it with <c>nativeLangFileName</c> as NULL to get the required number of char (not including the terminating nul character),
+        /// allocate language file name string buffer with the return value + 1, then call it again to get the current native language file name string.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is &quot;language file name string&quot; buffer length</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: language file name string receives all copied native language file name string</para>
+        /// </summary>
+        /// <returns>The number of chars copied/to copy</returns>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/446cc980e871d04885f13055bb56acee820636c8">8.7</a>
+        /// </remarks>
+        NPPM_GETNATIVELANGFILENAME = NPPMSG + 116,
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>
@@ -1430,11 +1443,11 @@ namespace Npp.DotNet.Plugin
         NPPN_EXTERNALLEXERBUFFER = NPPN_FIRST + 29,
 
         /// <summary>
-        /// To notify plugins that the current document is just modified by Replace All action.<br></br>
-        /// For solving the performance issue (from v8.6.4), Notepad++ doesn't trigger SCN_MODIFIED during Replace All action anymore.<br></br>
-        /// As a result, the plugins which monitor SCN_MODIFIED should also monitor NPPN_GLOBALMODIFIED.<br></br>
-        /// scnNotification->nmhdr.code = NPPN_GLOBALMODIFIED;<br></br>
-        /// scnNotification->nmhdr.hwndFrom = BufferID;<br></br>
+        /// To notify plugins that the current document is just modified by Replace All action.<br/>
+        /// For solving the performance issue (from v8.6.4), Notepad++ doesn't trigger SCN_MODIFIED during Replace All action anymore.<br/>
+        /// As a result, the plugins which monitor SCN_MODIFIED should also monitor NPPN_GLOBALMODIFIED.<br/>
+        /// scnNotification->nmhdr.code = NPPN_GLOBALMODIFIED;<br/>
+        /// scnNotification->nmhdr.hwndFrom = BufferID;<br/>
         /// scnNotification->nmhdr.idFrom = 0; // preserved for the future use, must be zero
         /// </summary>
         /// <remarks>
@@ -1442,6 +1455,19 @@ namespace Npp.DotNet.Plugin
         /// <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/49e6957d486c360e05ba85ceb1c179a891831779">v8.6.5</a></strong>
         /// </remarks>
         NPPN_GLOBALMODIFIED = NPPN_FIRST + 30,
+
+        /// <summary>
+        /// To notify plugins that the current native language is just changed to another one.<br/>
+        /// Use <see cref="NPPM_GETNATIVELANGFILENAME"/> to get current native language file name.<br/>
+        /// Use <see cref="NPPM_GETMENUHANDLE"/>(NPPPLUGINMENU, 0) to get submenu "Plugins" handle (HMENU)<br/>
+        /// scnNotification->nmhdr.code = NPPN_NATIVELANGCHANGED;<br/>
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp;<br/>
+        /// scnNotification->nmhdr.idFrom = 0; // preserved for the future use, must be zero
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/446cc980e871d04885f13055bb56acee820636c8">8.7</a>
+        /// </remarks>
+        NPPN_NATIVELANGCHANGED = NPPN_FIRST + 31,
     }
 
     public enum StatusBarSection
