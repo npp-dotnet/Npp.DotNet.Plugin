@@ -6,6 +6,7 @@
  */
 
 using Npp.DotNet.Plugin;
+using Npp.DotNet.Plugin.Winforms;
 using Npp.DotNet.Plugin.Winforms.Classes;
 using static Npp.DotNet.Plugin.Win32;
 

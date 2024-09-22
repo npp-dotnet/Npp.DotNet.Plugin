@@ -71,7 +71,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// Called by the unmanaged <c>getName</c> Notepad++ API function.<br/>
         /// </summary>
-        /// <returns>The allocated string pointer held by <see cref="PluginData.PszPluginName"/>.</returns>
+        /// <returns>The allocated string pointer held by <see cref="PluginData.PluginNamePtr"/>.</returns>
         /// <remarks>
         /// The return value must not be a <c>NULL</c> pointer, a.k.a <see cref="IntPtr.Zero"/>.<br/><br/>
         /// Deriving classes <b>should not </b> override this.

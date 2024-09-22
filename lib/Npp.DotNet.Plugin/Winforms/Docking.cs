@@ -7,7 +7,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Winforms
 {
     /// <summary>
     /// Defines for the Docking Manager.<br/>
@@ -30,6 +30,10 @@ namespace Npp.DotNet.Plugin
         /// Additional information are in use
         /// </summary>
         DWS_ADDINFO = 0x00000004,
+        /// <summary>
+        /// Use plugin's own dark mode
+        /// </summary>
+        DWS_USEOWNDARKMODE = 0x00000008,
         /// <summary>
         /// Combines all properties of <see cref="DWS_ICONTAB"/>, <see cref="DWS_ICONBAR"/> and <see cref="DWS_ADDINFO"/>
         /// </summary>
@@ -93,7 +97,10 @@ namespace Npp.DotNet.Plugin
         DMN_FIRST = 1050,
         DMN_CLOSE = (DMN_FIRST + 1),
         DMN_DOCK = (DMN_FIRST + 2),
-        DMN_FLOAT = (DMN_FIRST + 3)
+        DMN_FLOAT = (DMN_FIRST + 3),
+        DMN_SWITCHIN  = (DMN_FIRST + 4),
+        DMN_SWITCHOFF = (DMN_FIRST + 5),
+        DMN_FLOATDROPPED = (DMN_FIRST + 6)
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

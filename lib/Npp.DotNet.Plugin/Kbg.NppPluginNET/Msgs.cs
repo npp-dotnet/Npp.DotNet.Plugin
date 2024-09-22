@@ -301,9 +301,9 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_DMMREGASDCKDLG(0, tTbData* pData)<br/>
         /// Pass the necessary dockingData to Notepad++ in order to make your dialog dockable.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: pData is the pointer of tTbData. Please check the <see cref="NppTbData"/> structure</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: pData is the pointer of tTbData. Please check the <see cref="Winforms.NppTbData"/> structure</para>
         ///             Minimum information which needs to be filled out are hClient, pszName, dlgID, uMask and pszModuleName.
-        ///             Notice that <see cref="NppTbData.RcFloat"/> and <see cref="NppTbData.IPrevCont"/>  shouldn't be filled. They are used internally.
+        ///             Notice that <see cref="Winforms.NppTbData.RcFloat"/> and <see cref="Winforms.NppTbData.IPrevCont"/> shouldn't be filled. They are used internally.
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DMMREGASDCKDLG = NPPMSG + 33,
@@ -328,7 +328,7 @@ namespace Npp.DotNet.Plugin
         /// Reload the document which matches with the given filePathName2Reload.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: filePathName2Reload is the full file path of document to reload</para>
-        /// <returns>TRUE</returns> if reloading file succeeds, otherwise FALSE
+        /// <returns>TRUE if reloading file succeeds, otherwise FALSE</returns>
         /// </summary>
         NPPM_RELOADFILE = NPPMSG + 36,
         /// <summary>
@@ -344,7 +344,7 @@ namespace Npp.DotNet.Plugin
         /// Save current activated document.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
-        /// <returns>TRUE</returns> if file is saved, otherwise FALSE (the file doesn't need to be saved, or other reasons).
+        /// <returns>TRUE if file is saved, otherwise FALSE (the file doesn't need to be saved, or other reasons).</returns>
         /// </summary>
         NPPM_SAVECURRENTFILE = NPPMSG + 38,
         /// <summary>
@@ -888,7 +888,7 @@ namespace Npp.DotNet.Plugin
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: widthMode should be <see cref="LINENUMWIDTH_DYNAMIC"/> or <see cref="LINENUMWIDTH_CONSTANT"/></para>
         /// </summary>
-        /// <returns>TRUE</returns> if calling is successful, otherwise <returns>FALSE</returns>
+        /// <returns>TRUE if calling is successful, otherwise FALSE</returns>
         NPPM_SETLINENUMBERWIDTHMODE = NPPMSG + 99,
         /// <inheritdoc cref="NPPM_SETLINENUMBERWIDTHMODE"/>
         LINENUMWIDTH_DYNAMIC = 0,
@@ -950,7 +950,7 @@ namespace Npp.DotNet.Plugin
         /// Get the current use Auto-Indentation setting in Notepad++ Preferences.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
-        /// <returns>TRUE</returns> if Auto-Indentation is on, FALSE otherwise
+        /// <returns>TRUE if Auto-Indentation is on, FALSE otherwise</returns>
         /// </summary>
         NPPM_ISAUTOINDENTON = NPPMSG + 105,
         /// <summary>
@@ -970,10 +970,11 @@ namespace Npp.DotNet.Plugin
         /// Get Notepad++ Dark Mode status (ON or OFF).
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
-        /// <returns>TRUE</returns> if Dark Mode is enable, otherwise FALSE
-        /// since 8.4.1
-        /// https://github.com/notepad-plus-plus/notepad-plus-plus/commit/1eb5b10e41d7ab92b60aa32b28d4fe7739d15b53
+        /// <returns>TRUE if Dark Mode is enable, otherwise FALSE</returns>
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/1eb5b10e41d7ab92b60aa32b28d4fe7739d15b53">8.4.1</a>
+        /// </remarks>
         NPPM_ISDARKMODEENABLED = NPPMSG + 107,
         /// <summary>
         /// BOOL NPPM_GETDARKMODECOLORS (size_t cbSize, NppDarkMode::Colors* returnColors)<br/>
@@ -1019,9 +1020,10 @@ namespace Npp.DotNet.Plugin
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is "commandLineStr" buffer length</para>
         /// <para>lParam (<see cref="IntPtr"/>) [out]: commandLineStr receives all copied command line string</para>
         /// <returns>the number of TCHAR copied/to copy</returns>
-        /// since 8.4.2
-        /// https://github.com/notepad-plus-plus/notepad-plus-plus/commit/0f8d5724afb0a540e8b4024252945ab60bc88c71
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/0f8d5724afb0a540e8b4024252945ab60bc88c71">8.4.2</a>
+        /// </remarks>
         NPPM_GETCURRENTCMDLINE = NPPMSG + 109,
         /// <summary>
         /// void* NPPM_CREATELEXER(0, const TCHAR* lexer_name)<br/>
@@ -1029,9 +1031,10 @@ namespace Npp.DotNet.Plugin
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: lexer_name is the name of the lexer</para>
         /// <returns>the ILexer pointer</returns>
-        /// since 8.4.3
-        /// https://github.com/notepad-plus-plus/notepad-plus-plus/commit/f1ed4de78dbe8f5d85f4d199bae2970148cca8ed
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/f1ed4de78dbe8f5d85f4d199bae2970148cca8ed">8.4.3</a>
+        /// </remarks>
         NPPM_CREATELEXER = NPPMSG + 110,
         /// <summary>
         /// int NPPM_GETBOOKMARKID(0, 0)<br/>
@@ -1039,9 +1042,10 @@ namespace Npp.DotNet.Plugin
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
         /// <returns>bookmark ID</returns>
-        /// since 8.4.7
-        /// https://github.com/notepad-plus-plus/notepad-plus-plus/commit/4d5069280900ee249d358bc2b311bdb4b03f30a9
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/4d5069280900ee249d358bc2b311bdb4b03f30a9">8.4.7</a>
+        /// </remarks>
         NPPM_GETBOOKMARKID = NPPMSG + 111,
         /// <summary>
         /// ULONG NPPM_DARKMODESUBCLASSANDTHEME(ULONG dmFlags, HWND hwnd)<br/>

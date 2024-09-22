@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
+using Npp.DotNet.Plugin.Winforms;
 using static Npp.DotNet.Plugin.Win32;
 using Properties = Npp.DotNet.Plugin.Gui.Demo.Properties;
 
