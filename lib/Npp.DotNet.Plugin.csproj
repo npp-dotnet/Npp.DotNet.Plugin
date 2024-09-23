@@ -8,7 +8,7 @@
     <Description>AOT-ready port of the .NET Framework plugin template for Notepad++</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>brand.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/npp-dotnet</PackageProjectUrl>
+    <PackageProjectUrl>https://npp-dotnet.github.io/Npp.DotNet.Plugin</PackageProjectUrl>
     <RepositoryUrl>https://github.com/npp-dotnet/npp.dotnet.plugin</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

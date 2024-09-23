@@ -1,0 +1,54 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "lib",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "lib/api",
+      "properties": {
+        "TargetFramework": "net481",
+        "DefineConstants": "SCI_DISABLE_PROVISIONAL"
+      }
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "src": "lib",
+        "dest": "." ,
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "lib/*.{ico,png,svg}"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "statictoc",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appFaviconPath": "lib/brand.png",
+      "_appName": "Npp.DotNet.Plugin",
+      "_appTitle": "Npp.DotNet.Plugin",
+      "_enableSearch": true,
+      "_disableContribution": true,
+      "pdf": false
+    }
+  },
+  "disableGitFeatures": true
+}

@@ -189,6 +189,8 @@ DocProject/Help/html
 publish/
 
 # Publish Web Output
+**/api/
+_site/
 *.[Pp]ublish.xml
 *.azurePubxml
 # Note: Comment the next line if you want to checkin your web deploy settings,
