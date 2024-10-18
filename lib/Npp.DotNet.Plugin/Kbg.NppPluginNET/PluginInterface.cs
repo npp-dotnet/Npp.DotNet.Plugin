@@ -12,12 +12,6 @@ using System.Windows.Forms;
 namespace Npp.DotNet.Plugin
 {
     /// <summary>
-    /// Most of the types defined here were extracted from <see href="https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net"/>
-    /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
-    class NamespaceDoc { }
-
-    /// <summary>
     /// A container of static, globally visible data.
     /// </summary>
     public static class PluginData

@@ -9,11 +9,7 @@ using System.Windows.Forms;
 namespace Npp.DotNet.Plugin.Winforms
 {
     /// <summary>
-    /// various methods that every new form in this app should call.<br></br>
-    /// You may ask, "Wait, why do we have a static class with a bunch of methods everyone needs to call?"<br></br>
-    ///     "Shouldn't this be a subclass of Form, and have all the forms just subclass this?"<br></br>
-    /// To which I answer, NO!<br></br>
-    /// *I TRIED* having a superclass that all my forms inherited from, and the result was a total mess.
+    /// Various methods that every new form in this app should call.
     /// </summary>
     public static class Callbacks
     {

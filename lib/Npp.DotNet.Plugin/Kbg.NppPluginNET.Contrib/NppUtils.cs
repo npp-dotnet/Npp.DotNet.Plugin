@@ -15,7 +15,7 @@ using System.Text;
 namespace Npp.DotNet.Plugin
 {
     /// <summary>
-    /// contains connectors to Scintilla (editor) and Notepad++ (notepad)
+    /// Contains connectors to Scintilla (<see cref="NppUtils.Editor"/>) and Notepad++ (<see cref="NppUtils.Notepad"/>).
     /// </summary>
     public class NppUtils
     {

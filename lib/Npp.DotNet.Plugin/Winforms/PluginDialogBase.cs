@@ -14,14 +14,7 @@ using static Npp.DotNet.Plugin.Win32;
 namespace Npp.DotNet.Plugin.Winforms
 {
 	/// <summary>
-	/// Types and methods extracted from <see href="https://github.com/molsonkiko/NppCSharpPluginPack"/>.
-	/// </summary>
-	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	class NamespaceDoc { }
-
-	/// <summary>
-	/// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
-	/// incomplete. Please help fill in the blanks.
+	/// Extends <see cref="NotepadPPGateway"/> with methods to simplify working with forms.
 	/// </summary>
 	public class PluginDialogBase : NotepadPPGateway
 	{

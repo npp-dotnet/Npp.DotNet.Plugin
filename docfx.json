@@ -9,7 +9,7 @@
           ]
         }
       ],
-      "dest": "lib/api",
+      "dest": "docfx/api",
       "properties": {
         "TargetFramework": "net481",
         "DefineConstants": "SCI_DISABLE_PROVISIONAL"
@@ -22,13 +22,15 @@
         "files": [
           "**/*.{md,yml}"
         ],
-        "src": "lib",
+        "src": "docfx",
         "dest": "." ,
         "exclude": [
+          "extra/**",
           "_site/**"
         ]
       }
     ],
+    "overwrite": "docfx/extra/**",
     "resource": [
       {
         "files": [

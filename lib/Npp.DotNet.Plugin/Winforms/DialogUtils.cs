@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace Npp.DotNet.Plugin.Winforms
 {
     /// <summary>
-    /// Contains connectors to Scintilla (editor) and Notepad++ (notepad)
+    /// Extends <see cref="NppUtils"/> with a connector to the Notepad++ GUI (<see cref="DialogUtils.NotepadGUI"/>).
     /// </summary>
     public class DialogUtils : NppUtils
     {

@@ -32,8 +32,7 @@ namespace Npp.DotNet.Plugin
 	}
 
 	/// <summary>
-	/// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
-	/// incomplete. Please help fill in the blanks.
+	/// Helpers for sending messages defined in <a href="https://github.com/npp-dotnet/Npp.DotNet.Plugin/blob/main/lib/Npp.DotNet.Plugin/Kbg.NppPluginNET/Msgs.cs">Msgs.cs</a>.
 	/// </summary>
 	public class NotepadPPGateway : INotepadPPGateway
 	{

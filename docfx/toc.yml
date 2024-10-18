@@ -1,0 +1,5 @@
+- name: Home
+  href: https://github.com/npp-dotnet/Npp.DotNet.Plugin/tree/main/lib#readme
+
+- name: API
+  href: api/
