@@ -19,9 +19,11 @@ namespace Npp.DotNet.Plugin
 		void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon);
 		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
 		string GetNppPath();
+		string GetPluginsHomePath();
 		string GetPluginConfigPath();
 		string GetCurrentFilePath();
 		string GetFilePath(UIntPtr bufferId);
+		string GetNativeLanguage();
 		void SetCurrentLanguage(LangType language);
 		bool OpenFile(string path);
 		bool SaveCurrentFile();
@@ -80,28 +82,38 @@ namespace Npp.DotNet.Plugin
 		}
 
 		/// <summary>
-		/// This method incapsulates a common pattern in the Notepad++ API: when
+		/// This method encapsulates a common pattern in the Notepad++ API: when
 		/// you need to retrieve a string, you can first query the buffer size.
 		/// This method queries the necessary buffer size, allocates the temporary
 		/// memory, then returns the string retrieved through that buffer.
 		/// </summary>
 		/// <param name="message">Message ID of the data string to query.</param>
+		/// <param name="returnsWideString">
+		/// <see langword="true"/> if the out parameter of the given API method is a wide character buffer (<c>wchar_t*</c> or <c>TCHAR*</c>);
+		/// <see langword="false"/> if the out parameter is a byte buffer (<c>char*</c>).
+		/// </param>
 		/// <returns>String returned by Notepad++.</returns>
-		public string GetString(NppMsg message)
+		public static string GetString(NppMsg message, bool returnsWideString = true)
 		{
 			int len = Win32.SendMessage(
 					PluginData.NppData.NppHandle,
 					(uint)message, UnusedW, Unused).ToInt32()
 				+ 1;
-			var res = new StringBuilder(len);
-			_ = Win32.SendMessage(
-				PluginData.NppData.NppHandle, (uint)message, (uint)res.Capacity, res);
-			return res.ToString();
+			string res = new string('\0', len);
+			IntPtr pRes = returnsWideString ? Marshal.StringToHGlobalUni(res) : Marshal.StringToHGlobalAnsi(res);
+			_ = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)message, (uint)res.Length, pRes);
+			res = returnsWideString ? Marshal.PtrToStringUni(pRes) : Marshal.PtrToStringAnsi(pRes);
+			Marshal.FreeHGlobal(pRes);
+			return res;
 		}
 
 		/// <returns>The path to the Notepad++ executable.</returns>
 		public string GetNppPath()
 			=> GetString(NppMsg.NPPM_GETNPPDIRECTORY);
+
+		/// <returns>The path to the top directory of all installed plugins.</returns>
+		public string GetPluginsHomePath()
+			=> GetString(NppMsg.NPPM_GETPLUGINHOMEPATH);
 
 		/// <returns>The path to the Config folder for plugins.</returns>
 		public string GetPluginConfigPath()
@@ -189,6 +201,24 @@ namespace Npp.DotNet.Plugin
 		public void SetStatusBarSection(string message, StatusBarSection section)
 		{
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETSTATUSBAR, (uint)section, message);
+		}
+
+		/// <summary>
+		/// Get the name of the active localization file.
+		/// </summary>
+		/// <returns>
+		/// <para><b>N++ 8.7 and later</b></para>
+		/// <para>The name of the active localization file, without the <c>.xml</c> extension.</para>
+		/// <para><b>Older versions</b></para>
+		/// <para><c>"english"</c></para>
+		/// </returns>
+		public string GetNativeLanguage()
+		{
+			string langName, defaultLang = "english";
+			(int major, int minor, int _) = GetNppVersion();
+			if (!(major > 8 || (major == 8 && minor >= 7))) return defaultLang;
+			langName = GetString(NppMsg.NPPM_GETNATIVELANGFILENAME, false);
+			return string.IsNullOrEmpty(langName) ? defaultLang : langName.Replace(".xml", "");
 		}
 
 		/// <summary>

@@ -3,6 +3,7 @@
 
 * text=auto
 *[xX][mM][lL]                   text eol=crlf
+*.[iI][nN][iI]                  text eol=crlf
 *.[cC][sS]                      text eol=crlf
 *.[sS][lL][nN]                  text eol=crlf
 *.[rR][eE][sS][xX]              text eol=crlf

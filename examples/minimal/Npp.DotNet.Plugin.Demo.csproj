@@ -32,6 +32,10 @@
     <ProjectReference Include="../../lib/Npp.DotNet.Plugin.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
+    <Content Include="localizations/**">
+      <Link>%(RelativeDir)%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

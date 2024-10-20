@@ -265,8 +265,184 @@ namespace Npp.DotNet.Plugin
         [DllImport("user32", EntryPoint = "DefWindowProcW", CharSet = CharSet.Unicode)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
 
+        /// <summary>
+        /// Contains information about a menu item.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-menuiteminfow"/>
+        /// </remarks>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct MenuItemInfo
+        {
+            /// <summary>
+            /// The size of the structure, in bytes. The caller must set this member to <c>sizeof(MENUITEMINFO)</c>.
+            /// </summary>
+            public int cbSize;
+            /// <summary>
+            /// Indicates the members to be retrieved or set.
+            /// </summary>
+            public uint fMask;
+            /// <summary>
+            /// The menu item type.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_FTYPE"/>.
+            /// </remarks>
+            public uint fType;
+            /// <summary>
+            /// The menu item state.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_STATE"/>.
+            /// </remarks>
+            public uint fState;
+            /// <summary>
+            /// An application-defined value that identifies the menu item.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_ID"/>.
+            /// </remarks>
+            public int wID;
+            /// <summary>
+            /// A handle to the drop-down menu or submenu associated with the menu item. If the menu item is not an
+            /// item that opens a drop-down menu or submenu, this member is <see cref="IntPtr.Zero"/>.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_SUBMENU"/>.
+            /// </remarks>
+            public IntPtr hSubMenu;
+            /// <summary>
+            /// A handle to the bitmap to display next to the item if it is selected. If this member is
+            /// <see cref="IntPtr.Zero"/>, a default bitmap is used. If the <see cref="MFT_RADIOCHECK"/> type value is
+            /// specified, the default bitmap is a bullet. Otherwise, it is a check mark.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_CHECKMARKS"/>.
+            /// </remarks>
+            public IntPtr hbmpChecked;
+            /// <summary>
+            /// A handle to the bitmap to display next to the item if it is not selected. If this member is
+            /// <see cref="IntPtr.Zero"/>, no bitmap is used.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_CHECKMARKS"/>.
+            /// </remarks>
+            public IntPtr hbmpUnchecked;
+            /// <summary>
+            /// An application-defined value associated with the menu item.
+            /// </summary>
+            /// <remarks>
+            /// Used only if <see cref="fMask"/> has a value of <see cref="MIIM_DATA"/>.
+            /// </remarks>
+            public UIntPtr dwItemData;
+            /// <summary>
+            /// The contents of the menu item. The meaning of this member depends on the value of <see cref="fType"/>
+            /// and is used only if the <see cref="MIIM_TYPE"/> flag is set in the <see cref="fMask"/> member.
+            /// </summary>
+            /// <remarks>
+            /// <see cref="dwTypeData"/> is used only if the <see cref="MIIM_STRING"/> flag is set in the
+            /// <see cref="fMask"/> member.
+            /// </remarks>
+            public IntPtr dwTypeData;
+            /// <summary>
+            /// The length of the menu item text, in characters, when information is received about a menu item of the
+            /// <see cref="MIIM_STRING"/> type.
+            /// </summary>
+            /// <remarks>
+            /// The <see cref="cch"/> member is used when the <see cref="MIIM_STRING"/> flag is set in the
+            /// <see cref="fMask"/> member.
+            /// </remarks>
+            public int cch;
+            /// <summary>
+            /// A handle to the bitmap to be displayed.
+            /// </summary>
+            /// <remarks>
+            /// Used when the <see cref="MIIM_BITMAP"/> flag is set in the <see cref="fMask"/> member.
+            /// </remarks>
+            public IntPtr hbmpItem;
+        }
+
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.hbmpItem"/> member.</summary>
+        public const uint MIIM_BITMAP = 0x00000080;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.hbmpChecked"/> and <see cref="MenuItemInfo.hbmpUnchecked"/> members.</summary>
+        public const uint MIIM_CHECKMARKS = 0x00000008;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.dwItemData"/> member.</summary>
+        public const uint MIIM_DATA = 0x00000020;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.fType"/> member.</summary>
+        public const uint MIIM_FTYPE = 0x00000100;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.wID"/> member.</summary>
+        public const uint MIIM_ID = 0x00000002;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.fState"/> member.</summary>
+        public const uint MIIM_STATE = 0x00000001;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.dwTypeData"/> member.</summary>
+        public const uint MIIM_STRING = 0x00000040;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.hSubMenu"/> member.</summary>
+        public const uint MIIM_SUBMENU = 0x00000004;
+        /// <summary>Retrieves or sets the <see cref="MenuItemInfo.fType"/> and <see cref="MenuItemInfo.dwTypeData"/> members.</summary>
+        public const uint MIIM_TYPE = 0x00000010;
+        /// <summary>Displays the menu item using a bitmap. The low-order word of the <see cref="MenuItemInfo.dwTypeData"/> member
+        /// is the bitmap handle, and the <see cref="MenuItemInfo.cch"/> member is ignored.</summary>
+        public const uint MFT_BITMAP = 0x00000004;
+        /// <summary>Places the menu item on a new line (for a menu bar) or in a new column (for a drop-down menu,
+        /// submenu, or shortcut menu). For a drop-down menu, submenu, or shortcut menu, a vertical line separates
+        /// the new column from the old.</summary>
+        public const uint MFT_MENUBARBREAK = 0x00000020;
+        /// <summary>Places the menu item on a new line (for a menu bar) or in a new column (for a drop-down menu,
+        /// submenu, or shortcut menu). For a drop-down menu, submenu, or shortcut menu, the columns are not separated
+        /// by a vertical line.</summary>
+        public const uint MFT_MENUBREAK = 0x00000040;
+        /// <summary>Assigns responsibility for drawing the menu item to the window that owns the menu. The window
+        /// receives a WM_MEASUREITEM message before the menu is displayed for the first time, and a WM_DRAWITEM
+        /// message whenever the appearance of the menu item must be updated. If this value is specified, the
+        /// dwTypeData member contains an application-defined value.</summary>
+        public const uint MFT_OWNERDRAW = 0x00000100;
+        /// <summary>Displays selected menu items using a radio-button mark instead of a check mark if the
+        /// <see cref="MenuItemInfo.hbmpChecked"/> member is <see cref="IntPtr.Zero"/>.</summary>
+        public const uint MFT_RADIOCHECK = 0x00000200;
+        /// <summary>Right-justifies the menu item and any subsequent items. This value is valid only if the menu item
+        /// is in a menu bar.</summary>
+        public const uint MFT_RIGHTJUSTIFY = 0x00004000;
+        /// <summary>Specifies that menus cascade right-to-left (the default is left-to-right). This is used to support
+        /// right-to-left languages, such as Arabic and Hebrew.</summary>
+        public const uint MFT_RIGHTORDER = 0x00002000;
+        /// <summary>Specifies that the menu item is a separator. A menu item separator appears as a horizontal
+        /// dividing line. The <see cref="MenuItemInfo.dwTypeData"/> and <see cref="MenuItemInfo.cch"/> members are
+        /// ignored. This value is valid only in a drop-down menu, submenu, or shortcut menu.</summary>
+        public const uint MFT_SEPARATOR = 0x00000800;
+        /// <summary>Displays the menu item using a text string. The <see cref="MenuItemInfo.dwTypeData"/> member is
+        /// the pointer to a null-terminated string, and the <see cref="MenuItemInfo.cch"/> member is the length of the
+        /// string.</summary>
+        public const uint MFT_STRING = 0x00000000;
+        /// <summary>Checks the menu item. For more information about selected menu items, see the
+        /// <see cref="MenuItemInfo.hbmpChecked"/> member.</summary>
+        public const uint MFS_CHECKED = 0x00000008;
+        /// <summary>Specifies that the menu item is the default. A menu can contain only one default menu item, which
+        /// is displayed in bold.</summary>
+        public const uint MFS_DEFAULT = 0x00001000;
+        /// <summary>Disables the menu item and grays it so that it cannot be selected. This is equivalent to
+        /// <see cref="MFS_GRAYED"/>.</summary>
+        public const uint MFS_DISABLED = 0x00000003;
+        /// <summary>Enables the menu item so that it can be selected. This is the default state.</summary>
+        public const uint MFS_ENABLED = 0x00000000;
+        /// <summary>Disables the menu item and grays it so that it cannot be selected. This is equivalent to
+        /// <see cref="MFS_DISABLED"/>.</summary>
+        public const uint MFS_GRAYED = 0x00000003;
+        /// <summary>Highlights the menu item.</summary>
+        public const uint MFS_HILITE = 0x00000080;
+        /// <summary>Unchecks the menu item. For more information about clear menu items, see the
+        /// <see cref="MenuItemInfo.hbmpChecked"/> member.</summary>
+        public const uint MFS_UNCHECKED = 0x00000000;
+        /// <summary>Removes the highlight from the menu item. This is the default state.</summary>
+        public const uint MFS_UNHILITE = 0x00000000;
+
         [DllImport("user32")]
         public static extern IntPtr GetMenu(IntPtr hWnd);
+
+        [DllImport("user32", EntryPoint = "GetMenuItemInfoW", CharSet = CharSet.Unicode)]
+        public static extern int GetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, ref MenuItemInfo lpmii);
+
+        [DllImport("user32", EntryPoint = "SetMenuItemInfoW", CharSet = CharSet.Unicode)]
+        public static extern int SetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, MenuItemInfo lpmii);
 
         [DllImport("user32")]
         public static extern int CheckMenuItem(IntPtr hmenu, int uIDCheckItem, int uCheck);

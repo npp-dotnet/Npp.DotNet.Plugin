@@ -33,10 +33,9 @@ namespace Npp.DotNet.Plugin.Demo
         {
             get
             {
-                var folderName = Main.PluginName.Trim(new char[] { '\0', ' ' });
-                var configDir = new DirectoryInfo(Path.Combine(NppUtils.ConfigDirectory, folderName));
+                var configDir = new DirectoryInfo(Path.Combine(NppUtils.ConfigDirectory, Main.PluginFolderName));
                 if (!configDir.Exists)
-                    configDir = Directory.CreateDirectory(Path.Combine(NppUtils.ConfigDirectory, folderName));
+                    configDir = Directory.CreateDirectory(Path.Combine(NppUtils.ConfigDirectory, Main.PluginFolderName));
                 return Path.Combine(configDir.FullName, "settings.example.ini");
             }
         }

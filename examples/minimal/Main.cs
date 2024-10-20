@@ -32,6 +32,7 @@ namespace Npp.DotNet.Plugin.Demo
             Instance = new Main();
             PluginData.PluginNamePtr = Marshal.StringToHGlobalUni(PluginName);
             Config = new PluginOptions();
+            MenuTitles = new PluginMenuTitles();
         }
         #endregion
 
@@ -40,10 +41,11 @@ namespace Npp.DotNet.Plugin.Demo
         public override void OnSetInfo()
         {
             var sKey = new ShortcutKey(TRUE, FALSE, TRUE, 123); // Ctrl + Shift + F12
-            Utils.SetCommand("Say \"&Hello\"", HelloNpp, sKey);
-            Utils.SetCommand("Plugin &settings", OpenConfigFile);
+            MenuTitles.Load();
+            Utils.SetCommand(MenuTitles._0, HelloNpp, sKey);
+            Utils.SetCommand(MenuTitles._1, OpenConfigFile);
             Utils.MakeSeparator();
-            Utils.SetCommand("&About", DisplayInfo);
+            Utils.SetCommand(MenuTitles._2, DisplayInfo);
         }
 
         /// <inheritdoc cref="IDotNetPlugin.OnBeNotified" />
@@ -65,6 +67,10 @@ namespace Npp.DotNet.Plugin.Demo
                         if (string.Compare(Config.FilePath, NppUtils.GetCurrentPath(), StringComparison.InvariantCultureIgnoreCase) == 0)
                             Config?.Load();
                         break;
+                    case NppMsg.NPPN_NATIVELANGCHANGED:
+                        MenuTitles.Load();
+                        I18n.Menu.Localize(new string[] { MenuTitles._0, MenuTitles._1, "-", MenuTitles._2 });
+                        break;
                     case NppMsg.NPPN_SHUTDOWN:
                         Config?.Save();
                         // clean up resources
@@ -83,12 +89,14 @@ namespace Npp.DotNet.Plugin.Demo
                     if (wParam == SIZE_MAXIMIZED)
                     {
                         (long height, long width) = ((long)lParam >> 16, (long)lParam & 0xFFFF);
+                        uint mbMask = (uint)(MsgBox.ICONASTERISK | MsgBox.OK | MsgBox.TOPMOST);
+                        if (NativeLangIsRTL()) mbMask |= (uint)MsgBox.RTLREADING;
                         _ =
                             MsgBoxDialog(
                                 PluginData.NppData.NppHandle,
-                                $"New window size: {height}x{width}\0",
+                                $"{MenuTitles._3}: {height}x{width}\0",
                                 $"{PluginName}",
-                                (uint)(MsgBox.ICONASTERISK | MsgBox.OK | MsgBox.TOPMOST)
+                                mbMask
                            );
                     }
                     break;
@@ -116,12 +124,14 @@ namespace Npp.DotNet.Plugin.Demo
         /// </summary>
         static void DisplayInfo()
         {
+            uint mbMask = (uint)(MsgBox.ICONQUESTION | MsgBox.OK);
+            if (NativeLangIsRTL()) mbMask |= (uint)MsgBox.RTLREADING;
             _ =
                 MsgBoxDialog(
                     PluginData.NppData.NppHandle,
-                    $"Current version: {NppUtils.AssemblyVersionString}\0",
-                    $"About {PluginName}",
-                    (uint)(MsgBox.ICONQUESTION | MsgBox.OK)
+                    $"{MenuTitles._4}: {NppUtils.AssemblyVersionString}\0",
+                    $"{MenuTitles._5} {PluginName}",
+                   mbMask
                 );
         }
 
@@ -133,8 +143,15 @@ namespace Npp.DotNet.Plugin.Demo
 
         /// <summary><see cref="Main"/> should be a singleton class</summary>
         private Main() { }
+        private static bool NativeLangIsRTL()
+        {
+            string nativeLang = NppUtils.Notepad.GetNativeLanguage();
+            return new string[] { "arabic", "farsi" }.Any(lang => nativeLang.IndexOf(lang) > -1);
+        }
         private static readonly Main Instance;
         private static readonly PluginOptions Config;
+        private static readonly PluginMenuTitles MenuTitles;
         public static readonly string PluginName = ".NET Demo Plugin\0";
+        public static string PluginFolderName => PluginName.Trim(new char[] { '\0', '.' });
     }
 }
