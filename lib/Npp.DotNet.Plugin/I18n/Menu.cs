@@ -51,7 +51,7 @@ namespace Npp.DotNet.Plugin.I18n
 
                             currentTitle = Marshal.PtrToStringUni(mii.dwTypeData) ?? string.Empty;
                             int sKeyPos = currentTitle.LastIndexOf('\t');
-                            string shortcut = (sKeyPos > -1) ? currentTitle[sKeyPos..] : string.Empty;
+                            string shortcut = (sKeyPos > -1) ? currentTitle.Substring(sKeyPos) : string.Empty;
                             Marshal.FreeHGlobal(mii.dwTypeData);
 
                             mii.cch = (menuTitles[itemPos].Length + 1) * Marshal.SizeOf<char>();
