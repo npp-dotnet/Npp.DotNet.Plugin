@@ -47,7 +47,6 @@ namespace Npp.DotNet.Plugin
         WV_XP, WV_S2003, WV_XPX64, WV_VISTA, WV_WIN7, WV_WIN8, WV_WIN81, WV_WIN10, WV_WIN11
     }
 
-    [Flags]
     public enum NppMsg : uint
     {
         NPPMSG = Constants.WM_USER + 1000,
