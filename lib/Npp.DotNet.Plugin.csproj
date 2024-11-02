@@ -31,7 +31,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>embedded</DebugType>
+    <DebugType>portable</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AssemblyOriginatorKeyFile>Npp.DotNet.Plugin.snk</AssemblyOriginatorKeyFile>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <EmbedAllSources>true</EmbedAllSources>
