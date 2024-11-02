@@ -55,12 +55,18 @@ jobs:
           dotnet build examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
           dotnet publish examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
+      - name: Pack localized plugin assets
+        if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
+        working-directory: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native
+        run: |
+          7z a -tzip ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip ${{ env.PLUGIN_NAME }}.dll ${{ github.workspace }}\examples\minimal\localizations -y
+
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
-          path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.dll
+          path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
