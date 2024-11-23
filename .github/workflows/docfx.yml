@@ -20,6 +20,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
+      id-token: write
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2

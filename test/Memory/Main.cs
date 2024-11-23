@@ -12,7 +12,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
     public class LayoutTests
     {
         private static readonly string Module = "Npp.DotNet.Plugin";
-        private static IPEImage? _dll;
+        private static PEImage? _dll;
         private static ModuleDefinition? _module;
         private static bool _is64bit = true;
 
