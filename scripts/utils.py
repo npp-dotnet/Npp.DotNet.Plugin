@@ -3,6 +3,7 @@
  SPDX-License-Identifier: 0BSD
 """
 import os
+import re
 import subprocess
 import sys
 
@@ -24,3 +25,13 @@ def cmd_output_or_default(cmd: str, fallback: callable, default='') -> str:
             result = default
 
     return result.strip()
+
+def c_preproc_to_csharp(line: str, macro: re.Match) -> str:
+    _1, _2 = macro.groups()
+    if _1 == 'end':
+        result =  macro.group()
+    else:
+        define = line.split()
+        result = f"#{_1} {'!' if _2 == 'ndef' else ''}{define[1]}"
+
+    return result

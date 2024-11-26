@@ -17,26 +17,26 @@ namespace Npp.DotNet.Plugin
         SCI_OPTIONAL_START = 3000,
         SCI_LEXER_START = 4000,
         /// <summary>
-        /// SCI_ADDTEXT(position length, const char *text)<br/>
+        /// SCI_ADDTEXT(position length, const char ＊text)<br/>
         /// This inserts the first length characters from the string text at the current position. This will
         /// include any 0's in the string that you might have expected to stop the insert operation. The current position is
         /// set at the end of the inserted text, but it is not scrolled into view.
         /// </summary>
         SCI_ADDTEXT = 2001,
         /// <summary>
-        /// SCI_ADDSTYLEDTEXT(position length, cell *c)<br/>
+        /// SCI_ADDSTYLEDTEXT(position length, cell ＊c)<br/>
         /// This behaves just like SCI_ADDTEXT, but inserts styled text.
         /// </summary>
         SCI_ADDSTYLEDTEXT = 2002,
         /// <summary>
-        /// SCI_INSERTTEXT(position pos, const char *text)<br/>
+        /// SCI_INSERTTEXT(position pos, const char ＊text)<br/>
         /// This inserts the zero terminated text string at position pos or at the current position if pos is -1. If
         /// the current position is after the insertion point then it is moved along with its surrounding text but no scrolling
         /// is performed.
         /// </summary>
         SCI_INSERTTEXT = 2003,
         /// <summary>
-        /// SCI_CHANGEINSERTION(position length, const char *text)<br/>
+        /// SCI_CHANGEINSERTION(position length, const char ＊text)<br/>
         /// This may only be called from a SC_MOD_INSERTCHECK notification handler and will change the text being inserted to that
         /// provided.
         /// </summary>
@@ -88,11 +88,11 @@ namespace Npp.DotNet.Plugin
         SCI_SELECTALL = 2013,
         SCI_SETSAVEPOINT = 2014,
         /// <summary>
-        /// SCI_GETSTYLEDTEXT(&lt;unused&gt;, Sci_TextRange *tr) -&gt; position<br/>
+        /// SCI_GETSTYLEDTEXT(&lt;unused&gt;, Sci_TextRange ＊tr) -&gt; position<br/>
         /// </summary>
         SCI_GETSTYLEDTEXT = 2015,
         /// <summary>
-        /// SCI_GETSTYLEDTEXTFULL(&lt;unused&gt;, Sci_TextRangeFull *tr) -&gt; position<br/>
+        /// SCI_GETSTYLEDTEXTFULL(&lt;unused&gt;, Sci_TextRangeFull ＊tr) -&gt; position<br/>
         /// This collects styled text into a buffer using two bytes for each cell, with the character at the lower address of
         /// each pair and the style byte at the upper address. Characters between the positions cpMin and cpMax are
         /// copied to lpstrText (see struct Sci_TextRange and struct Sci_TextRangeFull in Scintilla.h ). Two 0
@@ -194,7 +194,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETANCHOR = 2026,
         /// <summary>
-        /// SCI_GETCURLINE(position length, char *text NUL-terminated) -&gt; position<br/>
+        /// SCI_GETCURLINE(position length, char ＊text NUL-terminated) -&gt; position<br/>
         /// This retrieves the text of the line containing the caret and returns the position within the line of the caret.
         /// Pass in char* text pointing at a buffer large enough to hold the text you wish to retrieve and a terminating
         /// NUL(0) character. Set length to the length of the buffer not including the terminating NUL character.
@@ -303,11 +303,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETCODEPAGE = 2037,
         /// <summary>
-        /// SCI_SETFONTLOCALE(&lt;unused&gt;, const char *localeName)<br/>
+        /// SCI_SETFONTLOCALE(&lt;unused&gt;, const char ＊localeName)<br/>
         /// </summary>
         SCI_SETFONTLOCALE = 2760,
         /// <summary>
-        /// SCI_GETFONTLOCALE(&lt;unused&gt;, char *localeName NUL-terminated) -&gt; int<br/>
+        /// SCI_GETFONTLOCALE(&lt;unused&gt;, char ＊localeName NUL-terminated) -&gt; int<br/>
         /// These messages set the locale used for font selection with language-dependent glyphs. It may, depending on
         /// platform and other circumstances influence the display of text, so setting "zh-Hant" may result in traditional
         /// Chinese display and "zh-Hans" may result in simplified Chinese display. It is currently only implemented for Win32
@@ -479,7 +479,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_MARKERPREVIOUS = 2048,
         /// <summary>
-        /// SCI_MARKERDEFINEPIXMAP(int markerNumber, const char *pixmap)<br/>
+        /// SCI_MARKERDEFINEPIXMAP(int markerNumber, const char ＊pixmap)<br/>
         /// Markers can be set to pixmaps with this message. The XPM format is used for the pixmap. Pixmaps use the
         /// SC_MARK_PIXMAP marker symbol.
         /// </summary>
@@ -653,7 +653,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_STYLESETSIZE = 2055,
         /// <summary>
-        /// SCI_STYLESETFONT(int style, const char *fontName)<br/>
+        /// SCI_STYLESETFONT(int style, const char ＊fontName)<br/>
         /// </summary>
         SCI_STYLESETFONT = 2056,
         /// <summary>
@@ -694,7 +694,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_STYLEGETSIZE = 2485,
         /// <summary>
-        /// SCI_STYLEGETFONT(int style, char *fontName NUL-terminated) -&gt; int<br/>
+        /// SCI_STYLEGETFONT(int style, char ＊fontName NUL-terminated) -&gt; int<br/>
         /// </summary>
         SCI_STYLEGETFONT = 2486,
         /// <summary>
@@ -811,11 +811,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_STYLEGETSTRETCH = 2259,
         /// <summary>
-        /// SCI_STYLESETINVISIBLEREPRESENTATION(int style, const char *representation)<br/>
+        /// SCI_STYLESETINVISIBLEREPRESENTATION(int style, const char ＊representation)<br/>
         /// </summary>
         SCI_STYLESETINVISIBLEREPRESENTATION = 2256,
         /// <summary>
-        /// SCI_STYLEGETINVISIBLEREPRESENTATION(int style, char *representation NUL-terminated) -&gt; int<br/>
+        /// SCI_STYLEGETINVISIBLEREPRESENTATION(int style, char ＊representation NUL-terminated) -&gt; int<br/>
         /// When a style is made invisible with SCI_STYLESETVISIBLE, text is difficult to edit as the cursor can be at both
         /// sides of the invisible text segment. With these messages invisible text segements can be made visible with a single
         /// UTF8 characater giving the user an indication if the cursor is left or right of the invisible text. The character is
@@ -1057,7 +1057,7 @@ namespace Npp.DotNet.Plugin
         SCI_CLEARCMDKEY = 2071,
         SCI_CLEARALLCMDKEYS = 2072,
         /// <summary>
-        /// SCI_SETSTYLINGEX(position length, const char *styles)<br/>
+        /// SCI_SETSTYLINGEX(position length, const char ＊styles)<br/>
         /// As an alternative to SCI_SETSTYLING, which applies the same style to each byte, you can use this message which
         /// specifies the styles for each of length bytes from the styling position and then increases the styling position
         /// by length, ready for the next call. SCI_STARTSTYLING should be called before the first call to this.
@@ -1079,14 +1079,14 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETCARETPERIOD = 2076,
         /// <summary>
-        /// SCI_SETWORDCHARS(&lt;unused&gt;, const char *characters)<br/>
+        /// SCI_SETWORDCHARS(&lt;unused&gt;, const char ＊characters)<br/>
         /// This message defines which characters are members of the word category. The character categories are set to
         /// default values before processing this function. For example, if you don't allow '_' in your set of characters
         /// use: SCI_SETWORDCHARS(0, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") ;
         /// </summary>
         SCI_SETWORDCHARS = 2077,
         /// <summary>
-        /// SCI_GETWORDCHARS(&lt;unused&gt;, char *characters) -&gt; int<br/>
+        /// SCI_GETWORDCHARS(&lt;unused&gt;, char ＊characters) -&gt; int<br/>
         /// This fills the characters parameter with all the characters included in words. The characters parameter
         /// must be large enough to hold all of the characters. If the characters parameter is 0 then the length that
         /// should be allocated to store the entire set is returned.
@@ -1327,7 +1327,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_STYLESETCHANGEABLE = 2099,
         /// <summary>
-        /// SCI_AUTOCSHOW(position lengthEntered, const char *itemList)<br/>
+        /// SCI_AUTOCSHOW(position lengthEntered, const char ＊itemList)<br/>
         /// This message causes a list to be displayed. lengthEntered is the number of characters of the word already
         /// entered and itemList is the list of words separated by separator characters. The initial separator character is
         /// a space but this can be set or got with SCI_AUTOCSETSEPARATOR and SCI_AUTOCGETSEPARATOR .
@@ -1346,7 +1346,7 @@ namespace Npp.DotNet.Plugin
         SCI_AUTOCPOSSTART = 2103,
         SCI_AUTOCCOMPLETE = 2104,
         /// <summary>
-        /// SCI_AUTOCSTOPS(&lt;unused&gt;, const char *characterSet)<br/>
+        /// SCI_AUTOCSTOPS(&lt;unused&gt;, const char ＊characterSet)<br/>
         /// The characterSet argument is a string containing a list of characters that will automatically cancel the
         /// autocompletion list. When you start the editor, this list is empty.
         /// </summary>
@@ -1362,7 +1362,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_AUTOCGETSEPARATOR = 2107,
         /// <summary>
-        /// SCI_AUTOCSELECT(&lt;unused&gt;, const char *select)<br/>
+        /// SCI_AUTOCSELECT(&lt;unused&gt;, const char ＊select)<br/>
         /// </summary>
         SCI_AUTOCSELECT = 2108,
         /// <summary>
@@ -1377,7 +1377,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_AUTOCGETCANCELATSTART = 2111,
         /// <summary>
-        /// SCI_AUTOCSETFILLUPS(&lt;unused&gt;, const char *characterSet)<br/>
+        /// SCI_AUTOCSETFILLUPS(&lt;unused&gt;, const char ＊characterSet)<br/>
         /// If a fillup character is typed with an autocompletion list active, the currently selected item in the list is added
         /// into the document, then the fillup character is added. Common fillup characters are '(', '[' and '.' but others are
         /// possible depending on the language. By default, no fillup characters are set.
@@ -1404,7 +1404,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_AUTOCGETIGNORECASE = 2116,
         /// <summary>
-        /// SCI_USERLISTSHOW(int listType, const char *itemList)<br/>
+        /// SCI_USERLISTSHOW(int listType, const char ＊itemList)<br/>
         /// The listType parameter is returned to the container as the wParam field of the SCNotification
         /// structure. It must be greater than 0 as this is how Scintilla tells the difference between an autocompletion list
         /// and a user list. If you have different types of list, for example a list of buffers and a list of macros, you can
@@ -1445,7 +1445,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_AUTOCGETDROPRESTOFWORD = 2271,
         /// <summary>
-        /// SCI_REGISTERIMAGE(int type, const char *xpmData)<br/>
+        /// SCI_REGISTERIMAGE(int type, const char ＊xpmData)<br/>
         /// </summary>
         SCI_REGISTERIMAGE = 2405,
         SCI_CLEARREGISTEREDIMAGES = 2408,
@@ -1692,21 +1692,21 @@ namespace Npp.DotNet.Plugin
         SCFIND_POSIX = 0x00400000,
         SCFIND_CXX11REGEX = 0x00800000,
         /// <summary>
-        /// SCI_FINDTEXT(int searchFlags, Sci_TextToFind *ft) -&gt; position<br/>
+        /// SCI_FINDTEXT(int searchFlags, Sci_TextToFind ＊ft) -&gt; position<br/>
         /// </summary>
         SCI_FINDTEXT = 2150,
         /// <summary>
-        /// SCI_FINDTEXTFULL(int searchFlags, Sci_TextToFindFull *ft) -&gt; position<br/>
+        /// SCI_FINDTEXTFULL(int searchFlags, Sci_TextToFindFull ＊ft) -&gt; position<br/>
         /// These messages search for text in the document. They do not use or move the current selection. The searchFlags
         /// argument controls the search type, which includes regular expression searches.
         /// </summary>
         SCI_FINDTEXTFULL = 2196,
         /// <summary>
-        /// SCI_FORMATRANGE(bool draw, Sci_RangeToFormat *fr) -&gt; position<br/>
+        /// SCI_FORMATRANGE(bool draw, Sci_RangeToFormat ＊fr) -&gt; position<br/>
         /// </summary>
         SCI_FORMATRANGE = 2151,
         /// <summary>
-        /// SCI_FORMATRANGEFULL(bool draw, Sci_RangeToFormatFull *fr) -&gt; position<br/>
+        /// SCI_FORMATRANGEFULL(bool draw, Sci_RangeToFormatFull ＊fr) -&gt; position<br/>
         /// This call renders a range of text into a device context. If you use this for printing, you will probably want to
         /// arrange a page header and footer; Scintilla does not do this for you. See SciTEWin::Print() in SciTEWinDlg.cxx
         /// for an example. Each use of this message renders a range of text into a rectangular area and returns the
@@ -1734,7 +1734,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETFIRSTVISIBLELINE = 2152,
         /// <summary>
-        /// SCI_GETLINE(line line, char *text) -&gt; position<br/>
+        /// SCI_GETLINE(line line, char ＊text) -&gt; position<br/>
         /// This fills the buffer defined by text with the contents of the nominated line (lines start at 0). The buffer is not
         /// terminated by a NUL(0) character. It is up to you to make sure that the buffer is long enough for the text, use
         /// SCI_LINELENGTH(line line). The returned value is the number of characters copied to the buffer. The returned text
@@ -1789,7 +1789,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETSEL = 2160,
         /// <summary>
-        /// SCI_GETSELTEXT(&lt;unused&gt;, char *text NUL-terminated) -&gt; position<br/>
+        /// SCI_GETSELTEXT(&lt;unused&gt;, char ＊text NUL-terminated) -&gt; position<br/>
         /// This copies the currently selected text and a terminating NUL(0) byte to the text buffer. The buffer size should
         /// be determined by calling with a NULL pointer for the text argument: 1+ SCI_GETSELTEXT(0, NULL). This
         /// allows for rectangular and discontiguous selections as well as simple selections. See Multiple Selection for
@@ -1797,11 +1797,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETSELTEXT = 2161,
         /// <summary>
-        /// SCI_GETTEXTRANGE(&lt;unused&gt;, Sci_TextRange *tr) -&gt; position<br/>
+        /// SCI_GETTEXTRANGE(&lt;unused&gt;, Sci_TextRange ＊tr) -&gt; position<br/>
         /// </summary>
         SCI_GETTEXTRANGE = 2162,
         /// <summary>
-        /// SCI_GETTEXTRANGEFULL(&lt;unused&gt;, Sci_TextRangeFull *tr) -&gt; position<br/>
+        /// SCI_GETTEXTRANGEFULL(&lt;unused&gt;, Sci_TextRangeFull ＊tr) -&gt; position<br/>
         /// This collects the text between the positions cpMin and cpMax and copies it to lpstrText (see struct
         /// Sci_TextRange in Scintilla.h ). If cpMax is -1, text is returned to the end of the document. The text
         /// is 0 terminated, so you must supply a buffer that is at least 1 character longer than the number of characters you
@@ -1858,7 +1858,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SCROLLRANGE = 2569,
         /// <summary>
-        /// SCI_REPLACESEL(&lt;unused&gt;, const char *text)<br/>
+        /// SCI_REPLACESEL(&lt;unused&gt;, const char ＊text)<br/>
         /// The currently selected text between the anchor and the current position is replaced by the 0 terminated text
         /// string. If the anchor and current position are the same, the text is inserted at the caret position. The caret is
         /// positioned after the inserted text and the caret is scrolled into view.
@@ -1886,16 +1886,16 @@ namespace Npp.DotNet.Plugin
         SCI_PASTE = 2179,
         SCI_CLEAR = 2180,
         /// <summary>
-        /// SCI_SETTEXT(&lt;unused&gt;, const char *text)<br/>
+        /// SCI_SETTEXT(&lt;unused&gt;, const char ＊text)<br/>
         /// This replaces all the text in the document with the zero terminated text string you pass in.
         /// </summary>
         SCI_SETTEXT = 2181,
         /// <summary>
-        /// SCI_GETTEXT(position length, char *text NUL-terminated) -&gt; position<br/>
+        /// SCI_GETTEXT(position length, char ＊text NUL-terminated) -&gt; position<br/>
         /// This returns at most length characters of text from the start of the document plus one terminating 0 character.
         /// When length is beyond document length, it returns document length. To collect all the text in a document, use
         /// SCI_GETLENGTH to get the number of characters in the document( nLen ), allocate a character buffer of
-        /// length nLen+1 bytes, then call SCI_GETTEXT(nLen, char *text). If the text argument is NULL(0) then the
+        /// length nLen+1 bytes, then call SCI_GETTEXT(nLen, char ＊text). If the text argument is NULL(0) then the
         /// length that should be allocated to store the entire document is returned. If you then save the text, you
         /// should use SCI_SETSAVEPOINT to mark the text as unmodified.
         /// </summary>
@@ -1990,14 +1990,14 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETTARGETRANGE = 2686,
         /// <summary>
-        /// SCI_GETTARGETTEXT(&lt;unused&gt;, char *text) -&gt; position<br/>
+        /// SCI_GETTARGETTEXT(&lt;unused&gt;, char ＊text) -&gt; position<br/>
         /// Retrieve the value in the target.
         /// </summary>
         SCI_GETTARGETTEXT = 2687,
         SCI_TARGETFROMSELECTION = 2287,
         SCI_TARGETWHOLEDOCUMENT = 2690,
         /// <summary>
-        /// SCI_REPLACETARGET(position length, const char *text) -&gt; position<br/>
+        /// SCI_REPLACETARGET(position length, const char ＊text) -&gt; position<br/>
         /// If length is -1, text is a zero terminated string, otherwise length sets the number of character to
         /// replace the target with. After replacement, the target range refers to the replacement text. The return value
         /// is the length of the replacement string. Note that the recommended way to delete text in the document is to set the
@@ -2005,7 +2005,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_REPLACETARGET = 2194,
         /// <summary>
-        /// SCI_REPLACETARGETRE(position length, const char *text) -&gt; position<br/>
+        /// SCI_REPLACETARGETRE(position length, const char ＊text) -&gt; position<br/>
         /// This replaces the target using regular expressions. If length is -1, text is a zero terminated string,
         /// otherwise length is the number of characters to use. The replacement string is formed from the text string with
         /// any sequences of \1 through \9 replaced by tagged matches from the most recent regular expression
@@ -2014,7 +2014,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_REPLACETARGETRE = 2195,
         /// <summary>
-        /// SCI_REPLACETARGETMINIMAL(position length, const char *text) -&gt; position<br/>
+        /// SCI_REPLACETARGETMINIMAL(position length, const char ＊text) -&gt; position<br/>
         /// This is similar to SCI_REPLACETARGET but tries to minimize change history when the current target text shares a
         /// common prefix or suffix with the replacement. Only the text that is actually different is marked as changed.
         /// This might be used when automatically reformatting some text so that the whole area formatted doesn't show change
@@ -2025,7 +2025,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_REPLACETARGETMINIMAL = 2779,
         /// <summary>
-        /// SCI_SEARCHINTARGET(position length, const char *text) -&gt; position<br/>
+        /// SCI_SEARCHINTARGET(position length, const char ＊text) -&gt; position<br/>
         /// This searches for the first occurrence of a text string in the target defined by SCI_SETTARGETSTART and
         /// SCI_SETTARGETEND. The text string is not zero terminated; the size is set by length. The search is modified
         /// by the search flags set by SCI_SETSEARCHFLAGS. If the search succeeds, the target is set to the found text
@@ -2043,7 +2043,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETSEARCHFLAGS = 2199,
         /// <summary>
-        /// SCI_CALLTIPSHOW(position pos, const char *definition)<br/>
+        /// SCI_CALLTIPSHOW(position pos, const char ＊definition)<br/>
         /// This message starts the process by displaying the call tip window. If a call tip is already active, this has no
         /// effect. pos is the position in the document at which to align the call tip. The call tip text is aligned to
         /// start 1 line below this character unless you have included up and/or down arrows in the call tip text in which case
@@ -2207,7 +2207,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_TOGGLEFOLD = 2231,
         /// <summary>
-        /// SCI_TOGGLEFOLDSHOWTEXT(line line, const char *text)<br/>
+        /// SCI_TOGGLEFOLDSHOWTEXT(line line, const char ＊text)<br/>
         /// Each fold point may be either expanded, displaying all its child lines, or contracted, hiding all the child lines.
         /// These messages toggle the folding state of the given line as long as it has the SC_FOLDLEVELHEADERFLAG set.
         /// These messages take care of folding or expanding all the lines that depend on the line. The display updates after
@@ -2227,11 +2227,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_FOLDDISPLAYTEXTGETSTYLE = 2707,
         /// <summary>
-        /// SCI_SETDEFAULTFOLDDISPLAYTEXT(&lt;unused&gt;, const char *text)<br/>
+        /// SCI_SETDEFAULTFOLDDISPLAYTEXT(&lt;unused&gt;, const char ＊text)<br/>
         /// </summary>
         SCI_SETDEFAULTFOLDDISPLAYTEXT = 2722,
         /// <summary>
-        /// SCI_GETDEFAULTFOLDDISPLAYTEXT(&lt;unused&gt;, char *text) -&gt; int<br/>
+        /// SCI_GETDEFAULTFOLDDISPLAYTEXT(&lt;unused&gt;, char ＊text) -&gt; int<br/>
         /// These messages set and get the default text displayed at the right of the folded text.
         /// </summary>
         SCI_GETDEFAULTFOLDDISPLAYTEXT = 2723,
@@ -2468,7 +2468,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETSCROLLWIDTHTRACKING = 2517,
         /// <summary>
-        /// SCI_TEXTWIDTH(int style, const char *text) -&gt; int<br/>
+        /// SCI_TEXTWIDTH(int style, const char ＊text) -&gt; int<br/>
         /// This returns the pixel width of a string drawn in the given style which can be used, for example, to decide how
         /// wide to make the line number margin in order to display a given number of numerals.
         /// </summary>
@@ -2499,7 +2499,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETVSCROLLBAR = 2281,
         /// <summary>
-        /// SCI_APPENDTEXT(position length, const char *text)<br/>
+        /// SCI_APPENDTEXT(position length, const char ＊text)<br/>
         /// This adds the first length characters from the string text to the end of the document. This will
         /// include any 0's in the string that you might have expected to stop the operation. The current selection is not
         /// changed and the new text is not scrolled into view.
@@ -2551,7 +2551,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETMULTIPASTE = 2615,
         /// <summary>
-        /// SCI_GETTAG(int tagNumber, char *tagValue NUL-terminated) -&gt; int<br/>
+        /// SCI_GETTAG(int tagNumber, char ＊tagValue NUL-terminated) -&gt; int<br/>
         /// Discover what text was matched by tagged expressions in a regular expression search. This is useful if the
         /// application wants to interpret the replacement string itself.
         /// </summary>
@@ -2770,11 +2770,11 @@ namespace Npp.DotNet.Plugin
         SCI_GETMULTIEDGECOLUMN = 2749,
         SCI_SEARCHANCHOR = 2366,
         /// <summary>
-        /// SCI_SEARCHNEXT(int searchFlags, const char *text) -&gt; position<br/>
+        /// SCI_SEARCHNEXT(int searchFlags, const char ＊text) -&gt; position<br/>
         /// </summary>
         SCI_SEARCHNEXT = 2367,
         /// <summary>
-        /// SCI_SEARCHPREV(int searchFlags, const char *text) -&gt; position<br/>
+        /// SCI_SEARCHPREV(int searchFlags, const char ＊text) -&gt; position<br/>
         /// These messages provide relocatable search support. This allows multiple incremental interactive searches to be
         /// macro recorded while still setting the selection to found text so the find/select operation is self-contained.
         /// These three messages send SCN_MACRORECORD notifications if macro recording is enabled.
@@ -3063,7 +3063,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_COPYRANGE = 2419,
         /// <summary>
-        /// SCI_COPYTEXT(position length, const char *text)<br/>
+        /// SCI_COPYTEXT(position length, const char ＊text)<br/>
         /// SCI_COPYRANGE copies a range of text from the document to the system clipboard and SCI_COPYTEXT copies a
         /// supplied piece of text to the system clipboard.
         /// </summary>
@@ -3128,11 +3128,11 @@ namespace Npp.DotNet.Plugin
         SCI_WORDRIGHTEND = 2441,
         SCI_WORDRIGHTENDEXTEND = 2442,
         /// <summary>
-        /// SCI_SETWHITESPACECHARS(&lt;unused&gt;, const char *characters)<br/>
+        /// SCI_SETWHITESPACECHARS(&lt;unused&gt;, const char ＊characters)<br/>
         /// </summary>
         SCI_SETWHITESPACECHARS = 2443,
         /// <summary>
-        /// SCI_GETWHITESPACECHARS(&lt;unused&gt;, char *characters) -&gt; int<br/>
+        /// SCI_GETWHITESPACECHARS(&lt;unused&gt;, char ＊characters) -&gt; int<br/>
         /// Similar to SCI_SETWORDCHARS, this message allows the user to define which chars Scintilla considers as
         /// whitespace. Setting the whitespace chars allows the user to fine-tune Scintilla's behaviour doing such
         /// things as moving the cursor to the start or end of a word; for example, by defining punctuation chars as
@@ -3142,11 +3142,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETWHITESPACECHARS = 2647,
         /// <summary>
-        /// SCI_SETPUNCTUATIONCHARS(&lt;unused&gt;, const char *characters)<br/>
+        /// SCI_SETPUNCTUATIONCHARS(&lt;unused&gt;, const char ＊characters)<br/>
         /// </summary>
         SCI_SETPUNCTUATIONCHARS = 2648,
         /// <summary>
-        /// SCI_GETPUNCTUATIONCHARS(&lt;unused&gt;, char *characters) -&gt; int<br/>
+        /// SCI_GETPUNCTUATIONCHARS(&lt;unused&gt;, char ＊characters) -&gt; int<br/>
         /// Similar to SCI_SETWORDCHARS and SCI_SETWHITESPACECHARS, this message allows the user to define which chars
         /// Scintilla considers as punctuation. SCI_GETPUNCTUATIONCHARS behaves similarly to SCI_GETWORDCHARS .
         /// </summary>
@@ -3163,7 +3163,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_AUTOCGETCURRENT = 2445,
         /// <summary>
-        /// SCI_AUTOCGETCURRENTTEXT(&lt;unused&gt;, char *text NUL-terminated) -&gt; int<br/>
+        /// SCI_AUTOCGETCURRENTTEXT(&lt;unused&gt;, char ＊text NUL-terminated) -&gt; int<br/>
         /// This message retrieves the current selected text in the autocompletion list. Normally the SCN_AUTOCSELECTION
         /// notification is used instead.
         /// </summary>
@@ -3214,7 +3214,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_ALLOCATE = 2446,
         /// <summary>
-        /// SCI_TARGETASUTF8(&lt;unused&gt;, char *s) -&gt; position<br/>
+        /// SCI_TARGETASUTF8(&lt;unused&gt;, char ＊s) -&gt; position<br/>
         /// This method retrieves the value of the target encoded as UTF-8 which is the default encoding of GTK so is useful
         /// for retrieving text for use in other parts of the user interface, such as find and replace dialogs. The length of
         /// the encoded text in bytes is returned. Cocoa uses UTF-16 which is easily converted from UTF-8 so this method can
@@ -3231,7 +3231,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETLENGTHFORENCODE = 2448,
         /// <summary>
-        /// SCI_ENCODEDFROMUTF8(const char *utf8, char *encoded) -&gt; position<br/>
+        /// SCI_ENCODEDFROMUTF8(const char ＊utf8, char ＊encoded) -&gt; position<br/>
         /// </summary>
         SCI_ENCODEDFROMUTF8 = 2449,
         /// <summary>
@@ -3263,7 +3263,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETPASTECONVERTENDINGS = 2468,
         /// <summary>
-        /// SCI_REPLACERECTANGULAR(position length, const char *text)<br/>
+        /// SCI_REPLACERECTANGULAR(position length, const char ＊text)<br/>
         /// Replaces the selected text or empty selection with the given text. The insertion is performed similarly to
         /// rectangular pastes: new lines in the given text are interpreted as moving to the next line without inserting new
         /// lines unless at the end of the document.
@@ -3390,11 +3390,11 @@ namespace Npp.DotNet.Plugin
         SCI_COPYALLOWLINE = 2519,
         SCI_CUTALLOWLINE = 2810,
         /// <summary>
-        /// SCI_SETCOPYSEPARATOR(&lt;unused&gt;, const char *separator)<br/>
+        /// SCI_SETCOPYSEPARATOR(&lt;unused&gt;, const char ＊separator)<br/>
         /// </summary>
         SCI_SETCOPYSEPARATOR = 2811,
         /// <summary>
-        /// SCI_GETCOPYSEPARATOR(&lt;unused&gt;, char *separator) -&gt; int<br/>
+        /// SCI_GETCOPYSEPARATOR(&lt;unused&gt;, char ＊separator) -&gt; int<br/>
         /// When a multiple selection is copied, this string property is added between each part. Defaults to empty.
         /// </summary>
         SCI_GETCOPYSEPARATOR = 2812,
@@ -3460,11 +3460,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_MARKERSYMBOLDEFINED = 2529,
         /// <summary>
-        /// SCI_MARGINSETTEXT(line line, const char *text)<br/>
+        /// SCI_MARGINSETTEXT(line line, const char ＊text)<br/>
         /// </summary>
         SCI_MARGINSETTEXT = 2530,
         /// <summary>
-        /// SCI_MARGINGETTEXT(line line, char *text) -&gt; int<br/>
+        /// SCI_MARGINGETTEXT(line line, char ＊text) -&gt; int<br/>
         /// </summary>
         SCI_MARGINGETTEXT = 2531,
         /// <summary>
@@ -3476,11 +3476,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_MARGINGETSTYLE = 2533,
         /// <summary>
-        /// SCI_MARGINSETSTYLES(line line, const char *styles)<br/>
+        /// SCI_MARGINSETSTYLES(line line, const char ＊styles)<br/>
         /// </summary>
         SCI_MARGINSETSTYLES = 2534,
         /// <summary>
-        /// SCI_MARGINGETSTYLES(line line, char *styles) -&gt; int<br/>
+        /// SCI_MARGINGETSTYLES(line line, char ＊styles) -&gt; int<br/>
         /// </summary>
         SCI_MARGINGETSTYLES = 2535,
         SCI_MARGINTEXTCLEARALL = 2536,
@@ -3511,11 +3511,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETMARGINOPTIONS = 2557,
         /// <summary>
-        /// SCI_ANNOTATIONSETTEXT(line line, const char *text)<br/>
+        /// SCI_ANNOTATIONSETTEXT(line line, const char ＊text)<br/>
         /// </summary>
         SCI_ANNOTATIONSETTEXT = 2540,
         /// <summary>
-        /// SCI_ANNOTATIONGETTEXT(line line, char *text) -&gt; int<br/>
+        /// SCI_ANNOTATIONGETTEXT(line line, char ＊text) -&gt; int<br/>
         /// </summary>
         SCI_ANNOTATIONGETTEXT = 2541,
         /// <summary>
@@ -3527,11 +3527,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_ANNOTATIONGETSTYLE = 2543,
         /// <summary>
-        /// SCI_ANNOTATIONSETSTYLES(line line, const char *styles)<br/>
+        /// SCI_ANNOTATIONSETSTYLES(line line, const char ＊styles)<br/>
         /// </summary>
         SCI_ANNOTATIONSETSTYLES = 2544,
         /// <summary>
-        /// SCI_ANNOTATIONGETSTYLES(line line, char *styles) -&gt; int<br/>
+        /// SCI_ANNOTATIONGETSTYLES(line line, char ＊styles) -&gt; int<br/>
         /// </summary>
         SCI_ANNOTATIONGETSTYLES = 2545,
         /// <summary>
@@ -3903,13 +3903,13 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_RGBAIMAGESETSCALE = 2651,
         /// <summary>
-        /// SCI_MARKERDEFINERGBAIMAGE(int markerNumber, const char *pixels)<br/>
+        /// SCI_MARKERDEFINERGBAIMAGE(int markerNumber, const char ＊pixels)<br/>
         /// Markers can be set to translucent pixmaps with this message. The RGBA format is used for the pixmap. The width
         /// and height must previously been set with the SCI_RGBAIMAGESETWIDTH and SCI_RGBAIMAGESETHEIGHT messages.
         /// </summary>
         SCI_MARKERDEFINERGBAIMAGE = 2626,
         /// <summary>
-        /// SCI_REGISTERRGBAIMAGE(int type, const char *pixels)<br/>
+        /// SCI_REGISTERRGBAIMAGE(int type, const char ＊pixels)<br/>
         /// </summary>
         SCI_REGISTERRGBAIMAGE = 2627,
         SCI_SCROLLTOSTART = 2628,
@@ -3988,15 +3988,15 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETLINEENDTYPESACTIVE = 2658,
         /// <summary>
-        /// SCI_SETREPRESENTATION(const char *encodedCharacter, const char *representation)<br/>
+        /// SCI_SETREPRESENTATION(const char ＊encodedCharacter, const char ＊representation)<br/>
         /// </summary>
         SCI_SETREPRESENTATION = 2665,
         /// <summary>
-        /// SCI_GETREPRESENTATION(const char *encodedCharacter, char *representation NUL-terminated) -&gt; int<br/>
+        /// SCI_GETREPRESENTATION(const char ＊encodedCharacter, char ＊representation NUL-terminated) -&gt; int<br/>
         /// </summary>
         SCI_GETREPRESENTATION = 2666,
         /// <summary>
-        /// SCI_CLEARREPRESENTATION(const char *encodedCharacter)<br/>
+        /// SCI_CLEARREPRESENTATION(const char ＊encodedCharacter)<br/>
         /// Any character, including those normally displayed as mnemonics may be represented by a Unicode string inverted in
         /// a rounded rectangle.
         /// </summary>
@@ -4006,30 +4006,30 @@ namespace Npp.DotNet.Plugin
         SC_REPRESENTATION_BLOB = 1,
         SC_REPRESENTATION_COLOUR = 0x10,
         /// <summary>
-        /// SCI_SETREPRESENTATIONAPPEARANCE(const char *encodedCharacter, int appearance)<br/>
+        /// SCI_SETREPRESENTATIONAPPEARANCE(const char ＊encodedCharacter, int appearance)<br/>
         /// </summary>
         SCI_SETREPRESENTATIONAPPEARANCE = 2766,
         /// <summary>
-        /// SCI_GETREPRESENTATIONAPPEARANCE(const char *encodedCharacter) -&gt; int<br/>
+        /// SCI_GETREPRESENTATIONAPPEARANCE(const char ＊encodedCharacter) -&gt; int<br/>
         /// The appearance may be changed using these flags. If a colour is set and the appearance is set without
         /// SC_REPRESENTATION_COLOUR then the representation will show in the colour of the underlying text.
         /// </summary>
         SCI_GETREPRESENTATIONAPPEARANCE = 2767,
         /// <summary>
-        /// SCI_SETREPRESENTATIONCOLOUR(const char *encodedCharacter, colouralpha colour)<br/>
+        /// SCI_SETREPRESENTATIONCOLOUR(const char ＊encodedCharacter, colouralpha colour)<br/>
         /// </summary>
         SCI_SETREPRESENTATIONCOLOUR = 2768,
         /// <summary>
-        /// SCI_GETREPRESENTATIONCOLOUR(const char *encodedCharacter) -&gt; colouralpha<br/>
+        /// SCI_GETREPRESENTATIONCOLOUR(const char ＊encodedCharacter) -&gt; colouralpha<br/>
         /// The colour and translucency of a representation may be set.
         /// </summary>
         SCI_GETREPRESENTATIONCOLOUR = 2769,
         /// <summary>
-        /// SCI_EOLANNOTATIONSETTEXT(line line, const char *text)<br/>
+        /// SCI_EOLANNOTATIONSETTEXT(line line, const char ＊text)<br/>
         /// </summary>
         SCI_EOLANNOTATIONSETTEXT = 2740,
         /// <summary>
-        /// SCI_EOLANNOTATIONGETTEXT(line line, char *text) -&gt; int<br/>
+        /// SCI_EOLANNOTATIONGETTEXT(line line, char ＊text) -&gt; int<br/>
         /// </summary>
         SCI_EOLANNOTATIONGETTEXT = 2741,
         /// <summary>
@@ -4143,7 +4143,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_COLOURISE = 4003,
         /// <summary>
-        /// SCI_SETPROPERTY(const char *key, const char *value)<br/>
+        /// SCI_SETPROPERTY(const char ＊key, const char ＊value)<br/>
         /// You can communicate settings to lexers with keyword:value string pairs. There is no limit to the number of keyword
         /// pairs you can set, other than available memory. key is a case sensitive keyword, value is a string that is
         /// associated with the keyword. If there is already a value string associated with the keyword, it is replaced. If you
@@ -4153,7 +4153,7 @@ namespace Npp.DotNet.Plugin
         SCI_SETPROPERTY = 4004,
         KEYWORDSET_MAX = 30,
         /// <summary>
-        /// SCI_SETKEYWORDS(int keyWordSet, const char *keyWords)<br/>
+        /// SCI_SETKEYWORDS(int keyWordSet, const char ＊keyWords)<br/>
         /// You can set up to 9 lists of keywords for use by the current lexer. keyWordSet can be 0 to 8 (actually 0 to
         /// KEYWORDSET_MAX) and selects which keyword list to replace. keyWords is a list of keywords separated by
         /// spaces, tabs, "\n" or "\r" or any combination of these. It is expected that the keywords will be composed
@@ -4162,26 +4162,26 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_SETKEYWORDS = 4005,
         /// <summary>
-        /// SCI_GETPROPERTY(const char *key, char *value NUL-terminated) -&gt; int<br/>
+        /// SCI_GETPROPERTY(const char ＊key, char ＊value NUL-terminated) -&gt; int<br/>
         /// Lookup a keyword:value pair using the specified key; if found, copy the value to the user-supplied buffer and
         /// return the length (not including the terminating 0). If not found, copy an empty string to the buffer and return
         /// 0.
         /// </summary>
         SCI_GETPROPERTY = 4008,
         /// <summary>
-        /// SCI_GETPROPERTYEXPANDED(const char *key, char *value) -&gt; int<br/>
+        /// SCI_GETPROPERTYEXPANDED(const char ＊key, char ＊value) -&gt; int<br/>
         /// This is now the same as SCI_GETPROPERTY- no expansion is performed.
         /// </summary>
         SCI_GETPROPERTYEXPANDED = 4009,
         /// <summary>
-        /// SCI_GETPROPERTYINT(const char *key, int defaultValue) -&gt; int<br/>
+        /// SCI_GETPROPERTYINT(const char ＊key, int defaultValue) -&gt; int<br/>
         /// Lookup a keyword:value pair using the specified key; if found, interpret the value as an integer and return it. If
         /// not found (or the value is an empty string) then return the supplied default. If the keyword:value pair is found but is
         /// not a number, then return 0.
         /// </summary>
         SCI_GETPROPERTYINT = 4010,
         /// <summary>
-        /// SCI_GETLEXERLANGUAGE(&lt;unused&gt;, char *language NUL-terminated) -&gt; int<br/>
+        /// SCI_GETLEXERLANGUAGE(&lt;unused&gt;, char ＊language NUL-terminated) -&gt; int<br/>
         /// SCI_GETLEXERLANGUAGE returns the name of the current lexer which must be set with SCI_SETILEXER. To locate
         /// the name for a lexer, open the relevant lexilla/lexers/Lex*.cxx file and search for LexerModule. The third
         /// argument in the LexerModule constructor is the name to use.
@@ -4193,18 +4193,18 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_PRIVATELEXERCALL = 4013,
         /// <summary>
-        /// SCI_PROPERTYNAMES(&lt;unused&gt;, char *names NUL-terminated) -&gt; int<br/>
+        /// SCI_PROPERTYNAMES(&lt;unused&gt;, char ＊names NUL-terminated) -&gt; int<br/>
         /// </summary>
         SCI_PROPERTYNAMES = 4014,
         SC_TYPE_BOOLEAN = 0,
         SC_TYPE_INTEGER = 1,
         SC_TYPE_STRING = 2,
         /// <summary>
-        /// SCI_PROPERTYTYPE(const char *name) -&gt; int<br/>
+        /// SCI_PROPERTYTYPE(const char ＊name) -&gt; int<br/>
         /// </summary>
         SCI_PROPERTYTYPE = 4015,
         /// <summary>
-        /// SCI_DESCRIBEPROPERTY(const char *name, char *description NUL-terminated) -&gt; int<br/>
+        /// SCI_DESCRIBEPROPERTY(const char ＊name, char ＊description NUL-terminated) -&gt; int<br/>
         /// Information may be retrieved about the properties that can be set for the current lexer. This information is only
         /// available for newer lexers. SCI_PROPERTYNAMES returns a string with all of the valid properties separated by "\n".
         /// If the lexer does not support this call then an empty string is returned. Properties may be boolean (
@@ -4213,7 +4213,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_DESCRIBEPROPERTY = 4016,
         /// <summary>
-        /// SCI_DESCRIBEKEYWORDSETS(&lt;unused&gt;, char *descriptions NUL-terminated) -&gt; int<br/>
+        /// SCI_DESCRIBEKEYWORDSETS(&lt;unused&gt;, char ＊descriptions NUL-terminated) -&gt; int<br/>
         /// A description of all of the keyword sets separated by "\n" is returned by SCI_DESCRIBEKEYWORDSETS .
         /// </summary>
         SCI_DESCRIBEKEYWORDSETS = 4017,
@@ -4252,7 +4252,7 @@ namespace Npp.DotNet.Plugin
         SCI_GETPRIMARYSTYLEFROMSTYLE = 4028,
         SCI_FREESUBSTYLES = 4023,
         /// <summary>
-        /// SCI_SETIDENTIFIERS(int style, const char *identifiers)<br/>
+        /// SCI_SETIDENTIFIERS(int style, const char ＊identifiers)<br/>
         /// Similar to SCI_SETKEYWORDS but for substyles. The prefix feature available with SCI_SETKEYWORDS is not
         /// implemented for SCI_SETIDENTIFIERS .
         /// </summary>
@@ -4263,7 +4263,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_DISTANCETOSECONDARYSTYLES = 4025,
         /// <summary>
-        /// SCI_GETSUBSTYLEBASES(&lt;unused&gt;, char *styles NUL-terminated) -&gt; int<br/>
+        /// SCI_GETSUBSTYLEBASES(&lt;unused&gt;, char ＊styles NUL-terminated) -&gt; int<br/>
         /// Fill styles with a byte for each style that can be split into substyles.
         /// </summary>
         SCI_GETSUBSTYLEBASES = 4026,
@@ -4273,17 +4273,17 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SCI_GETNAMEDSTYLES = 4029,
         /// <summary>
-        /// SCI_NAMEOFSTYLE(int style, char *name) -&gt; int<br/>
+        /// SCI_NAMEOFSTYLE(int style, char ＊name) -&gt; int<br/>
         /// Retrieve the name of a style. This is a C preprocessor symbol like "SCE_C_COMMENTDOC".
         /// </summary>
         SCI_NAMEOFSTYLE = 4030,
         /// <summary>
-        /// SCI_TAGSOFSTYLE(int style, char *tags) -&gt; int<br/>
+        /// SCI_TAGSOFSTYLE(int style, char ＊tags) -&gt; int<br/>
         /// Retrieve the tags of a style. This is a space-separated set of words like "comment documentation".
         /// </summary>
         SCI_TAGSOFSTYLE = 4031,
         /// <summary>
-        /// SCI_DESCRIPTIONOFSTYLE(int style, char *description) -&gt; int<br/>
+        /// SCI_DESCRIPTIONOFSTYLE(int style, char ＊description) -&gt; int<br/>
         /// Retrieve an English-language description of a style which may be suitable for display in a user interface. This
         /// looks like "Doc comment: block comments beginning with /** or /*!".
         /// </summary>

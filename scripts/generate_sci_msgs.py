@@ -68,14 +68,8 @@ def generate(cpp_header: str):
                 try:
                     macro = re.match(r'^#(if|end)(n?def|if)', line)
                     if macro is not None:
-                        _1, _2 = macro.groups()
-                        if _1 == 'end':
-                            print(macro.group(), file=out)
-                        else:
-                            define = line.split()
-                            print(f"#{_1} {'!' if _2 == 'ndef' else ''}{define[1]}", file=out)
-
-                    elif re.search(r'^#define', line):
+                        print(u.c_preproc_to_csharp(line, macro), file=out)
+                    elif re.search(r'^\s*(?!\/\/\s*)#define', line):
                         decl = re.sub(r'\-1$', '0xFFFFFFFF', line).split()
                         if len(decl) == 3:
                             sym = decl[1].upper()

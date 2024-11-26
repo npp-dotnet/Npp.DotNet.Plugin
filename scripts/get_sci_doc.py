@@ -94,7 +94,8 @@ class ScintillaDefinitions(HTMLParser):
         doc_lines = []
 
         def xmlify(s: str) -> str:
-            return re.sub(r'\s{2,}', ' ', html_escape(s, quote=False).replace('\u2192', '-&gt;'))
+            _s = html_escape(s, quote=False).replace('\u2192', '-&gt;')
+            return re.sub(r'\s{2,}', ' ', re.sub(r'\*\b', '\uff0a', _s))
 
         if sym in self.defs:
             doc = str(self.defs.get(sym))
