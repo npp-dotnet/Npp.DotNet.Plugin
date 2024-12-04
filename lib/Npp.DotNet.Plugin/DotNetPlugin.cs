@@ -16,20 +16,7 @@ namespace Npp.DotNet.Plugin
     /// <remarks>
     /// For a guide to the external lexer API, see <see href="https://community.notepad-plus-plus.org/post/76117"/>
     /// </remarks>
-    internal interface IDotNetPlugin
-    {
-        /// <inheritdoc cref="DotNetPlugin.OnSetInfo"/>
-        void OnSetInfo();
-        /// <inheritdoc cref="DotNetPlugin.OnBeNotified"/>
-        void OnBeNotified(ScNotification notification);
-        /// <inheritdoc cref="DotNetPlugin.OnMessageProc"/>
-        NativeBool OnMessageProc(uint msg, UIntPtr wParam, IntPtr lParam);
-    }
-
-    /// <summary>
-    /// Default implementation of the <see cref="IDotNetPlugin"/> interface.
-    /// </summary>
-    public class DotNetPlugin : IDotNetPlugin
+    public class DotNetPlugin
     {
         /// <summary>
         /// Called by the unmanaged <c>setInfo</c> Notepad++ API function.<br/>
