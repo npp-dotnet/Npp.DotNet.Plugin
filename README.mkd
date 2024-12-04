@@ -1,9 +1,5 @@
 
-<div align="center">
-  <h2><b><em>work in progress</em></b></h2>
-</div>
-
-[![Build Status]][gh-actions]
+![Project Status] [![Build Status]][gh-actions]
 
 ## What's in here
 
@@ -44,7 +40,9 @@ See the [known issues](doc/ISSUES.mkd#windows-forms) to learn more.
 
 Double-click the solution file at the root of the source tree.
 
-Activate one of the `*.Demo` projects by clicking on it in the Solution Explorer.
+Exapand the "examples" subfolder in the Solution Explorer.
+
+Activate one of the `*.Demo` projects by clicking on it.
 
 Select "Build" from the main menu, then "Publish Selection". Alternatively, right-click on a `*.Demo` project and select "Publish..." from the context menu.
 
@@ -118,5 +116,6 @@ This README and all other documentation, including images, are distributed under
 [examples/gui]: examples/gui
 
 <!-- badges -->
+[Project Status]: https://img.shields.io/badge/Work%20in%20Progress-EEBE53?style=for-the-badge
 [Build Status]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml/badge.svg
 [gh-actions]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml

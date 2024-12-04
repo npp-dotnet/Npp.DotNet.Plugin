@@ -83,12 +83,10 @@ namespace Npp.DotNet.Plugin
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.MENU_TITLE_LENGTH)]
         public string ItemName;
-        [MarshalAs(UnmanagedType.SysInt)]
         public PluginFunc PFunc;
         public int CmdID;
         [MarshalAs(UnmanagedType.U1)]
         public NativeBool Init2Check;
-        [MarshalAs(UnmanagedType.SysInt)]
         public ShortcutKey PShKey;
     }
 

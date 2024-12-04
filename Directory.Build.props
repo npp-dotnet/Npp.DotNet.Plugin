@@ -9,7 +9,7 @@
 		<RuntimeIdentifier Condition=" '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifier)' == '' ">win-x64</RuntimeIdentifier>
 		<SharedRuntimeIdentifier>$(RuntimeIdentifier)</SharedRuntimeIdentifier>
 		<SharedRuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</SharedRuntimeIdentifier>
-		<TargetFramework Condition=" '$(TargetFramework)' == '' ">net8.0-windows</TargetFramework>
+		<TargetFramework Condition=" '$(BuildingInsideVisualStudio)' == 'true' And '$(TargetFramework)' == '' ">net8.0-windows</TargetFramework>
 		<SharedFramework>$(TargetFramework)</SharedFramework>
 	</PropertyGroup>
 

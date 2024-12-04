@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-arm64;win-x64</RuntimeIdentifiers>
     <IsAotCompatible>true</IsAotCompatible>
     <IsPackable>false</IsPackable>

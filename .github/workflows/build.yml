@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - name: REUSE Compliance Check
-      uses: fsfe/reuse-action@3ae3c6bdf1257ab19397fab11fd3312144692083 # v4.0.0
+      uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542 # v5.0.0
 
   publish_aot:
     strategy:
@@ -40,7 +40,7 @@ jobs:
         with:
           dotnet-version: >
             8.0.x
-            7.0.x
+            9.0.x
 
       - name: Restore projects
         run: |
@@ -51,17 +51,17 @@ jobs:
         if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
-          dotnet msbuild /t:Build /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
-          dotnet test
+          dotnet msbuild /t:Build /p:SharedFramework=net9.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
+          dotnet test -f net9.0-windows --no-build
 
       - name: Build demo plugins
         run: |
-          dotnet build examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
-          dotnet publish examples\${{ matrix.plugin_demo }} -f net8.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet build examples\${{ matrix.plugin_demo }} -f net9.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet publish examples\${{ matrix.plugin_demo }} -f net9.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
       - name: Pack localized plugin assets
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
-        working-directory: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native
+        working-directory: examples/minimal/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native
         run: |
           7z a -tzip ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip ${{ env.PLUGIN_NAME }}.dll ${{ github.workspace }}\examples\minimal\localizations -y
 
@@ -70,18 +70,18 @@ jobs:
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
-          path: examples/minimal/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
+          path: examples/minimal/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
-          path: examples/vbnet/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
+          path: examples/vbnet/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'fsharp'
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
-          path: examples/fsharp/bin/Release/net8.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll
+          path: examples/fsharp/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll

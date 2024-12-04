@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.ComponentModel; // https://learn.microsoft.com/dotnet/core/compatibility/windows-forms/9.0/security-analyzers#new-behavior
 using System.Windows.Forms;
 using static Npp.DotNet.Plugin.Win32;
 
@@ -16,11 +17,13 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// if true, this blocks the parent application until closed.<br></br>
         /// THIS IS ONLY TRUE OF POP-UP DIALOGS.
         /// </summary>
+        [DefaultValue(false)]
         public bool IsModal { get; private set; }
 
         /// <summary>
         /// if true, this form's default appearance is docked (attached) to the left, right, bottom, or top of the Notepad++ window.
         /// </summary>
+        [DefaultValue(false)]
         public bool IsDocking { get; private set; }
 
         /// <summary>
