@@ -125,7 +125,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// <summary>
         /// Icon for tabs
         /// </summary>
-        public uint HIconTab;
+        public IntPtr HIconTab;
         /// <summary>
         /// Additional information (shown in window's title bar)
         /// </summary>

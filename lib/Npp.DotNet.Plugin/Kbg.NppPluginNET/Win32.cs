@@ -13,6 +13,7 @@ namespace Npp.DotNet.Plugin
 {
     public class Win32
     {
+        public static readonly IntPtr NULL = IntPtr.Zero;
         public static readonly NativeBool FALSE = NativeBool.False;
         public static readonly NativeBool TRUE = NativeBool.True;
 

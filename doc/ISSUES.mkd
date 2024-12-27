@@ -16,6 +16,24 @@ To make this technical discussion more concrete (and, hopefully, to invite contr
 <summary>Publishing a WinForms project with Native AOT</summary>
 <pre>
 <code>
+C:\git\Npp.DotNet.Plugin>dotnet publish examples\gui -r win-x64 -f net9.0-windows -c Release
+  npp.dotnet.plugin net9.0-windows succeeded (5.3s) → lib\bin\Release\net9.0-windows\win-x64\npp.dotnet.plugin.dll
+  Npp.DotNet.Plugin.Gui.Demo net9.0-windows succeeded with 5 warning(s) (41.5s) → examples\gui\bin\Release\net9.0-windows\win-x64\publish\
+    C:\Users\Admin\.nuget\packages\microsoft.windowsdesktop.app.runtime.win-x64\9.0.0\runtimes\win-x64\lib\net9.0\System.Windows.Forms.Primitives.dll : warning IL3053: Assembly 'System.Windows.Forms.Primitives' produced AOT analysis warnings.
+    ILC : warning IL3000: System.Windows.Forms.ThreadExceptionDialog.ThreadExceptionDialog(Exception): 'System.Reflection.Assembly.Location.get' always returns an empty string for assemblies embedded in a single-file app. If the path to the app directory is needed, consider calling 'System.AppContext.BaseDirectory'.
+    C:\Users\Admin\.nuget\packages\microsoft.windowsdesktop.app.runtime.win-x64\9.0.0\runtimes\win-x64\lib\net9.0\System.Windows.Forms.dll : warning IL3053: Assembly 'System.Windows.Forms' produced AOT analysis warnings.
+    ILC : warning IL3000: System.Windows.Forms.Control.ControlVersionInfo.OwnerIsInMemoryAssembly.get: 'System.Reflection.Assembly.Location.get' always returns an empty string for assemblies embedded in a single-file app. If the path to the app directory is needed, consider calling 'System.AppContext.BaseDirectory'.
+    C:\Users\Admin\.nuget\packages\microsoft.windowsdesktop.app.runtime.win-x64\9.0.0\runtimes\win-x64\lib\net9.0\System.Formats.Nrbf.dll : warning IL3053: Assembly 'System.Formats.Nrbf' produced AOT analysis warnings.
+
+Build succeeded with 5 warning(s) in 47.5s
+</code>
+</pre>
+</details>
+
+<details>
+<summary>Publishing a WinForms project with Native AOT (net8.0-windows)</summary>
+<pre>
+<code>
 C:\git\Npp.DotNet.Plugin>dotnet publish examples\gui -r win-x64 -f net8.0-windows -c Release
 MSBuild version 17.9.6+a4ecab324 for .NET
   Determining projects to restore...
@@ -44,7 +62,7 @@ MSBuild version 17.9.6+a4ecab324 for .NET
 </pre>
 </details>
 
-The warnings are significant. A module that is not properly trimmed is basically a .NET assembly. Without a compatible runtime, it crashes when starting up. If placed in the plugin path, it will throw an unhandled exception as soon as Notepad++ loads it, bringing down the main UI thread before the first window can appear.
+The warnings are significant. A module that is not properly trimmed is basically a .NET assembly. If placed in the plugin path, it may throw an unhandled exception at any time, crashing Notepad++.
 
 
 ## Lack of AOT-compatible third-party .NET libraries

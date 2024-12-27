@@ -12,7 +12,8 @@ using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
 using Npp.DotNet.Plugin.Winforms;
 using static Npp.DotNet.Plugin.Win32;
-using Properties = Npp.DotNet.Plugin.Gui.Demo.Properties;
+using static Npp.DotNet.Plugin.Winforms.WinUser;
+using static Npp.DotNet.Plugin.Winforms.WinGDI;
 
 namespace Npp.DotNet.Plugin.Gui.Demo
 {
@@ -99,8 +100,9 @@ namespace Kbg.Demo.Namespace
     class Main
     {
         #region " Fields "
-        internal const string PluginName = "NppManagedPluginDemo";
+        internal static readonly string PluginName = typeof(Npp.DotNet.Plugin.Gui.Demo.Main).Namespace!;
         static string iniFilePath = string.Empty;
+        static string toolbarIconPath = string.Empty;
         static readonly string sectionName = "Insert Extension";
         static readonly string keyName = "doCloseTag";
         static bool doCloseTag = false;
@@ -109,10 +111,9 @@ namespace Kbg.Demo.Namespace
         static internal int idFrmGotToLine = -1;
 
         // toolbar icons
-        static readonly Bitmap tbBmp = Properties.Resources.star;
-        static readonly Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
-        static readonly Icon tbIco = Properties.Resources.star_black;
-        static readonly Icon tbIcoDM = Properties.Resources.star_white;
+        static Bitmap? tbBmp_tbTab = null;
+        static Icon? tbIco = null;
+        static Icon? tbIcoDM = null;
         static Icon? tbIcon = null;
 
         // static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
@@ -134,6 +135,7 @@ namespace Kbg.Demo.Namespace
             StringBuilder sbIniFilePath = new StringBuilder(MAX_PATH);
             SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, sbIniFilePath);
             iniFilePath = sbIniFilePath.ToString();
+            toolbarIconPath = Path.Combine(NppUtils.Notepad.GetPluginsHomePath(), PluginName, "Properties");
 
             // if config path doesn't exist, we create it
             if (!Directory.Exists(iniFilePath))
@@ -204,13 +206,50 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static internal void SetToolBarIcon()
         {
-            // create struct
-            ToolbarIconDarkMode tbIcons = new();
+            // TODO: use ::GetDpiForMonitor
+            long screenDPI = 96;
+            int minBmpHeight = 16, minBmpWidth = 16;
+
+            IntPtr hHDC = GetDC(NULL);
+            int bmpX =
+                unchecked((int)((Math.BigMul(minBmpHeight, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSX)) + (screenDPI >> 1)) / screenDPI));
+            int bmpY =
+                unchecked((int)((Math.BigMul(minBmpWidth, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSY)) + (screenDPI >> 1)) / screenDPI));
+            _ = ReleaseDC(NULL, hHDC);
+
+            var loadFlags =
+                LoadImageFlag.LR_LOADFROMFILE | LoadImageFlag.LR_LOADTRANSPARENT | LoadImageFlag.LR_LOADMAP3DCOLORS;
+            IntPtr hBmp =
+                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_bmp.bmp"), LoadImageType.IMAGE_BITMAP, bmpX, bmpY, loadFlags);
 
             // add bmp icon
-            tbIcons.HToolbarBmp = tbBmp.GetHbitmap();
-            tbIcons.HToolbarIcon = tbIco.Handle;            // icon with black lines
-            tbIcons.HToolbarIconDarkMode = tbIcoDM.Handle;  // icon with light grey lines
+            if (hBmp != NULL)
+                tbBmp_tbTab = Image.FromHbitmap(hBmp);
+            else
+            {
+                using Bitmap bmp = new(bmpX, bmpY);
+                Graphics bmpIcon = Graphics.FromImage(bmp);
+                Rectangle rect = new(0, 0, bmpX, bmpY);
+                bmpIcon.FillRectangle(Brushes.BlueViolet, rect);
+                tbBmp_tbTab = Image.FromHbitmap(bmp.GetHbitmap());
+            }
+
+            IntPtr hIco =
+                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_black.ico"), LoadImageType.IMAGE_ICON, 32, 32, loadFlags);
+            IntPtr hIcoDark =
+                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_white.ico"), LoadImageType.IMAGE_ICON, 32, 32, loadFlags);
+
+            if (hIco == NULL) hIco = GetStandardIcon(WindowsIcon.IDI_APPLICATION);
+            if (hIcoDark == NULL) hIcoDark = hIco;
+            tbIco = Icon.FromHandle(hIco);
+            tbIcoDM = Icon.FromHandle(hIcoDark);
+
+            ToolbarIconDarkMode tbIcons = new()
+            {
+                HToolbarBmp = (tbBmp_tbTab?.GetHbitmap()).GetValueOrDefault(), // add bmp icon
+                HToolbarIcon = (tbIco?.Handle).GetValueOrDefault(),            // icon with black lines
+                HToolbarIconDarkMode = (tbIcoDM?.Handle).GetValueOrDefault()   // icon with light grey lines
+            };
 
             // convert to c++ pointer
             IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
@@ -457,20 +496,22 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                     colorMap[0].NewColor = Color.FromKnownColor(KnownColor.ButtonFace);
                     ImageAttributes attr = new ImageAttributes();
                     attr.SetRemapTable(colorMap);
-                    g.DrawImage(tbBmp_tbTab, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
+                    g.DrawImage(tbBmp_tbTab!, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
                     tbIcon = Icon.FromHandle(newBmp.GetHicon());
                 }
 
-                NppTbData _nppTbData = new NppTbData();
-                _nppTbData.HClient = frmGoToLine.Handle;
-                _nppTbData.PszName = "Go To Line #";
-                // the dlgDlg should be the index of funcItem where the current function pointer is in
-                // this case is 15.. so the initial value of funcItem[15].CmdID - not the updated internal one !
-                _nppTbData.DlgID = idFrmGotToLine;
-                // define the default docking behaviour
-                _nppTbData.UMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
-                _nppTbData.HIconTab = (uint)tbIcon!.Handle;
-                _nppTbData.PszModuleName = $"{PluginName}.dll";
+                NppTbData _nppTbData = new()
+                {
+                    HClient = frmGoToLine.Handle,
+                    PszName = "Go To Line #",
+                    // the dlgDlg should be the index of funcItem where the current function pointer is in
+                    // this case is 15.. so the initial value of funcItem[15].CmdID - not the updated internal one !
+                    DlgID = idFrmGotToLine,
+                    // define the default docking behaviour
+                    UMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR,
+                    HIconTab = (tbIcon?.Handle).GetValueOrDefault(),
+                    PszModuleName = $"{PluginName}.dll"
+                };
                 IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
                 Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
 

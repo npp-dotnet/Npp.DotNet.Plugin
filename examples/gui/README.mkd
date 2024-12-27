@@ -1,5 +1,5 @@
 
-### :warning: Native DLLs built from this project are currently non-functional :warning:
+### :warning: Native DLLs built from this project are currently unstable :warning:
 
 Npp.DotNet.Plugin.Gui.Demo
 --------------------------
@@ -17,7 +17,7 @@ Launch the Visual Studio [Developer Command Prompt or PowerShell] from the Windo
 
 Change into the same directory as this README and run:
 
-    dotnet publish -f net8.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
+    dotnet publish -f net9.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
 
 The command line arguments are the following:
 
@@ -30,12 +30,30 @@ The command line arguments are the following:
 
 ### Running the plugin
 
-__*Plugins built from this project will crash Notepad++ on start-up!*__
+> [!CAUTION]
+> Executing the plugin's "Dockable Dialog Demo" command will crash Notepad++:
+>
+> <img alt="GUI plugin menu" src="../../doc/img/npp.dotnet.plugin.gui.demo.toolbar.menu.png" width="680"/>
 
 If you would like to help further the development of Native AOT plugins, choose "Debug" for the `$(BUILD_CONFIGURATION)` above.
-Start a [portable Notepad++] with a debugger attached, and try to capture a stack trace before the fatal error occurs.
+Start a [portable Notepad++] with a debugger attached (e.g. the [Visual Studio Windows Debugger]), and watch the output window
+for a stacktrace similar to the following:
+
+```
+Unhandled exception. System.Globalization.CultureNotFoundException: Only the invariant culture is supported in globalization-invariant mode. See https://aka.ms/GlobalizationInvariantMode for more information. (Parameter 'name')
+zh-Hant is an invalid culture identifier.
+   at System.Globalization.CultureInfo..ctor(String name, Boolean useUserOverride) + 0x81
+   at System.Reflection.AssemblyName.set_CultureName(String) + 0x36
+   at System.Reflection.RuntimeAssemblyName.CopyToAssemblyName(AssemblyName) + 0x3c
+   at System.Reflection.Runtime.Assemblies.RuntimeAssemblyInfo.GetName() + 0x33
+   at System.Windows.Forms.ThreadExceptionDialog..ctor(Exception) + 0x7ea
+   at System.Windows.Forms.Application.ThreadContext.OnThreadException(Exception) + 0x94
+   at System.Windows.Forms.NativeWindow.Callback(HWND, MessageId, WPARAM, LPARAM) + 0xef
+   at Npp.DotNet.Plugin.Gui.Demo!<BaseAddress>+0x4ba9ea
+```
 
 
 [portable Notepad++]: ../minimal/README.mkd/#user-content-portable-npp
 [general build requirements]: ../../README.mkd/#requirements
 [Developer Command Prompt or PowerShell]: https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell
+[Visual Studio Windows Debugger]: https://code.visualstudio.com/docs/cpp/cpp-debug

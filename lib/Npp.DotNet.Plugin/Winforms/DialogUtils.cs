@@ -9,22 +9,14 @@ using System.Windows.Forms;
 namespace Npp.DotNet.Plugin.Winforms
 {
     /// <summary>
-    /// Extends <see cref="NppUtils"/> with a connector to the Notepad++ GUI (<see cref="DialogUtils.NotepadGUI"/>).
+    /// Provides readonly access to Notepad++'s GUI connector, with some additional helper methods.
     /// </summary>
-    public class DialogUtils : NppUtils
+    public class DialogUtils
     {
-        /// <summary>
-        /// Extends the default instance of <see cref="INotepadPPGateway"/> with methods from <see cref="PluginDialogBase"/>.
-        /// </summary>
-        static DialogUtils()
-        {
-            Notepad = new PluginDialogBase();
-        }
-
         /// <summary>
         /// Connector to Notepad++'s GUI.
         /// </summary>
-        public static PluginDialogBase NotepadGUI { get => (PluginDialogBase)Notepad; }
+        public static PluginDialogBase NotepadGUI { get; } = new PluginDialogBase();
 
         /// <summary>
         /// Trying to copy an empty string or null to the clipboard raises an error.<br></br>
