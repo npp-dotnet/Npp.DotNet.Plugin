@@ -1142,7 +1142,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// int NPPM_SETUNTITLEDNAME(BufferID id, const TCHAR* newName)<br/>
         /// Rename the tab name for an untitled tab.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: id - BufferID of the tab. -1 for currently active tab</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: id - BufferID of the tab.</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: newName - the desired new name of the tab</para>
         /// </summary>
         /// <returns>TRUE upon success; FALSE upon failure</returns>

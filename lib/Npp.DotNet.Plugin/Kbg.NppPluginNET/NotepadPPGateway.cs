@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -21,6 +22,7 @@ namespace Npp.DotNet.Plugin
 		string GetNppPath();
 		string GetPluginsHomePath();
 		string GetPluginConfigPath();
+		string GetSessionFilePath();
 		string GetCurrentFilePath();
 		string GetFilePath(UIntPtr bufferId);
 		string GetNativeLanguage();
@@ -118,6 +120,20 @@ namespace Npp.DotNet.Plugin
 		/// <returns>The path to the Config folder for plugins.</returns>
 		public string GetPluginConfigPath()
 			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
+
+		public string GetSessionFilePath()
+		{
+			// portable installation ?
+			var sessionPath = Directory.GetParent(GetPluginsHomePath());
+			var sessionFile = Path.Combine(sessionPath?.FullName, "session.xml");
+			if (!File.Exists(sessionFile))
+			{
+				// system-wide installation ?
+				sessionPath = Directory.GetParent(Directory.GetParent(GetConfigDirectory())?.FullName);
+				sessionFile = Path.Combine(sessionPath?.FullName, "session.xml");
+			}
+			return sessionFile;
+		}
 
 		/// <summary>
 		/// Open a file for editing in Notepad++, pretty much like using the app's

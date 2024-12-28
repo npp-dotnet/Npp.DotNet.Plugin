@@ -106,7 +106,7 @@ namespace Kbg.Demo.Namespace
         static readonly string sectionName = "Insert Extension";
         static readonly string keyName = "doCloseTag";
         static bool doCloseTag = false;
-        static readonly string sessionFilePath = @"C:\text.session";
+        static string? sessionFilePath = null;
         static frmGoToLine? frmGoToLine = null;
         static internal int idFrmGotToLine = -1;
 
@@ -455,11 +455,12 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         }
         static void getSessionFileNamesDemo()
         {
+            sessionFilePath = NppUtils.Notepad.GetSessionFilePath();
             int nbFile = (int)SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETNBSESSIONFILES, 0, sessionFilePath);
 
             if (nbFile < 1)
             {
-                MessageBox.Show("Please modify \"sessionFilePath\" in \"Demo.cs\" in order to point to a valid session file", "Error");
+                MessageBox.Show($"\"{sessionFilePath}\" is missing or contains no files", "Error");
                 return;
             }
             MessageBox.Show(nbFile.ToString(), "Number of session files:");
