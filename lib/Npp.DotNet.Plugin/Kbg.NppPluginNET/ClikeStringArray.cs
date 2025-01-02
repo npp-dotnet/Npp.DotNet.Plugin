@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Npp.DotNet.Plugin
 {
@@ -16,29 +17,47 @@ namespace Npp.DotNet.Plugin
         internal List<IntPtr> _nativeItems;
         bool _disposed = false;
 
-        public ClikeStringArray(int num, int stringCapacity)
+        /// <summary>
+        /// Creates a new <see cref="ClikeStringArray"/> with capacity for <paramref name="num"/> strings.
+        /// </summary>
+        /// <param name="num">The number of strings in this <see cref="ClikeStringArray"/>.</param>
+        /// <param name="stringLength">
+        /// The number of <em><b>wide</b></em> characters in each string, not counting the NULL terminator.
+        /// The memory size of each string in bytes will be equal to <c>stringLength x sizeof(wchar_t)</c>,
+        /// or simply <c>stringLength x 2</c> on Unicode-aware versions of Windows.
+        /// </param>
+        /// <remarks>
+        /// <paramref name="stringLength"/> should be no greater than <see cref="Win32.MAX_PATH"/>, less 1 for the NULL terminator.
+        /// The constructor will truncate any larger values.
+        /// </remarks>
+        public ClikeStringArray(int num, int stringLength)
         {
             _nativeArray = Marshal.AllocHGlobal((num + 1) * IntPtr.Size);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
-                IntPtr item = Marshal.AllocHGlobal(stringCapacity);
+                int cbSize = Math.Min(stringLength + 1, Win32.MAX_PATH - 1) * Marshal.SystemDefaultCharSize;
+                IntPtr item = Marshal.AllocHGlobal(cbSize);
                 Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);
             }
             Marshal.WriteIntPtr(_nativeArray + (num * IntPtr.Size), IntPtr.Zero);
         }
-        public ClikeStringArray(List<string> lstStrings)
+
+        /// <summary>
+        /// Creates a new <see cref="ClikeStringArray"/> from the given <paramref name="stringList"/>.
+        /// </summary>
+        /// <param name="stringList">A <see cref="List{T}"/> of managed .NET strings.</param>
+        /// <remarks>
+        /// Each string in <paramref name="stringList"/> should be no greater than <see cref="Win32.MAX_PATH"/>, less 1 for the NULL terminator.
+        /// </remarks>
+        public ClikeStringArray(List<string> stringList) : this(stringList.Count, Win32.MAX_PATH - 1)
         {
-            _nativeArray = Marshal.AllocHGlobal((lstStrings.Count + 1) * IntPtr.Size);
-            _nativeItems = new List<IntPtr>();
-            for (int i = 0; i < lstStrings.Count; i++)
+            for (int i = 0; i < stringList.Count; i++)
             {
-                IntPtr item = Marshal.StringToHGlobalUni(lstStrings[i]);
-                Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
-                _nativeItems.Add(item);
+                byte[] bytes = Encoding.Unicode.GetBytes(stringList[i]);
+                Marshal.Copy(bytes, 0, _nativeItems[i], bytes.Length);
             }
-            Marshal.WriteIntPtr(_nativeArray + (lstStrings.Count * IntPtr.Size), IntPtr.Zero);
         }
 
         public IntPtr NativePointer { get { return _nativeArray; } }
