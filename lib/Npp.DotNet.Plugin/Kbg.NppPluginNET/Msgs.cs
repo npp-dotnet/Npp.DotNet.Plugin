@@ -78,7 +78,7 @@ namespace Npp.DotNet.Plugin
         /// int NPPM_GETNBOPENFILES(0, int iViewType)<br/>
         /// Get the number of files currently open.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: iViewType - could be <see cref="PRIMARY_VIEW"/>, <see cref="SECOND_VIEW"/> or <see cref="ALL_OPEN_FILES"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>iViewType</c> - could be <see cref="PRIMARY_VIEW"/>, <see cref="SECOND_VIEW"/> or <see cref="ALL_OPEN_FILES"/></para>
         /// </summary>
         /// <returns>the number of opened files</returns>
         NPPM_GETNBOPENFILES = NPPMSG + 7,
@@ -91,10 +91,10 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// BOOL NPPM_GETOPENFILENAMES(TCHAR** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of both views. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
-        /// <para>wParam (<see cref="UIntPtr"/>) [out]: fileNames - array of file path</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: nbFileNames is the number of file path.</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
         /// </summary>
-        /// <returns>value: The number of files copied into fileNames array</returns>
+        /// <returns>value: The number of files copied into <c>fileNames</c> array</returns>
         NPPM_GETOPENFILENAMES = NPPMSG + 8,
         /// <summary>
         /// HWND NPPM_MODELESSDIALOG(int action, HWND hDlg)<br/>
@@ -102,20 +102,20 @@ namespace Npp.DotNet.Plugin
         /// For each created dialog in your plugin, you should register it (and unregister while destroy it) to Notepad++ by using this message.
         /// If this message is ignored, then your dialog won't react with the key stroke messages such as TAB, Ctrl-C or Ctrl-V key.
         /// For the good functioning of your plugin dialog, you're recommended to not ignore this message.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: action is <see cref="MODELESSDIALOGADD"/> (for registering your hDlg) or <see cref="MODELESSDIALOGREMOVE"/> (for unregistering your hDlg)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hDlg is the handle of dialog to register/unregister</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>action</c> is <see cref="MODELESSDIALOGADD"/> (for registering your <c>hDlg</c>) or <see cref="MODELESSDIALOGREMOVE"/> (for unregistering your hDlg)</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hDlg</c> is the handle of dialog to register/unregister</para>
         /// </summary>
-        /// <returns>hDlg (HWND) on success, NULL on failure</returns>
+        /// <returns><c>hDlg</c> (HWND) on success, NULL on failure</returns>
         NPPM_MODELESSDIALOG = NPPMSG + 12,
         /// <inheritdoc cref="NPPM_MODELESSDIALOG"/>
         MODELESSDIALOGADD = 0,
         /// <inheritdoc cref="NPPM_MODELESSDIALOG"/>
         MODELESSDIALOGREMOVE = 1,
         /// <summary>
-        /// int NPPM_GETNBSESSIONFILES (BOOL* pbIsValidXML /* added in v8.6 */, TCHAR* sessionFileName)<br/>
+        /// int NPPM_GETNBSESSIONFILES (BOOL* pbIsValidXML /＊ added in v8.6 ＊/, TCHAR* sessionFileName)<br/>
         /// Get the number of files to load in the session sessionFileName. sessionFileName should be a full path name of an xml file.
-        /// <para>wParam (<see cref="UIntPtr"/>) [out]: pbIsValidXML, if the lParam pointer is null, then this parameter will be ignored. TRUE if XML is valid, otherwise FALSE.</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: sessionFileName is XML session full path</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>pbIsValidXML</c>, if the lParam pointer is null, then this parameter will be ignored. TRUE if XML is valid, otherwise FALSE.</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileName</c> is XML session full path</para>
         /// </summary>
         /// <returns>value: The number of files in XML session file</returns>
         /// <remarks>
@@ -125,8 +125,8 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// NPPM_GETSESSIONFILES (TCHAR** sessionFileArray, TCHAR* sessionFileName)<br/>
         /// the files' full path name from a session file.
-        /// <para>wParam (<see cref="UIntPtr"/>) [out]: sessionFileArray is the array in which the files' full path of the same group are written. To allocate the array with the proper size, send <see cref="NPPM_GETNBSESSIONFILES"/>.</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: sessionFileName is XML session full path</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>sessionFileArray</c> is the array in which the files' full path of the same group are written. To allocate the array with the proper size, send <see cref="NPPM_GETNBSESSIONFILES"/>.</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileName</c> is XML session full path</para>
         /// </summary>
         /// <returns>FALSE on failure, TRUE on success</returns>
         NPPM_GETSESSIONFILES = NPPMSG + 14,
@@ -135,7 +135,7 @@ namespace Npp.DotNet.Plugin
         /// Creates an session file for a defined set of files.
         /// Unlike <see cref="NPPM_SAVECURRENTSESSION"/>, which saves the current opened files, this call can be used to freely define any file which should be part of a session.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: si is a pointer to a <see cref="SessionInfo"/> structure</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>si</c> is a pointer to a <see cref="SessionInfo"/> structure</para>
         /// </summary>
         /// <returns>sessionFileName on success, NULL otherwise</returns>
         NPPM_SAVESESSION = NPPMSG + 15,
@@ -143,23 +143,23 @@ namespace Npp.DotNet.Plugin
         /// TCHAR* NPPM_SAVECURRENTSESSION(0, TCHAR* sessionFileName)<br/>
         /// Saves the current opened files in Notepad++ as a group of files (session) as an xml file.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: sessionFileName is the xml full path name</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileArray</c> is the xml full path name</para>
         /// </summary>
         /// <returns>sessionFileName on success, NULL otherwise</returns>
         NPPM_SAVECURRENTSESSION = NPPMSG + 16,
         /// <summary>
         /// BOOL NPPM_GETOPENFILENAMESPRIMARY(TCHAR** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of main view. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
-        /// <para>wParam (<see cref="UIntPtr"/>) [out]: fileNames - array of file path</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: nbFileNames is the number of file path.</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
         /// </summary>
         /// <returns>value: The number of files copied into fileNames array</returns>
         NPPM_GETOPENFILENAMESPRIMARY = NPPMSG + 17,
         /// <summary>
         /// BOOL NPPM_GETOPENFILENAMESSECOND(TCHAR** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of sub-view. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
-        /// <para>wParam (<see cref="UIntPtr"/>) [out]: fileNames - array of file path</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: nbFileNames is the number of file path.</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
         /// </summary>
         /// <returns>value: The number of files copied into fileNames array</returns>
         NPPM_GETOPENFILENAMESSECOND = NPPMSG + 18,
@@ -167,7 +167,7 @@ namespace Npp.DotNet.Plugin
         /// HWND NPPM_CREATESCINTILLAHANDLE(0, HWND hParent)<br/>
         /// A plugin can create a Scintilla for its usage by sending this message to Notepad++.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hParent - If set (non NULL), it will be the parent window of this created Scintilla handle, otherwise the parent window is Notepad++</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hParent</c> - If set (non NULL), it will be the parent window of this created Scintilla handle, otherwise the parent window is Notepad++</para>
         /// </summary>
         /// <returns>the handle of created Scintilla handle</returns>
         NPPM_CREATESCINTILLAHANDLE = NPPMSG + 20,
@@ -194,7 +194,7 @@ namespace Npp.DotNet.Plugin
         /// int NPPM_GETCURRENTDOCINDEX(0, int inView)<br/>
         /// Get the current index of the given view.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: inView, should be <see cref="MAIN_VIEW"/>) or <see cref="SUB_VIEW"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>inView</c>, should be <see cref="MAIN_VIEW"/>) or <see cref="SUB_VIEW"/></para>
         /// </summary>
         /// <returns>-1 if the view is invisible (hidden), otherwise is the current index.</returns>
         NPPM_GETCURRENTDOCINDEX = NPPMSG + 23,
@@ -208,22 +208,16 @@ namespace Npp.DotNet.Plugin
         /// <returns>FALSE on failure, TRUE on success</returns>
         /// </summary>
         NPPM_SETSTATUSBAR = NPPMSG + 24,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_DOC_TYPE = 0,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_DOC_SIZE = 1,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_CUR_POS = 2,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_EOF_FORMAT = 3,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_UNICODE_TYPE = 4,
-        /// <inheritdoc cref="NPPM_SETSTATUSBAR"/>
         STATUSBAR_TYPING_MODE = 5,
         /// <summary>
         /// int NPPM_GETMENUHANDLE(int menuChoice, 0)<br/>
         /// Get menu handle (HMENU) of choice.
-        /// <para>wParam (<see cref="UIntPtr"/>)b[in]: <c>menuChoice</c> could be main menu (<see cref="NPPMAINMENU"/>) or Plugin menu (<see cref="NPPPLUGINMENU"/>)</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>menuChoice</c> could be main menu (<see cref="NPPMAINMENU"/>) or Plugin menu (<see cref="NPPPLUGINMENU"/>)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
         /// </summary>
         /// <returns>menu handle (HMENU) of choice (plugin menu handle or Notepad++ main menu handle)</returns>
@@ -268,7 +262,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_LAUNCHFINDINFILESDLG(TCHAR * dir2Search, TCHAR * filter)<br/>
         /// Launch Find in Files dialog and set "Find in" directory and filters with the given arguments.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: if <c>dir2Search</c> is not NULL, it will be set as working directory in which Notepad++ will search</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: if filter is not NULL, filter string will be set into filter field</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: if <c>filter</c> is not NULL, filter string will be set into filter field</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_LAUNCHFINDINFILESDLG = NPPMSG + 29,
@@ -276,7 +270,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_DMMSHOW(0, HWND hDlg)<br/>
         /// Show the dialog which was previously registered by <see cref="NPPM_DMMREGASDCKDLG"/>.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hDlg is the handle of dialog to show</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hDlg</c> is the handle of dialog to show</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DMMSHOW = NPPMSG + 30,
@@ -284,7 +278,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_DMMHIDE(0, HWND hDlg)<br/>
         /// Hide the dialog which was previously regeistered by <see cref="NPPM_DMMREGASDCKDLG"/>.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hDlg is the handle of dialog to hide</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hDlg</c> is the handle of dialog to hide</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DMMHIDE = NPPMSG + 31,
@@ -292,7 +286,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_DMMUPDATEDISPINFO(0, HWND hDlg)<br/>
         /// Redraw the dialog.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hDlg is the handle of dialog to redraw</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hDlg</c> is the handle of dialog to redraw</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DMMUPDATEDISPINFO = NPPMSG + 32,
@@ -300,7 +294,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_DMMREGASDCKDLG(0, tTbData* pData)<br/>
         /// Pass the necessary dockingData to Notepad++ in order to make your dialog dockable.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: pData is the pointer of tTbData. Please check the <see cref="Winforms.NppTbData"/> structure</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>pData</c> is the pointer of tTbData. Please check the <see cref="Winforms.NppTbData"/> structure</para>
         ///             Minimum information which needs to be filled out are hClient, pszName, dlgID, uMask and pszModuleName.
         ///             Notice that <see cref="Winforms.NppTbData.RcFloat"/> and <see cref="Winforms.NppTbData.IPrevCont"/> shouldn't be filled. They are used internally.
         /// </summary>
@@ -437,7 +431,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_MENUCOMMAND(0, int cmdID)<br/>
         /// Run Notepad++ command with the given command ID.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: cmdID - See <see cref="MenuCmdId"/>for all the Notepad++ menu command items</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: cmdID - See <see cref="MenuCmdId"/> for all the Notepad++ menu command items</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_MENUCOMMAND = NPPMSG + 48,
@@ -531,7 +525,7 @@ namespace Npp.DotNet.Plugin
         /// UINT_PTR NPPM_GETBUFFERIDFROMPOS(int index, int iView)<br/>
         /// Get the document bufferID from the given position (iView and index).
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>index</c> (0 based) of document</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>iView</c> <see cref="MAIN_VIEW"/> or <see cref="SUB_VIEW"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>iView</c> - <see cref="MAIN_VIEW"/> or <see cref="SUB_VIEW"/></para>
         /// </summary>
         /// <returns>NULL if invalid, otherwise bufferID</returns>
         NPPM_GETBUFFERIDFROMPOS = NPPMSG + 59,
@@ -1048,7 +1042,7 @@ namespace Npp.DotNet.Plugin
         NPPM_GETBOOKMARKID = NPPMSG + 111,
         /// <summary>
         /// ULONG NPPM_DARKMODESUBCLASSANDTHEME(ULONG dmFlags, HWND hwnd)<br/>
-        /// Add support for generic dark mode to plugin dialog. Subclassing is applied automatically unless DWS_USEOWNDARKMODE flag is used.
+        /// Add support for generic dark mode to plugin dialog. Subclassing is applied automatically unless <see cref="Winforms.NppTbMsg.DWS_USEOWNDARKMODE"/> flag is used.
         /// Might not work properly in C# plugins.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: dmFlags has 2 possible value dmfInit (0x0000000BUL) &amp; dmfHandleChange (0x0000000CUL) - see above definition</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: hwnd is the dialog handle of plugin -  Docking panels don't need to call NPPM_DARKMODESUBCLASSANDTHEME</para>
@@ -1060,19 +1054,19 @@ namespace Npp.DotNet.Plugin
         /// </code></example><example>
         /// - handling dark mode change:
         /// <code>
-        ///     extern "C" __declspec(dllexport) void beNotified(SCNotification * notifyCode)
-        ///     {
-        ///     	switch (notifyCode->nmhdr.code)
-        ///     	{
-        ///     		case NPPN_DARKMODECHANGED:
-        ///     		{
-        ///     			::SendMessage(nppData._nppHandle, NPPM_DARKMODESUBCLASSANDTHEME, static_cast&lt;WPARAM&gt;(dmfHandleChange), reinterpret_cast&lt;LPARAM&gt;(mainHwnd));
-        ///     			::SetWindowPos(mainHwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-        ///                 // to redraw titlebar and window
-        ///     			break;
-        ///     		}
-        ///     	}
-        ///     }
+        ///   extern "C" __declspec(dllexport) void beNotified(SCNotification * notifyCode)
+        ///   {
+        ///      switch (notifyCode->nmhdr.code)
+        ///      {
+        ///         case NPPN_DARKMODECHANGED:
+        ///         {
+        ///          ::SendMessage(nppData._nppHandle, NPPM_DARKMODESUBCLASSANDTHEME, static_cast&lt;WPARAM&gt;(dmfHandleChange), reinterpret_cast&lt;LPARAM&gt;(mainHwnd));
+        ///          ::SetWindowPos(mainHwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+        ///          // to redraw titlebar and window
+        ///          break;
+        ///         }
+        ///      }
+        ///   }
         /// </code>
         /// </example>
         /// </summary>
@@ -1218,205 +1212,263 @@ namespace Npp.DotNet.Plugin
         /// <summary>Notification code.</summary>
         NPPN_FIRST = 1000,
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_READY;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = 0;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_READY;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = 0;
+        /// </code>
         /// </summary>
         NPPN_READY = NPPN_FIRST + 1,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_TB_MODIFICATION;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = 0;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_TB_MODIFICATION;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = 0;
+        /// </code>
         /// </summary>
         NPPN_TBMODIFICATION = NPPN_FIRST + 2,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFORECLOSE;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFORECLOSE;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFORECLOSE = NPPN_FIRST + 3,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEOPENED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEOPENED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEOPENED = NPPN_FIRST + 4,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILECLOSED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILECLOSED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILECLOSED = NPPN_FIRST + 5,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFOREOPEN = NPPN_FIRST + 6,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFORESAVE = NPPN_FIRST + 7,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILESAVED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILESAVED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILESAVED = NPPN_FIRST + 8,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_SHUTDOWN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = 0;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_SHUTDOWN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = 0;
+        /// </code>
         /// </summary>
         NPPN_SHUTDOWN = NPPN_FIRST + 9,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_BUFFERACTIVATED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = activatedBufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_BUFFERACTIVATED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = activatedBufferID;
+        /// </code>
         /// </summary>
         NPPN_BUFFERACTIVATED = NPPN_FIRST + 10,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_LANGCHANGED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = currentBufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_LANGCHANGED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = currentBufferID;
+        /// </code>
         /// </summary>
         NPPN_LANGCHANGED = NPPN_FIRST + 11,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_WORDSTYLESUPDATED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = currentBufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_WORDSTYLESUPDATED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = currentBufferID;
+        /// </code>
         /// </summary>
         NPPN_WORDSTYLESUPDATED = NPPN_FIRST + 12,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_SHORTCUTSREMAPPED;
-        ///scnNotification->nmhdr.hwndFrom = ShortcutKeyStructurePointer;
-        ///scnNotification->nmhdr.idFrom = cmdID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_SHORTCUTSREMAPPED;
+        ///     scnNotification->nmhdr.hwndFrom = ShortcutKeyStructurePointer;
+        ///     scnNotification->nmhdr.idFrom = cmdID;
+        /// </code>
+        /// <example>
         ///where ShortcutKeyStructurePointer is pointer of struct ShortcutKey:
+        /// <code>
         ///struct ShortcutKey {
-        ///	bool _isCtrl;
-        ///	bool _isAlt;
-        ///	bool _isShift;
-        ///	UCHAR _key;
+        ///		bool _isCtrl;
+        ///		bool _isAlt;
+        ///		bool _isShift;
+        ///		UCHAR _key;
         ///};
+        /// </code>
+        /// </example>
         /// </summary>
         NPPN_SHORTCUTREMAPPED = NPPN_FIRST + 13,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = NULL;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFOREOPEN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = NULL;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFORELOAD = NPPN_FIRST + 14,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEOPENFAILED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEOPENFAILED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILELOADFAILED = NPPN_FIRST + 15,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_READONLYCHANGED;
-        ///scnNotification->nmhdr.hwndFrom = bufferID;
-        ///scnNotification->nmhdr.idFrom = docStatus;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_READONLYCHANGED;
+        ///     scnNotification->nmhdr.hwndFrom = bufferID;
+        ///     scnNotification->nmhdr.idFrom = docStatus;
+        /// </code>
         /// where bufferID is BufferID
         ///       docStatus can be combined by <see cref="DOCSTATUS_READONLY"/> and <see cref="DOCSTATUS_BUFFERDIRTY"/>
         /// </summary>
         NPPN_READONLYCHANGED = NPPN_FIRST + 16,
-        /// <inheritdoc cref="NPPN_READONLYCHANGED"/>
         DOCSTATUS_READONLY = 1,
-        /// <inheritdoc cref="NPPN_READONLYCHANGED"/>
         DOCSTATUS_BUFFERDIRTY = 2,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_DOCORDERCHANGED;
-        ///scnNotification->nmhdr.hwndFrom = newIndex;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_DOCORDERCHANGED;
+        ///     scnNotification->nmhdr.hwndFrom = newIndex;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_DOCORDERCHANGED = NPPN_FIRST + 17,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_SNAPSHOTDIRTYFILELOADED;
-        ///scnNotification->nmhdr.hwndFrom = NULL;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_SNAPSHOTDIRTYFILELOADED;
+        ///     scnNotification->nmhdr.hwndFrom = NULL;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_SNAPSHOTDIRTYFILELOADED = NPPN_FIRST + 18,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_BEFORESHUTDOWN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = 0;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_BEFORESHUTDOWN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = 0;
+        /// </code>
         /// </summary>
         NPPN_BEFORESHUTDOWN = NPPN_FIRST + 19,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_CANCELSHUTDOWN;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = 0;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_CANCELSHUTDOWN;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = 0;
+        /// </code>
         /// </summary>
         NPPN_CANCELSHUTDOWN = NPPN_FIRST + 20,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFORERENAME;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFORERENAME;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFORERENAME = NPPN_FIRST + 21,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILERENAMECANCEL;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILERENAMECANCEL;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILERENAMECANCEL = NPPN_FIRST + 22,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILERENAMED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILERENAMED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILERENAMED = NPPN_FIRST + 23,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEBEFOREDELETE;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEBEFOREDELETE;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEBEFOREDELETE = NPPN_FIRST + 24,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEDELETEFAILED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEDELETEFAILED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEDELETEFAILED = NPPN_FIRST + 25,
 
         /// <summary>
-        ///scnNotification->nmhdr.code = NPPN_FILEDELETED;
-        ///scnNotification->nmhdr.hwndFrom = hwndNpp;
-        ///scnNotification->nmhdr.idFrom = BufferID;
+        /// <code>
+        ///     scnNotification->nmhdr.code = NPPN_FILEDELETED;
+        ///     scnNotification->nmhdr.hwndFrom = hwndNpp;
+        ///     scnNotification->nmhdr.idFrom = BufferID;
+        /// </code>
         /// </summary>
         NPPN_FILEDELETED = NPPN_FIRST + 26,
 
         /// <summary>
         /// To notify plugins that Dark Mode was enabled/disabled
+        /// <example>
+        /// <code>
         /// scnNotification->nmhdr.code = NPPN_DARKMODECHANGED;
         /// scnNotification->nmhdr.hwndFrom = hwndNpp;
         /// scnNotification->nmhdr.idFrom = 0;
+        /// </code>
+        /// </example>
         /// </summary>
         /// <remarks>
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/1eb5b10e41d7ab92b60aa32b28d4fe7739d15b53">8.4.1</a>
@@ -1425,9 +1477,13 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// To notify plugins that the new argument for plugins (via '-pluginMessage="YOUR_PLUGIN_ARGUMENT"' in command line) is available
+        /// <example>
+        /// <code>
         /// scnNotification->nmhdr.code = NPPN_CMDLINEPLUGINMSG;
         /// scnNotification->nmhdr.hwndFrom = hwndNpp;
         /// scnNotification->nmhdr.idFrom = pluginMessage; //where pluginMessage is pointer of type wchar_t
+        /// </code>
+        /// </example>
         /// </summary>
         /// <remarks>
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/0f8d5724afb0a540e8b4024252945ab60bc88c71">8.4.2</a>
@@ -1436,9 +1492,13 @@ namespace Npp.DotNet.Plugin
 
         ///<summary>
         /// To notify lexer plugins that the buffer (in idFrom) is just applied to a external lexer
+        /// <example>
+        /// <code>
         /// scnNotification->nmhdr.code = NPPN_EXTERNALLEXERBUFFER;
         /// scnNotification->nmhdr.hwndFrom = hwndNpp;
         /// scnNotification->nmhdr.idFrom = BufferID; //where pluginMessage is pointer of type wchar_t
+        /// </code>
+        /// </example>
         ///</summary>
         /// <remarks>
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/03a5c4795b764fa5e719092da0c37fc66ec82889">8.5</a>
@@ -1447,11 +1507,15 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// To notify plugins that the current document is just modified by Replace All action.<br/>
-        /// For solving the performance issue (from v8.6.4), Notepad++ doesn't trigger SCN_MODIFIED during Replace All action anymore.<br/>
-        /// As a result, the plugins which monitor SCN_MODIFIED should also monitor NPPN_GLOBALMODIFIED.<br/>
+        /// For solving the performance issue (from v8.6.4), Notepad++ doesn't trigger <see cref="SciMsg.SCN_MODIFIED"/> during Replace All action anymore.<br/>
+        /// As a result, the plugins which monitor <see cref="SciMsg.SCN_MODIFIED"/> should also monitor <see cref="NPPN_GLOBALMODIFIED"/>.<br/>
+        /// <example>
+        /// <code>
         /// scnNotification->nmhdr.code = NPPN_GLOBALMODIFIED;<br/>
         /// scnNotification->nmhdr.hwndFrom = BufferID;<br/>
         /// scnNotification->nmhdr.idFrom = 0; // preserved for the future use, must be zero
+        /// </code>
+        /// </example>
         /// </summary>
         /// <remarks>
         /// <strong>This notification is implemented in Notepad++
@@ -1462,10 +1526,14 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// To notify plugins that the current native language is just changed to another one.<br/>
         /// Use <see cref="NPPM_GETNATIVELANGFILENAME"/> to get current native language file name.<br/>
-        /// Use <see cref="NPPM_GETMENUHANDLE"/>(NPPPLUGINMENU, 0) to get submenu "Plugins" handle (HMENU)<br/>
+        /// Use <see cref="NPPM_GETMENUHANDLE"/>(<see cref="NPPPLUGINMENU"/>, 0) to get submenu "Plugins" handle (HMENU)<br/>
+        /// <example>
+        /// <code>
         /// scnNotification->nmhdr.code = NPPN_NATIVELANGCHANGED;<br/>
         /// scnNotification->nmhdr.hwndFrom = hwndNpp;<br/>
         /// scnNotification->nmhdr.idFrom = 0; // preserved for the future use, must be zero
+        /// </code>
+        /// </example>
         /// </summary>
         /// <remarks>
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/446cc980e871d04885f13055bb56acee820636c8">8.7</a>
