@@ -5,12 +5,16 @@
 __all__ = ['MESSAGES']
 
 _NO_STYLE_BITS = '[Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators", true)]'
+_NO_SINGE_PHASE_DRAW = '[Obsolete("Use SC_PHASES_TWO or SC_PHASES_MULTIPLE instead: https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]'
 _USE_ELEMENT_APIS = '[Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]'
+_USE_LAYER_APIS = '[Obsolete("Use SCI_SETSELECTIONLAYER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETSELECTIONLAYER")]'
+_USE_NEW_INDICATORS = '[Obsolete("Use the INDICATOR_* range numbers instead: https://www.scintilla.org/ScintillaDoc.html#Indicators")]'
 
 MESSAGES = {
     'SCI_SETSTYLEBITS': _NO_STYLE_BITS,
     'SCI_GETSTYLEBITS': _NO_STYLE_BITS,
     'SCI_GETSTYLEBITSNEEDED': _NO_STYLE_BITS,
+    'SC_PHASES_ONE': _NO_SINGE_PHASE_DRAW,
     'SCI_SETSELFORE': _USE_ELEMENT_APIS,
     'SCI_SETSELBACK': _USE_ELEMENT_APIS,
     'SCI_SETSELALPHA': _USE_ELEMENT_APIS,
@@ -32,5 +36,10 @@ MESSAGES = {
     'SCI_SETADDITIONALSELFORE': _USE_ELEMENT_APIS,
     'SCI_SETADDITIONALSELBACK': _USE_ELEMENT_APIS,
     'SCI_SETADDITIONALCARETFORE': _USE_ELEMENT_APIS,
-    'SCI_GETADDITIONALCARETFORE': _USE_ELEMENT_APIS
+    'SCI_GETADDITIONALCARETFORE': _USE_ELEMENT_APIS,
+    'SC_ALPHA_NOALPHA': _USE_LAYER_APIS,
+    'INDIC_CONTAINER':_USE_NEW_INDICATORS,
+    'INDIC_IME': _USE_NEW_INDICATORS,
+    'INDIC_IME_MAX': _USE_NEW_INDICATORS,
+    'INDIC_MAX': _USE_NEW_INDICATORS,
 }

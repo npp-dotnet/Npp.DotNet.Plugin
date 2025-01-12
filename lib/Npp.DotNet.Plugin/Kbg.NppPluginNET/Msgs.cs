@@ -47,6 +47,22 @@ namespace Npp.DotNet.Plugin
         WV_XP, WV_S2003, WV_XPX64, WV_VISTA, WV_WIN7, WV_WIN8, WV_WIN81, WV_WIN10, WV_WIN11
     }
 
+    /// <summary>
+    /// Used with <see cref="NppMsg.NPPM_GETEXTERNALLEXERAUTOINDENTMODE"/> and <see cref="NppMsg.NPPM_SETEXTERNALLEXERAUTOINDENTMODE"/>.
+    /// </summary>
+    /// <remarks>
+    /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+    /// </remarks>
+    public enum ExternalLexerAutoIndentMode { Standard, C_Like, Custom }
+
+    /// <summary>
+    /// Return value of <see cref="NppMsg.NPPM_GETCURRENTMACROSTATUS"/>.
+    /// </summary>
+    /// <remarks>
+    /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+    /// </remarks>
+    public enum MacroStatus { Idle, RecordInProgress, RecordingStopped, PlayingBack };
+
     public enum NppMsg : uint
     {
         NPPMSG = Constants.WM_USER + 1000,
@@ -62,7 +78,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_GETCURRENTLANGTYPE(0, int* langType)<br/>
         /// Get the programming language type from the current used document.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: langType - see <see cref="LangType"/> for all valid values</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>langType</c> - see <see cref="LangType"/> for all valid values</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_GETCURRENTLANGTYPE = NPPMSG + 5,
@@ -70,7 +86,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_SETCURRENTLANGTYPE(0, int langType)<br/>
         /// Set a new programming language type to the current used document.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: langType - see <see cref="LangType"/> for all valid values</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>langType</c> - see <see cref="LangType"/> for all valid values</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_SETCURRENTLANGTYPE = NPPMSG + 6,
@@ -89,7 +105,7 @@ namespace Npp.DotNet.Plugin
         /// <inheritdoc cref="NPPM_GETNBOPENFILES"/>
         SECOND_VIEW = 2,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMES(TCHAR** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMES(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of both views. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
@@ -112,7 +128,7 @@ namespace Npp.DotNet.Plugin
         /// <inheritdoc cref="NPPM_MODELESSDIALOG"/>
         MODELESSDIALOGREMOVE = 1,
         /// <summary>
-        /// int NPPM_GETNBSESSIONFILES (BOOL* pbIsValidXML /＊ added in v8.6 ＊/, TCHAR* sessionFileName)<br/>
+        /// int NPPM_GETNBSESSIONFILES (BOOL* pbIsValidXML /＊ added in v8.6 ＊/, wchar_t* sessionFileName)<br/>
         /// Get the number of files to load in the session sessionFileName. sessionFileName should be a full path name of an xml file.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>pbIsValidXML</c>, if the lParam pointer is null, then this parameter will be ignored. TRUE if XML is valid, otherwise FALSE.</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileName</c> is XML session full path</para>
@@ -123,7 +139,7 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         NPPM_GETNBSESSIONFILES = NPPMSG + 13,
         /// <summary>
-        /// NPPM_GETSESSIONFILES (TCHAR** sessionFileArray, TCHAR* sessionFileName)<br/>
+        /// NPPM_GETSESSIONFILES (wchar_t** sessionFileArray, wchar_t* sessionFileName)<br/>
         /// the files' full path name from a session file.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>sessionFileArray</c> is the array in which the files' full path of the same group are written. To allocate the array with the proper size, send <see cref="NPPM_GETNBSESSIONFILES"/>.</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileName</c> is XML session full path</para>
@@ -140,7 +156,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>sessionFileName on success, NULL otherwise</returns>
         NPPM_SAVESESSION = NPPMSG + 15,
         /// <summary>
-        /// TCHAR* NPPM_SAVECURRENTSESSION(0, TCHAR* sessionFileName)<br/>
+        /// wchar_t* NPPM_SAVECURRENTSESSION(0, wchar_t* sessionFileName)<br/>
         /// Saves the current opened files in Notepad++ as a group of files (session) as an xml file.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileArray</c> is the xml full path name</para>
@@ -148,7 +164,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>sessionFileName on success, NULL otherwise</returns>
         NPPM_SAVECURRENTSESSION = NPPMSG + 16,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMESPRIMARY(TCHAR** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMESPRIMARY(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of main view. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
@@ -156,7 +172,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>value: The number of files copied into fileNames array</returns>
         NPPM_GETOPENFILENAMESPRIMARY = NPPMSG + 17,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMESSECOND(TCHAR** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMESSECOND(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the open files full paths of sub-view. User is responsible to allocate an big enough fileNames array by using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - array of file path</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> is the number of file path.</para>
@@ -201,7 +217,7 @@ namespace Npp.DotNet.Plugin
         MAIN_VIEW = 0,
         SUB_VIEW = 1,
         /// <summary>
-        /// BOOL NPPM_SETSTATUSBAR(int whichPart, TCHAR *str2set)<br/>
+        /// BOOL NPPM_SETSTATUSBAR(int whichPart, wchar_t*str2set)<br/>
         /// Set string in the specified field of a statusbar.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>whichPart</c> for indicating the statusbar part you want to set. It can be only the above value (0 - 5)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>str2set</c> is the string you want to write to the part of statusbar.</para>
@@ -259,7 +275,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE</returns>
         NPPM_ACTIVATEDOC = NPPMSG + 28,
         /// <summary>
-        /// BOOL NPPM_LAUNCHFINDINFILESDLG(TCHAR * dir2Search, TCHAR * filter)<br/>
+        /// BOOL NPPM_LAUNCHFINDINFILESDLG(wchar_t* dir2Search, wchar_t* filter)<br/>
         /// Launch Find in Files dialog and set "Find in" directory and filters with the given arguments.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: if <c>dir2Search</c> is not NULL, it will be set as working directory in which Notepad++ will search</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: if <c>filter</c> is not NULL, filter string will be set into filter field</para>
@@ -301,34 +317,34 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE</returns>
         NPPM_DMMREGASDCKDLG = NPPMSG + 33,
         /// <summary>
-        /// BOOL NPPM_LOADSESSION(0, TCHAR* sessionFileName)<br/>
+        /// BOOL NPPM_LOADSESSION(0, wchar_t* sessionFileName)<br/>
         /// Open all files of same session in Notepad++ via a xml format session file sessionFileName.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: sessionFileName is the full file path of session file to reload</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>sessionFileName</c> is the full file path of session file to reload</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_LOADSESSION = NPPMSG + 34,
         /// <summary>
-        /// BOOL WM_DMM_VIEWOTHERTAB(0, TCHAR* name)<br/>
+        /// BOOL WM_DMM_VIEWOTHERTAB(0, wchar_t* name)<br/>
         /// Show the plugin dialog (switch to plugin tab) with the given name.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: name should be the same value as previously used to register the dialog (pszName of tTbData)</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>name</c> should be the same value as previously used to register the dialog (<see cref="Winforms.NppTbData.PszName"/> of <see cref="Winforms.NppTbData"/>)</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DMMVIEWOTHERTAB = NPPMSG + 35,
         /// <summary>
-        /// BOOL NPPM_RELOADFILE(BOOL withAlert, TCHAR *filePathName2Reload)<br/>
+        /// BOOL NPPM_RELOADFILE(BOOL withAlert, wchar_t*filePathName2Reload)<br/>
         /// Reload the document which matches with the given filePathName2Reload.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: filePathName2Reload is the full file path of document to reload</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>filePathName2Reload</c> is the full file path of document to reload</para>
         /// <returns>TRUE if reloading file succeeds, otherwise FALSE</returns>
         /// </summary>
         NPPM_RELOADFILE = NPPMSG + 36,
         /// <summary>
-        /// BOOL NPPM_SWITCHTOFILE(0, TCHAR* filePathName2switch)<br/>
+        /// BOOL NPPM_SWITCHTOFILE(0, wchar_t* filePathName2switch)<br/>
         /// Switch to the document which matches with the given filePathName2switch.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: filePathName2switch is the full file path of document to switch</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>filePathName2switch</c> is the full file path of document to switch</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_SWITCHTOFILE = NPPMSG + 37,
@@ -377,11 +393,11 @@ namespace Npp.DotNet.Plugin
         /// <returns>a <see cref="WinVer"/></returns>
         NPPM_GETWINDOWSVERSION = NPPMSG + 42,
         /// <summary>
-        /// HWND NPPM_DMMGETPLUGINHWNDBYNAME(const TCHAR *windowName, const TCHAR *moduleName)<br/>
+        /// HWND NPPM_DMMGETPLUGINHWNDBYNAME(const wchar_t*windowName, const wchar_t*moduleName)<br/>
         /// Retrieve the dialog handle corresponds to the windowName and moduleName. You may need this message if you want to communicate with another plugin "dockable" dialog.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: windowName - if windowName is NULL, then the first found window handle which matches with the moduleName will be returned</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in] : moduleName - if moduleName is NULL, then <returns>value is NULL</returns></para>
-        /// <returns>NULL if moduleName is NULL. If windowName is NULL, then the first found window handle which matches with the moduleName will be returned.</returns>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>windowName</c> - if <c>windowName</c> is NULL, then the first found window handle which matches with the moduleName will be returned</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in] : <c>moduleName</c> - if <c>moduleName</c> is NULL, then <returns>value is NULL</returns></para>
+        /// <returns>NULL if moduleName is NULL. If <c>windowName</c> is NULL, then the first found window handle which matches with the moduleName will be returned.</returns>
         /// </summary>
         NPPM_DMMGETPLUGINHWNDBYNAME = NPPMSG + 43,
         /// <summary>
@@ -405,10 +421,10 @@ namespace Npp.DotNet.Plugin
         [Obsolete("Use EnableThemeDialogTexture directly (uxtheme.h) instead", false)]
         NPPM_GETENABLETHEMETEXTUREFUNC = NPPMSG + 45,
         /// <summary>
-        /// int NPPM_GETPLUGINSCONFIGDIR(int strLen, TCHAR *str)<br/>
+        /// int NPPM_GETPLUGINSCONFIGDIR(int strLen, wchar_t*str)<br/>
         /// Get user's plugin config directory path. It's useful if plugins want to save/load parameters for the current user
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is length of  allocated buffer in which directory path is copied</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out] : str is the allocated buffere. User should call this message twice -</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> is length of  allocated buffer in which directory path is copied</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out] : <c>str</c> is the allocated buffere. User should call this message twice -</para>
         ///               The 1st call with "str" be NULL to get the required number of TCHAR (not including the terminating nul character)<br/>
         ///               The 2nd call to allocate "str" buffer with the 1st call's <returns>value + 1, then call it again to get the path</returns>
         /// <returns>value: The 1st call - the number of TCHAR to copy.</returns>
@@ -416,11 +432,11 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         NPPM_GETPLUGINSCONFIGDIR = NPPMSG + 46,
         /// <summary>
-        /// BOOL NPPM_MSGTOPLUGIN(TCHAR *destModuleName, CommunicationInfo *info)<br/>
+        /// BOOL NPPM_MSGTOPLUGIN(wchar_t* destModuleName, CommunicationInfo *info)<br/>
         /// Send a private information to a plugin with given plugin name. This message allows the communication between 2 plugins.
         /// For example, plugin X can execute a command of plugin Y if plugin X knows the command ID and the file name of plugin Y.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: destModuleName is the destination complete module file name (with the file extension ".dll")</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: info - pointer to a <see cref="CommunicationInfo"/> structure</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>destModuleName</c> is the destination complete module file name (with the file extension ".dll")</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>info</c> - pointer to a <see cref="CommunicationInfo"/> structure</para>
         /// </summary>
         /// <returns>
         /// TRUE if Notepad++ found the plugin by its module name (destModuleName), and pass the info (communicationInfo) to the module.<br/>
@@ -431,7 +447,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_MENUCOMMAND(0, int cmdID)<br/>
         /// Run Notepad++ command with the given command ID.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: cmdID - See <see cref="MenuCmdId"/> for all the Notepad++ menu command items</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>cmdID</c> - See <see cref="MenuCmdId"/> for all the Notepad++ menu command items</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_MENUCOMMAND = NPPMSG + 48,
@@ -513,7 +529,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>-1 if the bufferID non existing, else return value contains VIEW and INDEX:</returns>///
         NPPM_GETPOSFROMBUFFERID = NPPMSG + 57,
         /// <summary>
-        /// int NPPM_GETFULLPATHFROMBUFFERID(UINT_PTR bufferID, TCHAR* fullFilePath)<br/>
+        /// int NPPM_GETFULLPATHFROMBUFFERID(UINT_PTR bufferID, wchar_t* fullFilePath)<br/>
         /// Get full path file name from a bufferID (the pointer of buffer).
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>bufferID</c></para>
         /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>fullFilePath</c> - User should call it with fullFilePath be NULL to get the number of TCHAR (not including the nul character),</para>
@@ -666,7 +682,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE if this function call is successful and shortcut is enable, otherwise FALSE</returns>
         NPPM_GETSHORTCUTBYCMDID = NPPMSG + 76,
         /// <summary>
-        /// BOOL NPPM_DOOPEN(0, const TCHAR* fullPathName2Open)<br/>
+        /// BOOL NPPM_DOOPEN(0, const wchar_t* fullPathName2Open)<br/>
         /// Open a file with given <c>fullPathName2Open</c>.
         /// If <c>fullPathName2Open</c> has been already opened in Notepad++, the it will be activated and becomes the current document.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
@@ -675,10 +691,10 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE if the operation is successful, otherwise FALSE</returns>
         NPPM_DOOPEN = NPPMSG + 77,
         /// <summary>
-        /// BOOL NPPM_SAVECURRENTFILEAS (BOOL saveAsCopy, const TCHAR* filename)<br/>
+        /// BOOL NPPM_SAVECURRENTFILEAS (BOOL saveAsCopy, const wchar_t* filename)<br/>
         /// Save the current activated document.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: saveAsCopy must be either FALSE to save, or TRUE to save a copy of the current filename ("Save a Copy As..." action)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: filename indicates the full file path name to be saved</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>saveAsCopy</c> must be either FALSE to save, or TRUE to save a copy of the current filename ("Save a Copy As..." action)</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>filename</c> indicates the full file path name to be saved</para>
         /// </summary>
         /// <returns>TRUE if the operation is successful, otherwise FALSE</returns>
         NPPM_SAVECURRENTFILEAS = NPPMSG + 78,
@@ -738,21 +754,21 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful</returns>
         NPPM_ALLOCATEMARKER = NPPMSG + 82,
         /// <summary>
-        /// int NPPM_GETLANGUAGENAME(LangType langType, TCHAR* langName)<br/>
+        /// int NPPM_GETLANGUAGENAME(LangType langType, wchar_t* langName)<br/>
         /// Get programming language name from the given language type (<see cref="LangType"/> enum).
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: langType is the number of <see cref="LangType"/></para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: langName is the buffer to receive the language name string</para>
-        /// You should call this function 2 times - the first time you pass langName as NULL to get the number of characters to copy.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>langType</c> is the number of <see cref="LangType"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>langName</c> is the buffer to receive the language name string</para>
+        /// You should call this function 2 times - the first time you pass <c>langName</c> as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then send <see cref="NPPM_GETLANGUAGENAME"/> the 2nd time
         /// by passing allocated buffer as argument langName
         /// </summary>
         /// <returns>value is the number of copied character / number of character to copy (0 is not included)</returns>
         NPPM_GETLANGUAGENAME = NPPMSG + 83,
         /// <summary>
-        /// INT NPPM_GETLANGUAGEDESC(int langType, TCHAR *langDesc)<br/>
+        /// INT NPPM_GETLANGUAGEDESC(int langType, wchar_t*langDesc)<br/>
         /// Get programming language short description from the given language type (<see cref="LangType"/> enum).
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: langType is the number of <see cref="LangType"/></para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: langDesc is the buffer to receive the language description string</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>langType</c> is the number of <see cref="LangType"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>langDesc</c> is the buffer to receive the language description string</para>
         ///
         /// You should call this function 2 times - the first time you pass langDesc as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then send <see cref="NPPM_GETLANGUAGENAME"/> the 2nd time
@@ -764,7 +780,7 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_SHOWDOCLIST(0, BOOL toShowOrNot)<br/>
         /// Show or hide the Document List panel.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>toShowOrNot</c> - if toShowOrNot is TRUE, the Document List panel is shown otherwise it is hidden.</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>toShowOrNot</c> - if <c>toShowOrNot</c> is TRUE, the Document List panel is shown otherwise it is hidden.</para>
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_SHOWDOCLIST = NPPMSG + 85,
@@ -833,7 +849,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE</returns>
         NPPM_SETEDITORBORDEREDGE = NPPMSG + 93,
         /// <summary>
-        /// BOOL NPPM_SAVEFILE(0, const TCHAR *fileNameToSave)<br/>
+        /// BOOL NPPM_SAVEFILE(0, const wchar_t*fileNameToSave)<br/>
         /// Save the file (opened in Notepad++) with the given full file name path.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>fileNameToSave</c> must be the full file path for the file to be saved.</para>
@@ -857,7 +873,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE if function call is successful, otherwise FALSE</returns>
         NPPM_REMOVESHORTCUTBYCMDID = NPPMSG + 96,  // 2120 in decimal
         /// <summary>
-        /// int NPPM_GETPLUGINHOMEPATH(size_t strLen, TCHAR* pluginRootPath)<br/>
+        /// int NPPM_GETPLUGINHOMEPATH(size_t strLen, wchar_t* pluginRootPath)<br/>
         /// Get plugin home root path. It's useful if plugins want to get its own path by appending <c>pluginFolderName</c> which is the name of plugin without extension part.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> - size of allocated <c>pluginRootPath</c> buffer</para>
         /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>pluginRootPath</c> - Users should call it with <c>pluginRootPath</c> be NULL to get the required number of TCHAR (not including the terminating nul character),</para>
@@ -866,7 +882,7 @@ namespace Npp.DotNet.Plugin
         /// <returns>the number of TCHAR copied/to copy, or 0 on failure</returns>
         NPPM_GETPLUGINHOMEPATH = NPPMSG + 97,
         /// <summary>
-        /// int NPPM_GETSETTINGSONCLOUDPATH(size_t strLen, TCHAR *settingsOnCloudPath)<br/>
+        /// int NPPM_GETSETTINGSONCLOUDPATH(size_t strLen, wchar_t*settingsOnCloudPath)<br/>
         /// Get settings on cloud path. It's useful if plugins want to store its settings on Cloud, if this path is set.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> - size of allocated <c>settingsOnCloudPath</c> buffer</para>
         /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>settingsOnCloudPath</c> - Users should call it with <c>settingsOnCloudPath</c> be NULL to get the required number of TCHAR (not including the terminating nul character),</para>
@@ -879,7 +895,7 @@ namespace Npp.DotNet.Plugin
         /// Set line number margin width in dynamic width mode (<see cref="LINENUMWIDTH_DYNAMIC"/>) or constant width mode (<see cref="LINENUMWIDTH_CONSTANT"/>)<br/>
         /// It may help some plugins to disable non-dynamic line number margins width to have a smoothly visual effect while vertical scrolling the content in Notepad++
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: widthMode should be <see cref="LINENUMWIDTH_DYNAMIC"/> or <see cref="LINENUMWIDTH_CONSTANT"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>widthMode</c> should be <see cref="LINENUMWIDTH_DYNAMIC"/> or <see cref="LINENUMWIDTH_CONSTANT"/></para>
         /// </summary>
         /// <returns>TRUE if calling is successful, otherwise FALSE</returns>
         NPPM_SETLINENUMBERWIDTHMODE = NPPMSG + 99,
@@ -898,8 +914,8 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// BOOL NPPM_ADDTOOLBARICON_FORDARKMODE(UINT pluginCmdID, toolbarIconsWithDarkMode* iconHandles)<br/>
         /// Use this instead of the obsolete <see cref="NPPM_ADDTOOLBARICON"/> (DEPRECATED) which doesn't support the dark mode
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: pluginCmdID</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: iconHandles is the pointer to a <see cref="ToolbarIconDarkMode"/> structure</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>pluginCmdID</c> is the plugin command ID which corresponds to the menu item: <see cref="FuncItem.CmdID"/></para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>iconHandles</c> is the pointer to a <see cref="ToolbarIconDarkMode"/> structure</para>
         ///             All 3 handles below should be set so the icon will be displayed correctly if toolbar icon sets are changed by users, also in dark mode
         /// </summary>
         /// <remarks>
@@ -917,26 +933,32 @@ namespace Npp.DotNet.Plugin
         /// <returns>TRUE</returns>
         NPPM_DOCLISTDISABLEPATHCOLUMN = NPPMSG + 102,
         /// <summary>
-        /// BOOL NPPM_GETEXTERNALLEXERAUTOINDENTMODE(const TCHAR* languageName, ExternalLexerAutoIndentMode* autoIndentMode)<br/>
-        /// Get ExternalLexerAutoIndentMode for an installed external programming language.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: languageName is external language name to search</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: autoIndentMode could receive one of three following values</para>
+        /// BOOL NPPM_GETEXTERNALLEXERAUTOINDENTMODE(const wchar_t* languageName, ExternalLexerAutoIndentMode* autoIndentMode)<br/>
+        /// Get the <see cref="ExternalLexerAutoIndentMode"/> for an installed external programming language.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>languageName</c> is external language name to search</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>autoIndentMode</c> could receive one of three following values</para>
         ///              - Standard (0) means Notepad++ will keep the same TAB indentation between lines;
         ///              - C_Like (1) means Notepad++ will perform a C-Language style indentation for the selected external language;
         ///              - Custom (2) means a Plugin will be controlling auto-indentation for the current language.
         /// returned values: TRUE for successful searches, otherwise FALSE.
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+        /// </remarks>
         NPPM_GETEXTERNALLEXERAUTOINDENTMODE = NPPMSG + 103,
         /// <summary>
-        /// BOOL NPPM_SETEXTERNALLEXERAUTOINDENTMODE(const TCHAR* languageName, ExternalLexerAutoIndentMode autoIndentMode)<br/>
-        /// Set ExternalLexerAutoIndentMode for an installed external programming language.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: languageName is external language name to set</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: autoIndentMode could receive one of three following values</para>
+        /// BOOL NPPM_SETEXTERNALLEXERAUTOINDENTMODE(const wchar_t* languageName, ExternalLexerAutoIndentMode autoIndentMode)<br/>
+        /// Set the <see cref="ExternalLexerAutoIndentMode"/> for an installed external programming language.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>languageName</c> is external language name to set</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>autoIndentMode</c> could receive one of three following values</para>
         ///             - Standard (0) means Notepad++ will keep the same TAB indentation between lines;
         ///             - C_Like (1) means Notepad++ will perform a C-Language style indentation for the selected external language;
         ///             - Custom (2) means a Plugin will be controlling auto-indentation for the current language.
         /// <returns>value: TRUE if function call was successful, otherwise FALSE.</returns>
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+        /// </remarks>
         NPPM_SETEXTERNALLEXERAUTOINDENTMODE = NPPMSG + 104,
         /// <summary>
         /// BOOL NPPM_ISAUTOINDENTON(0, 0)<br/>
@@ -945,18 +967,24 @@ namespace Npp.DotNet.Plugin
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
         /// <returns>TRUE if Auto-Indentation is on, FALSE otherwise</returns>
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+        /// </remarks>
         NPPM_ISAUTOINDENTON = NPPMSG + 105,
         /// <summary>
         /// MacroStatus NPPM_GETCURRENTMACROSTATUS(0, 0)<br/>
-        /// Get current enum class MacroStatus { Idle, RecordInProgress, RecordingStopped, PlayingBack }
+        /// Get the current <see cref="MacroStatus"/> { Idle, RecordInProgress, RecordingStopped, PlayingBack }
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
         /// <para>lParam (<see cref="IntPtr"/>) : 0 (not used)</para>
-        /// <returns>MacroStatus as int:</returns>
+        /// <returns><see cref="MacroStatus"/> as int:</returns>
         /// 0: Idle - macro is not in use and it's empty
         /// 1: RecordInProgress - macro is currently being recorded
         /// 2: RecordingStopped - macro recording has been stopped
         /// 3: PlayingBack - macro is currently being played back
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/9cbd03c">8.3.3</a>
+        /// </remarks>
         NPPM_GETCURRENTMACROSTATUS = NPPMSG + 106,
         /// <summary>
         /// BOOL NPPM_ISDARKMODEENABLED(0, 0)<br/>
@@ -972,8 +1000,8 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// BOOL NPPM_GETDARKMODECOLORS (size_t cbSize, NppDarkMode::Colors* returnColors)<br/>
         /// Get the colors used in Dark Mode.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: cbSize must be filled with sizeof(NppDarkMode::Colors).</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: returnColors must be a pre-allocated NppDarkMode::Colors struct.</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>cbSize</c> must be filled with sizeof(NppDarkMode::Colors).</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>returnColors</c> must be a pre-allocated NppDarkMode::Colors struct.</para>
         /// <example>
         /// You need to uncomment the following code to use NppDarkMode::Colors structure:
         /// <code>
@@ -1006,12 +1034,12 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         NPPM_GETDARKMODECOLORS = NPPMSG + 108,
         /// <summary>
-        /// int NPPM_GETCURRENTCMDLINE(size_t strLen, TCHAR *commandLineStr)<br/>
+        /// int NPPM_GETCURRENTCMDLINE(size_t strLen, wchar_t*commandLineStr)<br/>
         /// Get the Current Command Line string.
         /// Users should call it with commandLineStr as NULL to get the required number of TCHAR (not including the terminating nul character),
         /// allocate commandLineStr buffer with the <returns>value + 1, then call it again to get the current command line string.</returns>
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is "commandLineStr" buffer length</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: commandLineStr receives all copied command line string</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> is "commandLineStr" buffer length</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>commandLineStr</c> receives all copied command line string</para>
         /// <returns>the number of TCHAR copied/to copy</returns>
         /// </summary>
         /// <remarks>
@@ -1019,10 +1047,10 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         NPPM_GETCURRENTCMDLINE = NPPMSG + 109,
         /// <summary>
-        /// void* NPPM_CREATELEXER(0, const TCHAR* lexer_name)<br/>
+        /// void* NPPM_CREATELEXER(0, const wchar_t* lexer_name)<br/>
         /// Get the ILexer pointer created by Lexilla. Call the lexilla "CreateLexer()" function to allow plugins to set the lexer for a Scintilla instance created by NPPM_CREATESCINTILLAHANDLE.
         /// <para>wParam (<see cref="UIntPtr"/>): 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: lexer_name is the name of the lexer</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>lexer_name</c> is the name of the lexer</para>
         /// <returns>the ILexer pointer</returns>
         /// </summary>
         /// <remarks>
@@ -1044,8 +1072,8 @@ namespace Npp.DotNet.Plugin
         /// ULONG NPPM_DARKMODESUBCLASSANDTHEME(ULONG dmFlags, HWND hwnd)<br/>
         /// Add support for generic dark mode to plugin dialog. Subclassing is applied automatically unless <see cref="Winforms.NppTbMsg.DWS_USEOWNDARKMODE"/> flag is used.
         /// Might not work properly in C# plugins.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: dmFlags has 2 possible value dmfInit (0x0000000BUL) &amp; dmfHandleChange (0x0000000CUL) - see above definition</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: hwnd is the dialog handle of plugin -  Docking panels don't need to call NPPM_DARKMODESUBCLASSANDTHEME</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>dmFlags</c> has 2 possible value dmfInit (0x0000000BUL) &amp; dmfHandleChange (0x0000000CUL) - see above definition</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>hwnd</c> is the dialog handle of plugin -  Docking panels don't need to call NPPM_DARKMODESUBCLASSANDTHEME</para>
         /// Examples:
         /// <example>
         /// - after controls initializations in WM_INITDIALOG, in WM_CREATE or after CreateWindow:
@@ -1079,8 +1107,8 @@ namespace Npp.DotNet.Plugin
         /// BOOL NPPM_ALLOCATEINDICATOR(int numberRequested, int* startNumber)<br/>
         /// Allocates an indicator number to a plugin: if a plugin needs to add an indicator,
         /// it has to use this message to get the indicator number, in order to prevent a conflict with the other plugins.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: numberRequested is the number of ID you request for the reservation</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [out]: startNumber will be set to the initial command ID if successful</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>numberRequested</c> is the number of ID you request for the reservation</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>startNumber</c> will be set to the initial command ID if successful</para>
         /// <example>
         /// Example: If a plugin needs 1 indicator ID, the following code can be used :
         /// <code>
@@ -1091,7 +1119,7 @@ namespace Npp.DotNet.Plugin
         /// If isAllocatedSuccessful is TRUE, and value of idBegin is 7,
         /// then indicator ID 7 is preserved by Notepad++, and it is safe to be used by the plugin.
         /// </summary>
-        /// <returns>TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful</returns>
+        /// <returns>TRUE if successful, FALSE otherwise. <c>startNumber</c> will also be set to 0 if unsuccessful</returns>
         /// <remarks>
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/de25873cb3352ee59d883e95e80c91806944e348">8.5.6</a>
         /// </remarks>
@@ -1134,10 +1162,10 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         NPPM_GETTABCOLORID = NPPMSG + 114,
         /// <summary>
-        /// int NPPM_SETUNTITLEDNAME(BufferID id, const TCHAR* newName)<br/>
+        /// int NPPM_SETUNTITLEDNAME(BufferID id, const wchar_t* newName)<br/>
         /// Rename the tab name for an untitled tab.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: id - BufferID of the tab.</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: newName - the desired new name of the tab</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>id</c> - BufferID of the tab.</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>newName</c> - the desired new name of the tab</para>
         /// </summary>
         /// <returns>TRUE upon success; FALSE upon failure</returns>
         /// <remarks>
@@ -1149,8 +1177,9 @@ namespace Npp.DotNet.Plugin
         /// Get the Current native language file name string. Use it after getting <see cref="NPPN_READY"/> notification to find out which native language is used.
         /// Users should call it with <c>nativeLangFileName</c> as NULL to get the required number of char (not including the terminating nul character),
         /// allocate language file name string buffer with the return value + 1, then call it again to get the current native language file name string.
-        /// <para>wParam (<see cref="UIntPtr"/>) [in]: strLen is &quot;language file name string&quot; buffer length</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: language file name string receives all copied native language file name string</para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> is &quot;language file name string&quot; buffer length</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: language file name string receives all copied native language file name string.
+        /// If there's no localization file applied, the returned value is 0.</para>
         /// </summary>
         /// <returns>The number of chars copied/to copy</returns>
         /// <remarks>
@@ -1160,7 +1189,7 @@ namespace Npp.DotNet.Plugin
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>
-        /// BOOL NPPM_GETXXXXXXXXXXXXXXXX(size_t strLen, TCHAR *str)<br/>
+        /// BOOL NPPM_GETXXXXXXXXXXXXXXXX(size_t strLen, wchar_t*str)<br/>
         /// where:<br/>
         /// str is the allocated TCHAR array,<br/>
         /// strLen is the allocated array size
@@ -1518,8 +1547,7 @@ namespace Npp.DotNet.Plugin
         /// </example>
         /// </summary>
         /// <remarks>
-        /// <strong>This notification is implemented in Notepad++
-        /// <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/49e6957d486c360e05ba85ceb1c179a891831779">v8.6.5</a></strong>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/49e6957d486c360e05ba85ceb1c179a891831779">8.6.5</a>
         /// </remarks>
         NPPN_GLOBALMODIFIED = NPPN_FIRST + 30,
 

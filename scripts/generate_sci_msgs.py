@@ -11,6 +11,7 @@ import tempfile
 from datetime import datetime
 from io import StringIO
 
+import deprecated
 import utils as u
 from get_sci_doc import ScintillaDefinitions, get_resource
 
@@ -76,6 +77,8 @@ def generate(cpp_header: str):
                             comment = docs.describe(sym)
                             if bool(comment):
                                 print(comment, file=out)
+                            elif sym in deprecated.MESSAGES:
+                                print(f"{docs.style.indent}{deprecated.MESSAGES[sym]}", file=out)
 
                             print(f"{docs.style.indent}{decl[1]} = {decl[2]},", file=out)
 

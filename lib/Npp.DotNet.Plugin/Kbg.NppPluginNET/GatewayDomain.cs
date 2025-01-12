@@ -430,10 +430,39 @@ namespace Npp.DotNet.Plugin
         POINTCHARACTER = 19,
         GRADIENT = 20,
         GRADIENTCENTRE = 21,
-        CONTAINER = 8,
-        IME = 32,
-        IME_MAX = 35,
-        MAX = 35
+        /// <summary>
+        /// Draw a triangle above the start of the indicator range.
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://sourceforge.net/p/scintilla/code/ci/2ca5745f7e8e">5.3.0</a>
+        /// </remarks>
+        POINTTOP = 22,
+        /// <summary>
+        /// Defined by Notepad++ (not in Scintilla).
+        /// </summary>
+        EXPLORERLINK = 23,
+    }
+    /// <remarks>
+    /// Added in <a href="https://sourceforge.net/p/scintilla/code/ci/7f7dbf80b0d6">5.3.0</a>
+    /// </remarks>
+    public enum ChangeHistoryIndicators
+    {
+        /// <summary>Text was deleted and saved but then reverted to its original state.</summary>
+        REVERTED_TO_ORIGIN_INSERTION = 36,
+        /// <summary>Text was inserted and saved but then reverted to its original state.</summary>
+        REVERTED_TO_ORIGIN_DELETION = 37,
+        /// <summary>Text was inserted and saved.</summary>
+        SAVED_INSERTION = 38,
+        /// <summary>Text was deleted and saved.</summary>
+        SAVED_DELETION = 39,
+        /// <summary>Text was inserted but not yet saved.</summary>
+        MODIFIED_INSERTION = 40,
+        /// <summary>Text was deleted but not yet saved.</summary>
+        MODIFIED_DELETION = 41,
+        /// <summary>Text was deleted and saved but then reverted but not to its original state.</summary>
+        REVERTED_TO_MODIFIED_INSERTION = 42,
+        /// <summary>Text was inserted and saved but then reverted but not to its original state.</summary>
+        REVERTED_TO_MODIFIED_DELETION = 43,
     }
     /// <summary>
     /// INDIC_CONTAINER, INDIC_IME, INDIC_IME_MAX, and INDIC_MAX are indicator numbers,
@@ -446,7 +475,7 @@ namespace Npp.DotNet.Plugin
         CONTAINER = 8,
         IME = 32,
         IME_MAX = 35,
-        MAX = 35
+        MAX = 43
     }
     /// <summary>Retrieve the foreground hover colour of an indicator. (Scintilla feature SC_INDICVALUE)</summary>
     public enum IndicValue
@@ -478,6 +507,7 @@ namespace Npp.DotNet.Plugin
         SCREENCOLOURS = 5
     }
     /// <summary>Returns the print colour mode. (Scintilla feature SCFIND_)</summary>
+    [Flags]
     public enum FindOption
     {
         NONE = 0x0,
@@ -504,22 +534,34 @@ namespace Npp.DotNet.Plugin
         BOXED = 2
     }
     /// <summary>Get the default fold display text. (Scintilla feature SC_FOLDACTION_)</summary>
+    [Flags]
     public enum FoldAction
     {
         CONTRACT = 0,
         EXPAND = 1,
-        TOGGLE = 2
+        TOGGLE = 2,
+        /// <summary>
+        /// Used for <see cref="SciMsg.SCI_FOLDALL"/> only, can be combined with <see cref="CONTRACT"/> or <see cref="TOGGLE"/> to contract all levels instead of only top-level.
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://sourceforge.net/p/scintilla/code/ci/7de5b28bba1c">5.3.0</a>
+        /// </remarks>
+        CONTRACTEVERYLEVEL = 4
     }
     /// <summary>Ensure a particular line is visible by expanding any header line hiding it. (Scintilla feature SC_AUTOMATICFOLD_)</summary>
+    [Flags]
     public enum AutomaticFold
     {
+        NONE = 0,
         SHOW = 0x0001,
         CLICK = 0x0002,
         CHANGE = 0x0004
     }
     /// <summary>Get automatic folding behaviours. (Scintilla feature SC_FOLDFLAG_)</summary>
+    [Flags]
     public enum FoldFlag
     {
+        NONE = 0,
         LINEBEFORE_EXPANDED = 0x0002,
         LINEBEFORE_CONTRACTED = 0x0004,
         LINEAFTER_EXPANDED = 0x0008,
@@ -577,6 +619,7 @@ namespace Npp.DotNet.Plugin
     /// <summary>Append a string to the end of the document without changing the selection. (Scintilla feature SC_PHASES_)</summary>
     public enum PhasesDraw
     {
+        [Obsolete("Use SC_PHASES_TWO or SC_PHASES_MULTIPLE instead: https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]
         ONE = 0,
         TWO = 1,
         MULTIPLE = 2
@@ -648,6 +691,7 @@ namespace Npp.DotNet.Plugin
         STRICT = 0x04
     }
     /// <summary>Set the focus to this Scintilla widget. (Scintilla feature CARET_)</summary>
+    [Flags]
     public enum CaretPolicy
     {
         SLOP = 0x01,
@@ -699,9 +743,11 @@ namespace Npp.DotNet.Plugin
     {
         TRANSPARENT = 0,
         OPAQUE = 255,
+        [Obsolete("Use SCI_SETSELECTIONLAYER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETSELECTIONLAYER")]
         NOALPHA = 256
     }
     /// <summary>Get the background alpha of the caret line. (Scintilla feature CARETSTYLE_)</summary>
+    [Flags]
     public enum CaretStyle
     {
         INVISIBLE = 0,
@@ -710,6 +756,7 @@ namespace Npp.DotNet.Plugin
         OVERSTRIKE_BAR = 0,
         OVERSTRIKE_BLOCK = 0x10,
         INS_MASK = 0xF,
+        CURSES = 0x20,
         BLOCK_AFTER = 0x100
     }
     /// <summary>Get the start of the range of style numbers used for margin text (Scintilla feature SC_MARGINOPTION_)</summary>
@@ -771,14 +818,142 @@ namespace Npp.DotNet.Plugin
         STRING = 2
     }
     /// <summary>
-    /// Notifications
-    /// Type of modification and the action which caused the modification.
+    /// The <see cref="ScNotification.ModificationType"/> field of a <see cref="ScNotification"/>.
     /// These are defined as a bit mask to make it easy to specify which notifications are wanted.
     /// One bit is set from each of SC_MOD_* and SC_PERFORMED_*.
     /// (Scintilla feature SC_MOD_ SC_PERFORMED_ SC_MULTISTEPUNDOREDO SC_LASTSTEPINUNDOREDO SC_MULTILINEUNDOREDO SC_STARTACTION SC_MODEVENTMASKALL)
     /// </summary>
+    [Flags]
     public enum ModificationFlags
     {
+        /// <summary>
+        /// Base value with no fields valid. Will not occur but is useful in tests.
+        /// </summary>
+        SC_MOD_NONE = 0x00,
+        /// <summary>
+        /// Text has been inserted into the document.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>, <see cref="ScNotification.TextPointer"/>, <see cref="ScNotification.LinesAdded"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_INSERTTEXT = 0x01,
+        /// <summary>
+        /// Text has been removed from the document.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>, <see cref="ScNotification.TextPointer"/>, <see cref="ScNotification.LinesAdded"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_DELETETEXT = 0x02,
+        /// <summary>
+        /// A style change has occurred.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_CHANGESTYLE = 0x04,
+        /// <summary>
+        /// A folding change has occurred.
+        /// <para>
+        /// Fields: <see cref="ScNotification.LineNumber"/>, <see cref="ScNotification.FoldLevelNow"/>, <see cref="ScNotification.FoldLevelPrev"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_CHANGEFOLD = 0x08,
+        /// <summary> Information: the operation was done by the user. </summary>
+        SC_PERFORMED_USER = 0x10,
+        /// <summary> Information: this was the result of an Undo. </summary>
+        SC_PERFORMED_UNDO = 0x20,
+        /// <summary> Information: this was the result of a Redo. </summary>
+        SC_PERFORMED_REDO = 0x40,
+        /// <summary> This is part of a multi-step Undo or Redo transaction. </summary>
+        SC_MULTISTEPUNDOREDO = 0x80,
+        /// <summary> This is the final step in an Undo or Redo transaction. </summary>
+        SC_LASTSTEPINUNDOREDO = 0x100,
+        /// <summary>
+        /// One or more markers has changed in a line.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGEMARKER = 0x200,
+        /// <summary> Text is about to be inserted into the document.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>.
+        /// If performed by user (i.e., <c>ModificationType &amp; SC_PERFORMED_USER == SC_PERFORMED_USER</c>)
+        /// then also <see cref="ScNotification.TextPointer"/>  in bytes and  <see cref="ScNotification.Length"/>  in bytes
+        /// </para>
+        /// </summary>
+        SC_MOD_BEFOREINSERT = 0x400,
+        /// <summary>
+        /// Text is about to be deleted from the document.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_BEFOREDELETE = 0x800,
+        /// <summary>
+        /// An indicator has been added or removed from a range of text.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_CHANGEINDICATOR = 0x4000,
+        /// <summary>
+        /// A line state has changed because <see cref="SciMsg.SCI_SETLINESTATE"/> was called.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGELINESTATE = 0x8000,
+        /// <summary>
+        /// The explicit tab stops on a line have changed because <see cref="SciMsg.SCI_CLEARTABSTOPS"/> or <see cref="SciMsg.SCI_ADDTABSTOP"/> was called.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGETABSTOPS = 0x200000,
+        /// <summary>
+        /// The internal state of a lexer has changed over a range.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_LEXERSTATE = 0x80000,
+        /// <summary>
+        /// A text margin has changed.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGEMARGIN = 0x10000,
+        /// <summary>
+        /// An annotation has changed.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGEANNOTATION = 0x20000,
+        /// <summary>
+        /// An EOL annotation has changed.
+        /// <para>Fields: <see cref="ScNotification.LineNumber"/></para>
+        /// </summary>
+        SC_MOD_CHANGEEOLANNOTATION = 0x400000,
+        /// <summary>
+        /// Text is about to be inserted. The handler may change the text being inserted by calling <see cref="SciMsg.SCI_CHANGEINSERTION"/>.
+        /// No other modifications may be made in this handler.
+        /// <para>
+        /// Fields: <see cref="ScNotification.Position"/>, <see cref="ScNotification.Length"/>, <see cref="ScNotification.TextPointer"/>
+        /// </para>
+        /// </summary>
+        SC_MOD_INSERTCHECK = 0x100000,
+        /// <summary>
+        /// This is part of an Undo or Redo with multi-line changes.
+        /// </summary>
+        SC_MULTILINEUNDOREDO = 0x1000,
+        /// <summary>
+        /// This is set on a SC_PERFORMED_USER action when it is the first or only step in an undo transaction.
+        /// This can be used to integrate the Scintilla undo stack with an undo stack in the container application by adding a Scintilla
+        /// action to the container's stack for the currently opened container transaction or to open a new container transaction if there
+        /// is no open container transaction.
+        /// </summary>
+        SC_STARTACTION = 0x2000,
+        /// <summary> This is set on for actions that the container stored into the undo stack with <see cref="SciMsg.SCI_ADDUNDOACTION"/>.
+        /// <para>Fields: <see cref="ScNotification.Token"/></para>
+        /// </summary>
+        SC_MOD_CONTAINER = 0x40000,
+        /// <summary>
+        /// This is a mask for all valid flags. This is the default mask state set by <see cref="SciMsg.SCI_SETMODEVENTMASK"/>.
+        /// </summary>
+        SC_MODEVENTMASKALL = 0x7FFFFF,
     }
     /// <summary>
     /// Notifications
@@ -787,6 +962,7 @@ namespace Npp.DotNet.Plugin
     /// One bit is set from each of SC_MOD_* and SC_PERFORMED_*.
     /// (Scintilla feature SC_UPDATE_)
     /// </summary>
+    [Flags]
     public enum Update
     {
         CONTENT = 0x1,
@@ -821,7 +997,14 @@ namespace Npp.DotNet.Plugin
         DOUBLECLICK = 2,
         TAB = 3,
         NEWLINE = 4,
-        COMMAND = 5
+        COMMAND = 5,
+        /// <summary>
+        /// There was only a single choice in the list and 'choose single' mode was active as set by <see cref="SciMsg.SCI_AUTOCSETCHOOSESINGLE"/>. ch is 0.
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://sourceforge.net/p/scintilla/code/ci/2cd5a02a022b">5.3.2</a>
+        /// </remarks>
+        SINGLECHOICE = 6
     }
     /// <summary>characterSource for SCN_CHARADDED (Scintilla feature SC_CHARACTERSOURCE_)</summary>
     public enum CharacterSource
@@ -830,7 +1013,11 @@ namespace Npp.DotNet.Plugin
         TENTATIVE_INPUT = 1,
         IME_RESULT = 2
     }
-    /// <summary>For SciLexer.h (Scintilla feature SCLEX_)</summary>
+    /// <remarks>
+    /// Notepad++ adopted Scintilla's external lexer API in v8.4 (released in April 2022).
+    /// See <see href="https://community.notepad-plus-plus.org/post/76117"/>
+    /// </remarks>
+    [Obsolete("Removed in Scintilla v5.0: https://www.scintilla.org/Scintilla5Migration.html")]
     public enum Lexer
     {
         CONTAINER = 0,
