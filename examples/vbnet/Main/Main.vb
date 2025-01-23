@@ -49,6 +49,7 @@ Public Class Main
                 Case NppMsg.NPPN_SHUTDOWN
                     ' clean up resources
                     PluginData.PluginNamePtr = IntPtr.Zero
+                    PluginData.FuncItems.Dispose()
             End Select
         End If
     End Sub

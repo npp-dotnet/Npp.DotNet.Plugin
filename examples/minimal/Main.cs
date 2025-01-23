@@ -75,6 +75,7 @@ namespace Npp.DotNet.Plugin.Demo
                         Config?.Save();
                         // clean up resources
                         PluginData.PluginNamePtr = IntPtr.Zero;
+                        PluginData.FuncItems.Dispose();
                         break;
                 }
             }

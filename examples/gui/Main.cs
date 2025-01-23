@@ -63,6 +63,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
                     case NppMsg.NPPN_SHUTDOWN:
                         PluginCleanUp();
                         PluginData.PluginNamePtr = nint.Zero;
+                        PluginData.FuncItems.Dispose();
                         break;
                 }
             }

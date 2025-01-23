@@ -58,7 +58,8 @@ namespace Npp.DotNet.Plugin
 
                 if (funcItem.PShKey.Key != 0)
                 {
-                    IntPtr newShortCutKey = Marshal.AllocHGlobal(CbSKey);
+                    _hotKeys.Add(Marshal.AllocHGlobal(CbSKey));
+                    IntPtr newShortCutKey = _hotKeys[_hotKeys.Count - 1];
                     Marshal.StructureToPtr(funcItem.PShKey, newShortCutKey, false);
                     Marshal.WriteIntPtr(ptrPosNewItem, newShortCutKey);
                 }

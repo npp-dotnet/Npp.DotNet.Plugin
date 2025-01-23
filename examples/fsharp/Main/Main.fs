@@ -77,6 +77,7 @@ type Main =
             | NppMsg.NPPN_SHUTDOWN ->
                 // clean up resources
                 PluginData.PluginNamePtr <- 0n
+                PluginData.FuncItems.Dispose()
             | _ -> ()
         else
             ()
