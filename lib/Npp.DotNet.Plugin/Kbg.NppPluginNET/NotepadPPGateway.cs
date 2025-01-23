@@ -18,6 +18,9 @@ namespace Npp.DotNet.Plugin
 	{
 		void FileNew();
 		void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon);
+		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
+		void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon);
+		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
 		string GetNppPath();
 		string GetPluginsHomePath();
@@ -50,7 +53,7 @@ namespace Npp.DotNet.Plugin
 
 		public void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon)
 		{
-			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(icon));
+			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf<ToolbarIconDarkMode>());
 			try
 			{
 				Marshal.StructureToPtr(icon, pTbIcons, false);
@@ -66,14 +69,35 @@ namespace Npp.DotNet.Plugin
 			}
 		}
 
+#pragma warning disable CS0618
+		public void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon)
+		{
+			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf<ToolbarIcon>());
+			try
+			{
+				Marshal.StructureToPtr(icon, pTbIcons, false);
+				_ = Win32.SendMessage(
+					PluginData.NppData.NppHandle,
+					(uint)NppMsg.NPPM_ADDTOOLBARICON_DEPRECATED,
+					(UIntPtr)(PluginData.FuncItems?.Items[funcItemsIndex].CmdID),
+					pTbIcons);
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(pTbIcons);
+			}
+		}
+
 		public void AddToolbarIcon(int funcItemsIndex, Bitmap icon)
 		{
-			var tbi = new ToolbarIconDarkMode()
+			// The dark mode API requires a least one ICO, otherwise nothing will display
+			var tbi = new ToolbarIcon()
 			{
 				HToolbarBmp = icon.GetHbitmap()
 			};
 			AddToolbarIcon(funcItemsIndex, tbi);
 		}
+#pragma warning restore CS0618
 
 		/// <summary>
 		/// Gets the path of the current document.
