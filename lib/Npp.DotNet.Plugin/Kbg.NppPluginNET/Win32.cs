@@ -253,9 +253,51 @@ namespace Npp.DotNet.Plugin
         [DllImport("kernel32")]
         public static extern long WritePrivateProfileSection(string section, string val, string filePath);
 
-        public const int MF_BYCOMMAND = 0;
-        public const int MF_CHECKED = 8;
-        public const int MF_UNCHECKED = 0;
+        /// <summary>Indicates that the <c>uPosition</c> parameter gives the identifier of the menu item.</summary>
+        public const uint MF_BYCOMMAND = 0;
+        /// <summary>Indicates that the <c>uPosition</c> parameter gives the zero-based relative position of the menu item.</summary>
+        public const uint MF_BYPOSITION = 0x00000400;
+        /// <summary>Uses a bitmap as the menu item. The lpNewItem parameter contains a handle to the bitmap.</summary>
+        public const uint MF_BITMAP = 0x00000004;
+        /// <summary>Disables the menu item so that it cannot be selected, but this flag does not gray it.</summary>
+        public const uint MF_DISABLED = 2;
+        /// <summary>Enables the menu item so that it can be selected and restores it from its grayed state.</summary>
+        public const uint MF_ENABLED = 0;
+        /// <summary>Disables the menu item and grays it so that it cannot be selected.</summary>
+        public const uint MF_GRAYED = 1;
+        /// <summary>Functions the same as the <see cref="MF_MENUBREAK"/> flag for a menu bar. For a drop-down menu, submenu, or shortcut menu, the new column is separated from the old column by a vertical line.</summary>
+        public const uint MF_MENUBARBREAK = 0x00000020;
+        /// <summary>Places the item on a new line (for menu bars) or in a new column (for a drop-down menu, submenu, or shortcut menu) without separating columns.</summary>
+        public const uint MF_MENUBREAK = 0x00000040;
+        /// <summary>
+        /// Specifies that the item is an owner-drawn item. Before the menu is displayed for the first time, the window that owns the menu receives a <see cref="WM_MEASUREITEM"/> message  to retrieve
+        /// the width and height of the menu item. The <see cref="WM_DRAWITEM"/> message is then sent to the window procedure of the owner window whenever the appearance of the menu item must be updated.
+        /// </summary>
+        public const uint MF_OWNERDRAW = 0x00000100;
+        /// <summary>
+        /// Specifies that the menu item opens a drop-down menu or submenu. The <c>uIDNewItem</c> parameter specifies a handle to the drop-down menu or submenu. This flag is used to add a menu name to a
+        /// menu bar or a menu item that opens a submenu to a drop-down menu, submenu, or shortcut menu.
+        /// </summary>
+        public const uint MF_POPUP = 0x00000010;
+        /// <summary>
+        /// Draws a horizontal dividing line. This flag is used only in a drop-down menu, submenu, or shortcut menu. The line cannot be grayed, disabled, or highlighted. The <c>lpNewItem</c> and
+        /// <c>uIDNewItem</c> parameters are ignored.
+        /// </summary>
+        public const uint MF_SEPARATOR = 0x00000800;
+        /// <summary>Specifies that the menu item is a text string; the <c>lpNewItem</c> parameter is a pointer to the string.</summary>
+        public const uint MF_STRING = 0x00000000;
+        /// <summary>
+        /// Places a check mark next to the item. If your application provides check-mark bitmaps (see the
+        /// <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps">SetMenuItemBitmaps</a> function),
+        /// this flag displays a selected bitmap next to the menu item.
+        /// </summary>
+        public const uint MF_CHECKED = 8;
+        /// <summary>
+        /// Does not place a check mark next to the item (the default). If your application supplies check-mark bitmaps (see the
+        /// <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps">SetMenuItemBitmaps</a> function),
+        /// this flag displays a clear bitmap next to the menu item.
+        /// </summary>
+        public const uint MF_UNCHECKED = 0;
 
         public const int SIZE_RESTORED = 0;
         public const int SIZE_MINIMIZED = 1;
@@ -393,7 +435,7 @@ namespace Npp.DotNet.Plugin
         /// by a vertical line.</summary>
         public const uint MFT_MENUBREAK = 0x00000040;
         /// <summary>Assigns responsibility for drawing the menu item to the window that owns the menu. The window
-        /// receives a WM_MEASUREITEM message before the menu is displayed for the first time, and a WM_DRAWITEM
+        /// receives a <see cref="WM_MEASUREITEM"/> message before the menu is displayed for the first time, and a <see cref="WM_DRAWITEM"/>
         /// message whenever the appearance of the menu item must be updated. If this value is specified, the
         /// dwTypeData member contains an application-defined value.</summary>
         public const uint MFT_OWNERDRAW = 0x00000100;
@@ -440,19 +482,29 @@ namespace Npp.DotNet.Plugin
         public static extern IntPtr GetMenu(IntPtr hWnd);
 
         [DllImport("user32", EntryPoint = "GetMenuItemInfoW", CharSet = CharSet.Unicode)]
-        public static extern int GetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, ref MenuItemInfo lpmii);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, ref MenuItemInfo lpmii);
 
         [DllImport("user32", EntryPoint = "SetMenuItemInfoW", CharSet = CharSet.Unicode)]
-        public static extern int SetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, MenuItemInfo lpmii);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetMenuItemInfo(IntPtr hmenu, int item, [MarshalAs(UnmanagedType.Bool)] bool fByPosition, MenuItemInfo lpmii);
+
+        [DllImport("user32", EntryPoint = "ModifyMenuW", CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool ModifyMenu(IntPtr hMenu, int uPosition, uint uFlags, UIntPtr uIDNewItem, IntPtr lpNewItem = default);
+
+        [DllImport("user32", EntryPoint = "EnableMenuItem")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnableMenuItem(IntPtr hMenu, int uIDEnableItem, uint uEnable);
 
         [DllImport("user32")]
-        public static extern int CheckMenuItem(IntPtr hmenu, int uIDCheckItem, int uCheck);
+        public static extern uint CheckMenuItem(IntPtr hmenu, int uIDCheckItem, uint uCheck);
 
         [DllImport("user32", EntryPoint = "MessageBoxW", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern DlgResult MsgBoxDialog(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string lpText, [MarshalAs(UnmanagedType.LPTStr)] string lpCaption, uint uType);
 
         /// <summary>
-        /// Possible values of the <c>uType</c> paramater of <see cref="MsgBoxDialog"/>.
+        /// Possible values of the <c>uType</c> parameter of <see cref="MsgBoxDialog"/>.
         /// </summary>
         /// <remarks>
         /// To display an icon in the message box, specify one of the ICON* values.<br/>
@@ -465,7 +517,7 @@ namespace Npp.DotNet.Plugin
         {
             /// <summary>The message box contains three push buttons: Abort, Retry, and Ignore.</summary>
             ABORTRETRYIGNORE = 0x00000002,
-            /// <summary>The message box contains three push buttons: Cance, Try Again, Continue. Use this message box type instead of <see cref="ABORTRETRYIGNORE"/> .</summary>
+            /// <summary>The message box contains three push buttons: Cancel, Try Again, Continue. Use this message box type instead of <see cref="ABORTRETRYIGNORE"/>.</summary>
             CANCELTRYCONTINUE = 0x00000006,
             /// <summary>Adds a Help button to the message box. When the user clicks the Help button or presses F1, the system sends a <see cref="WM_HELP"/> message to the owner.</summary>
             HELP = 0x00004000,
@@ -601,6 +653,16 @@ namespace Npp.DotNet.Plugin
         public const uint WM_WININICHANGE = 26;
         public const uint WM_DEVMODECHANGE = 27;
         public const uint WM_ACTIVATEAPP = 28;
+        /// <summary>
+        /// Sent to the parent window of an owner-drawn button, combo box, list box, or menu when a visual aspect of the button, combo box, list box, or menu has changed.
+        /// See <see href="https://learn.microsoft.com/windows/win32/controls/wm-drawitem"/>
+        /// </summary>
+        public const uint WM_DRAWITEM = 43;
+        /// <summary>
+        /// Sent to the owner window of a combo box, list box, list-view control, or menu item when the control or menu is created.
+        /// See <see href="https://learn.microsoft.com/windows/win32/controls/wm-measureitem"/>
+        /// </summary>
+        public const uint WM_MEASUREITEM = 44;
         public const int WM_NOTIFY = 0x004e;
         public const int WM_HELP = 0x0053;
         public const int GWL_EXSTYLE = -20;
@@ -662,8 +724,8 @@ namespace Npp.DotNet.Plugin
         /// <param name="hwnd">Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the <paramref name="nBar"/> parameter.</param>
         /// <param name="nBar">See <see cref="ScrollInfoBar"/></param>
         /// <param name="scrollInfo">See <see cref="ScrollInfo"/></param>
-        /// <returns></returns>
-        [DllImport("user32")]
-        public static extern int GetScrollInfo(IntPtr hwnd, int nBar, ref ScrollInfo scrollInfo);
+        [DllImport("user32", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetScrollInfo(IntPtr hwnd, int nBar, ref ScrollInfo scrollInfo);
     }
 }

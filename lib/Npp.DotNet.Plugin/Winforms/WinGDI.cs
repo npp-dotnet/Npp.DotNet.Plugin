@@ -15,6 +15,30 @@ namespace Npp.DotNet.Plugin.Winforms
 		public static extern int GetDeviceCaps(IntPtr hWnd, [MarshalAs(UnmanagedType.I4)] DeviceCapability index);
 
 		/// <summary>
+		/// Retrieves the number of logical pixels in the window or screen area bound by <paramref name="pixelsX"/>
+		/// and <paramref name="pixelsY"/> physical pixels, based on <paramref name="deviceDPI"/>.
+		/// </summary>
+		/// <param name="pixelsX">Number of physical pixels in the x-axis of the window or screen area being measured.</param>
+		/// <param name="pixelsY">Number of physical pixels in the y-axis of the window or screen area being measured.</param>
+		/// <param name="deviceDPI">The DPI of the window or screen area being measured.</param>
+		/// <param name="hWnd">Handle to the window or, if <see cref="Win32.NULL"/>, the screen whose area is being measured.</param>
+		public static (int, int) GetLogicalPixels(int pixelsX, int pixelsY, long deviceDPI = 96L, IntPtr hWnd = default)
+		{
+			int logPixelsX = pixelsX;
+			int logPixelsY = pixelsY;
+			IntPtr hHDC = WinUser.GetDC(hWnd);
+
+			unchecked
+			{
+				logPixelsX = (int)((Math.BigMul(pixelsX, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSX)) + (deviceDPI >> 1)) / deviceDPI);
+				logPixelsY = (int)((Math.BigMul(pixelsY, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSY)) + (deviceDPI >> 1)) / deviceDPI);
+			}
+
+			_ = WinUser.ReleaseDC(Win32.NULL, hHDC);
+			return (logPixelsX, logPixelsY);
+		}
+
+		/// <summary>
 		/// Device parameters for <see cref="GetDeviceCaps"/>.
 		/// </summary>
 		/// <remarks>
