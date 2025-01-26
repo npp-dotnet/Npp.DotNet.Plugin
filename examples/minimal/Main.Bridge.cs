@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SPDX-FileCopyrightText: 2024 Robert Di Pardo <https://github.com/rdipardo>
  *
  * SPDX-License-Identifier: Apache-2.0

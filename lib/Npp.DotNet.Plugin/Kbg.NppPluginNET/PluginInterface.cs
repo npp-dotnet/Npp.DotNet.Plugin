@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>, et al.
  *                         2024 Robert Di Pardo <dipardo.r@gmail.com>
  *
