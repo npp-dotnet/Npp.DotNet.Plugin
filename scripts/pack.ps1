@@ -13,7 +13,7 @@ try {
   {
       & dotnet build -c Release -f $tfm
   }
-  & dotnet pack --no-build
+  & dotnet pack --no-build -o .\bin\Release
 } catch {
    $_.InvocationInfo.PositionMessage; $_.Exception.Message
 } finally {

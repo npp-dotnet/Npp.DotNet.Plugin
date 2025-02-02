@@ -32,9 +32,9 @@ jobs:
 
     - name: Generate docs
       run: |
-        dotnet tool update -g docfx
+        dotnet tool restore
         dotnet restore
-        docfx
+        dotnet docfx
       env:
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.ref_name }}
 
