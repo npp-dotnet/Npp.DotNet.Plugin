@@ -407,10 +407,10 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             if (size < 3)
                 return;
 
-            using (TextRange tr = new TextRange(startPos, currentPos, bufCapacity))
+            using (TextRangeFull tr = new(startPos, currentPos, bufCapacity))
             {
                 NppUtils.Editor.GetTextRange(tr);
-                string buf = tr.lpstrText!;
+                string buf = tr.LpStrText!;
 
                 if (buf[size - 2] == '/')
                     return;

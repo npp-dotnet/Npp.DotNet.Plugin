@@ -243,9 +243,20 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Retrieve a buffer of cells.
+        /// (Scintilla feature 2778)
+        /// </summary>
+        /// <returns>The 64-bit number of bytes in the buffer, not including terminating NULs.</returns>
+        public long GetStyledText(TextRangeFull tr)
+        {
+            return (long)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXTFULL, UnusedW, tr.NativePointer);
+        }
+
+        /// <summary>
+        /// Retrieve a buffer of cells.
         /// Returns the number of bytes in the buffer not including terminating NULs.
         /// (Scintilla feature 2015)
         /// </summary>
+        [Obsolete("Use GetStyledText(Npp.DotNet.Plugin.TextRangeFull) instead")]
         public int GetStyledText(TextRange tr)
         {
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXT, UnusedW, tr.NativePointer);
@@ -1551,7 +1562,14 @@ namespace Npp.DotNet.Plugin
             return (PrintOption)SendMessage(_scintilla, SciMsg.SCI_GETPRINTCOLOURMODE, UnusedW, Unused);
         }
 
+        /// <summary>Find some text in the document. (Scintilla feature 2196)</summary>
+        public long FindText(FindOption searchFlags, TextToFindFull ft)
+        {
+            return (long)SendMessage(_scintilla, SciMsg.SCI_FINDTEXTFULL, (UIntPtr)searchFlags, ft.NativePointer);
+        }
+
         /// <summary>Find some text in the document. (Scintilla feature 2150)</summary>
+        [Obsolete("Use FindText(Npp.DotNet.Plugin.FindOption, Npp.DotNet.Plugin.TextRangeFull) instead")]
         public int FindText(FindOption searchFlags, TextToFind ft)
         {
             return (int)SendMessage(_scintilla, SciMsg.SCI_FINDTEXT, (UIntPtr)searchFlags, ft.NativePointer);
@@ -1628,9 +1646,20 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Retrieve a range of text.
+        /// (Scintilla feature 2039)
+        /// </summary>
+        /// <returns>The 64-bit length of the text.</returns>
+        public long GetTextRange(TextRangeFull tr)
+        {
+            return (long)SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGEFULL, UnusedW, tr.NativePointer);
+        }
+
+        /// <summary>
+        /// Retrieve a range of text.
         /// Return the length of the text.
         /// (Scintilla feature 2162)
         /// </summary>
+        [Obsolete("Use GetTextRange(Npp.DotNet.Plugin.TextRangeFull) instead")]
         public int GetTextRange(TextRange tr)
         {
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGE, UnusedW, tr.NativePointer);

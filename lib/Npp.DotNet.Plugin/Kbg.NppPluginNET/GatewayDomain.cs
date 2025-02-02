@@ -177,6 +177,15 @@ namespace Npp.DotNet.Plugin
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct CharacterRangeFull
+    {
+        public CharacterRangeFull(long cpmin, long cpmax) { CpMin = new IntPtr(cpmin); CpMax = new IntPtr(cpmax); }
+        public IntPtr CpMin;
+        public IntPtr CpMax;
+    }
+
+    [Obsolete("Use CharacterRangeFull instead")]
+    [StructLayout(LayoutKind.Sequential)]
     public struct CharacterRange
     {
         public CharacterRange(int cpmin, int cpmax) { cpMin = new IntPtr(cpmin); cpMax = new IntPtr(cpmax); }
@@ -195,6 +204,67 @@ namespace Npp.DotNet.Plugin
         public char[] Value { get { return CharactersAndStyles; } }
     }
 
+    public class TextRangeFull : IDisposable
+    {
+        Sci_TextRangeFull _sciTextRange;
+        IntPtr _ptrSciTextRange;
+        bool _disposed = false;
+
+        public TextRangeFull(CharacterRangeFull chrRange, int stringCapacity)
+        {
+            _sciTextRange.ChRg = chrRange;
+            _sciTextRange.LpStrText = Marshal.AllocHGlobal(stringCapacity * Marshal.SystemDefaultCharSize);
+        }
+
+        public TextRangeFull(long cpmin, long cpmax, int stringCapacity)
+        {
+            _sciTextRange.ChRg.CpMin = new IntPtr(cpmin);
+            _sciTextRange.ChRg.CpMax = new IntPtr(cpmax);
+            _sciTextRange.LpStrText = Marshal.AllocHGlobal(stringCapacity * Marshal.SystemDefaultCharSize);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct Sci_TextRangeFull
+        {
+            public CharacterRangeFull ChRg;
+            public IntPtr LpStrText;
+        }
+
+        public IntPtr NativePointer { get { InitNativeStruct(); return _ptrSciTextRange; } }
+        public string LpStrText { get { ReadNativeStruct(); return Marshal.PtrToStringAnsi(_sciTextRange.LpStrText); } }
+        public CharacterRangeFull ChRg { get { ReadNativeStruct(); return _sciTextRange.ChRg; } set { _sciTextRange.ChRg = value; InitNativeStruct(); } }
+
+        void InitNativeStruct()
+        {
+            if (_ptrSciTextRange == IntPtr.Zero)
+                _ptrSciTextRange = Marshal.AllocHGlobal(Marshal.SizeOf(_sciTextRange));
+            Marshal.StructureToPtr(_sciTextRange, _ptrSciTextRange, false);
+        }
+
+        unsafe void ReadNativeStruct()
+        {
+            if (_ptrSciTextRange != IntPtr.Zero)
+                _sciTextRange = *(Sci_TextRangeFull*)_ptrSciTextRange;
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                if (_sciTextRange.LpStrText != IntPtr.Zero) Marshal.FreeHGlobal(_sciTextRange.LpStrText);
+                if (_ptrSciTextRange != IntPtr.Zero) Marshal.FreeHGlobal(_ptrSciTextRange);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        ~TextRangeFull()
+        {
+            Dispose();
+        }
+    }
+
+    [Obsolete("Use TextRangeFull instead")]
     public class TextRange : IDisposable
     {
         Sci_TextRange _sciTextRange;
@@ -204,13 +274,13 @@ namespace Npp.DotNet.Plugin
         public TextRange(CharacterRange chrRange, int stringCapacity)
         {
             _sciTextRange.chrg = chrRange;
-            _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity);
+            _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity * Marshal.SystemDefaultCharSize);
         }
         public TextRange(int cpmin, int cpmax, int stringCapacity)
         {
             _sciTextRange.chrg.cpMin = new IntPtr(cpmin);
             _sciTextRange.chrg.cpMax = new IntPtr(cpmax);
-            _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity);
+            _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity * Marshal.SystemDefaultCharSize);
         }
 
         [StructLayout(LayoutKind.Sequential)]

@@ -76,6 +76,74 @@ namespace Npp.DotNet.Plugin
         public char Character { get { return (char)Ch; } }
     }
 
+    public class TextToFindFull : IDisposable
+    {
+        Sci_TextToFindFull _sciTextToFind;
+        IntPtr _ptrSciTextToFind;
+        bool _disposed = false;
+
+        public TextToFindFull(CharacterRangeFull chrRange, string searchText)
+        {
+            _sciTextToFind.ChRg = chrRange;
+            _sciTextToFind.LpStrText = Marshal.StringToHGlobalAnsi(searchText);
+        }
+
+        public TextToFindFull(long cpmin, long cpmax, string searchText)
+        {
+            _sciTextToFind.ChRg.CpMin = new IntPtr(cpmin);
+            _sciTextToFind.ChRg.CpMax = new IntPtr(cpmax);
+            _sciTextToFind.LpStrText = Marshal.StringToHGlobalAnsi(searchText);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct Sci_TextToFindFull
+        {
+            public CharacterRangeFull ChRg;
+            public IntPtr LpStrText;
+            public CharacterRangeFull ChRgText;
+        }
+
+        public IntPtr NativePointer { get { InitNativeStruct(); return _ptrSciTextToFind; } }
+        public string LpStrText { set { FreeNativeString(); _sciTextToFind.LpStrText = Marshal.StringToHGlobalAnsi(value); } }
+        public CharacterRangeFull ChRg { get { ReadNativeStruct(); return _sciTextToFind.ChRg; } set { _sciTextToFind.ChRg = value; InitNativeStruct(); } }
+        public CharacterRangeFull ChRgText { get { ReadNativeStruct(); return _sciTextToFind.ChRgText; } }
+
+        void InitNativeStruct()
+        {
+            if (_ptrSciTextToFind == IntPtr.Zero)
+                _ptrSciTextToFind = Marshal.AllocHGlobal(Marshal.SizeOf(_sciTextToFind));
+            Marshal.StructureToPtr(_sciTextToFind, _ptrSciTextToFind, false);
+        }
+
+        unsafe void ReadNativeStruct()
+        {
+            if (_ptrSciTextToFind != IntPtr.Zero)
+                _sciTextToFind = *(Sci_TextToFindFull*)_ptrSciTextToFind;
+        }
+
+        void FreeNativeString()
+        {
+            if (_sciTextToFind.LpStrText != IntPtr.Zero) Marshal.FreeHGlobal(_sciTextToFind.LpStrText);
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                FreeNativeString();
+                if (_ptrSciTextToFind != IntPtr.Zero) Marshal.FreeHGlobal(_ptrSciTextToFind);
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        ~TextToFindFull()
+        {
+            Dispose();
+        }
+    }
+
+    [Obsolete("Use TextToFindFull instead")]
     public class TextToFind : IDisposable
     {
         Sci_TextToFind _sciTextToFind;

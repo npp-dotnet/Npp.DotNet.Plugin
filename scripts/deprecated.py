@@ -9,6 +9,7 @@ _NO_SINGE_PHASE_DRAW = '[Obsolete("Use SC_PHASES_TWO or SC_PHASES_MULTIPLE inste
 _USE_ELEMENT_APIS = '[Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]'
 _USE_LAYER_APIS = '[Obsolete("Use SCI_SETSELECTIONLAYER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETSELECTIONLAYER")]'
 _USE_NEW_INDICATORS = '[Obsolete("Use the INDICATOR_* range numbers instead: https://www.scintilla.org/ScintillaDoc.html#Indicators")]'
+_USE_NEW_CHRNG_APIS = '[Obsolete("Use the 64-bit character range APIs instead: https://groups.google.com/g/scintilla-interest/c/mPLwYdC0-FE")]'
 
 MESSAGES = {
     'SCI_SETSTYLEBITS': _NO_STYLE_BITS,
@@ -42,4 +43,8 @@ MESSAGES = {
     'INDIC_IME': _USE_NEW_INDICATORS,
     'INDIC_IME_MAX': _USE_NEW_INDICATORS,
     'INDIC_MAX': _USE_NEW_INDICATORS,
+    'SCI_FINDTEXT': _USE_NEW_CHRNG_APIS,
+    'SCI_FORMATRANGE': _USE_NEW_CHRNG_APIS,
+    'SCI_GETTEXTRANGE': _USE_NEW_CHRNG_APIS,
+    'SCI_GETSTYLEDTEXT': _USE_NEW_CHRNG_APIS,
 }
