@@ -36,6 +36,8 @@ namespace Npp.DotNet.Plugin
 		(int, int, int) GetNppVersion();
 		string[] GetOpenFileNames();
 		void SetStatusBarSection(string message, StatusBarSection section);
+		void SetModificationFlags(ModificationFlags flags);
+		bool DefaultModificationFlagsChanged();
 	}
 
 	/// <summary>
@@ -259,6 +261,30 @@ namespace Npp.DotNet.Plugin
 			if (!(major > 8 || (major == 8 && minor >= 7))) return defaultLang;
 			langName = GetString(NppMsg.NPPM_GETNATIVELANGFILENAME, false);
 			return string.IsNullOrEmpty(langName) ? defaultLang : langName.Replace(".xml", "");
+		}
+
+		/// <summary>
+		/// Sends <see cref="NppMsg.NPPM_ADDSCNMODIFIEDFLAGS"/> with the given <paramref name="flags"/>.
+		/// </summary>
+		/// <param name="flags">The additional <see cref="ModificationFlags"/> to monitor.</param>
+		/// <remarks>
+		/// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/d888fb5f1263f5ea036c610b6980e5c4381ce7eb">8.7.7</a>
+		/// </remarks>
+		public void SetModificationFlags(ModificationFlags flags)
+		{
+			_ = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ADDSCNMODIFIEDFLAGS, UnusedW, (int)flags);
+		}
+
+		/// <summary>
+		/// Returns <see langword="true"/> if the active <see cref="SciMsg.SCN_MODIFIED"/> event mask has been changed from <see cref="ModificationFlags.NPP_DEFAULT_SC_MOD_MASK"/>.
+		/// </summary>
+		/// <remarks>
+		/// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/d888fb5f1263f5ea036c610b6980e5c4381ce7eb">8.7.7</a>
+		/// </remarks>
+		public bool DefaultModificationFlagsChanged()
+		{
+			var sci = new ScintillaGateway(Utils.GetCurrentScintilla());
+			return sci.GetModEventMask() != ModificationFlags.NPP_DEFAULT_SC_MOD_MASK;
 		}
 
 		/// <summary>

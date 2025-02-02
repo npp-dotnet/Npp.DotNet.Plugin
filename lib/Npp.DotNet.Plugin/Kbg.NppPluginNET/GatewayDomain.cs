@@ -1024,6 +1024,16 @@ namespace Npp.DotNet.Plugin
         /// This is a mask for all valid flags. This is the default mask state set by <see cref="SciMsg.SCI_SETMODEVENTMASK"/>.
         /// </summary>
         SC_MODEVENTMASKALL = 0x7FFFFF,
+        /// <summary>
+        /// Used with <see cref="INotepadPPGateway.DefaultModificationFlagsChanged"/> to determine if the default <see cref="ModificationFlags"/>
+        /// have been changed by another plugin.
+        /// </summary>
+        NPP_DEFAULT_SC_MOD_MASK =
+            SC_MOD_DELETETEXT |
+            SC_MOD_INSERTTEXT |
+            SC_PERFORMED_UNDO |
+            SC_PERFORMED_REDO |
+            SC_MOD_CHANGEINDICATOR,
     }
     /// <summary>
     /// Notifications

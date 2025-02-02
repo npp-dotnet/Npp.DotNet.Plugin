@@ -1186,6 +1186,41 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/446cc980e871d04885f13055bb56acee820636c8">8.7</a>
         /// </remarks>
         NPPM_GETNATIVELANGFILENAME = NPPMSG + 116,
+        /// <summary>
+        /// BOOL NPPM_ADDSCNMODIFIEDFLAGS(0, unsigned long scnMotifiedFlags2Add)<br/>
+        /// Add the necessary <see cref="ModificationFlags"/> so that your plugin will receive the <see cref="ModificationFlags"/> notification for these events, enabling your specific treatments.
+        /// By default, Notepad++ only forwards the 5 flags/events in <see cref="ModificationFlags.NPP_DEFAULT_SC_MOD_MASK"/>.
+        /// <para>
+        /// If your plugin needs to process other <see cref="ModificationFlags"/> events, you should add the required flags by sending this message to Notepad++. You can send it immediately after receiving <see cref="NPPN_READY"/>,
+        /// or only when your plugin needs to listen to specific events (to avoid penalizing Notepad++'s performance). Just ensure that the message is sent only once.
+        /// </para>
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: 0 (not used)</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>scnMotifiedFlags2Add</c> - <see cref="ModificationFlags"/> to add.</para>
+        /// <example>
+        /// Example:
+        /// <code>
+        ///   extern "C" __declspec(dllexport) void beNotified(SCNotification* notifyCode)
+        ///   {
+        ///     switch (notifyCode->nmhdr.code)
+        ///     {
+        ///       case NPPN_READY:
+        ///       {
+        ///         // Add SC_MOD_BEFOREDELETE and SC_MOD_BEFOREINSERT to listen to the 2 events of SCN_MODIFIED
+        ///         ::SendMessage(nppData._nppHandle, NPPM_ADDSCNMODIFIEDFLAGS, 0, SC_MOD_BEFOREDELETE | SC_MOD_BEFOREINSERT);
+        ///         break;
+        ///       }
+        ///       // ...
+        ///     }
+        ///   // ...
+        ///   }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <returns>TRUE</returns>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/d888fb5f1263f5ea036c610b6980e5c4381ce7eb">8.7.7</a>
+        /// </remarks>
+        NPPM_ADDSCNMODIFIEDFLAGS = NPPMSG + 117,
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>
