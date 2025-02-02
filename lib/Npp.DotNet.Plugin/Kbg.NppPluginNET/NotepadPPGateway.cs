@@ -26,6 +26,8 @@ namespace Npp.DotNet.Plugin
 		string GetPluginsHomePath();
 		string GetPluginConfigPath();
 		string GetSessionFilePath();
+		string GetCurrentWord();
+		string GetCurrentLine();
 		string GetCurrentFilePath();
 		string GetFilePath(UIntPtr bufferId);
 		string GetNativeLanguage();
@@ -102,11 +104,49 @@ namespace Npp.DotNet.Plugin
 #pragma warning restore CS0618
 
 		/// <summary>
+		/// Gets the word currently under the caret.
+		/// </summary>
+		/// <returns>The word under the caret.</returns>
+		public string GetCurrentWord()
+			=> GetDocumentString(NppMsg.NPPM_GETCURRENTWORD);
+
+		/// <summary>
+		/// Gets the text of the currently active line.
+		/// </summary>
+		/// <returns>The text of the active line.</returns>
+		public string GetCurrentLine()
+			=> GetDocumentString(NppMsg.NPPM_GETCURRENTLINESTR);
+
+		/// <summary>
 		/// Gets the path of the current document.
 		/// </summary>
 		public string GetCurrentFilePath()
 		{
 			return NppUtils.GetCurrentPath(NppUtils.PathType.FULL_CURRENT_PATH);
+		}
+
+		/// <summary>
+		/// Gets a string of text in the code page of the current document.
+		/// </summary>
+		/// <param name="message">The <see cref="NppMsg"/> to be sent.</param>
+		/// <returns>A string of document text, or <see cref="string.Empty"/>.</returns>
+		static string GetDocumentString(NppMsg message)
+		{
+			var sci = new ScintillaGateway(Utils.GetCurrentScintilla());
+			bool isUnicode = sci.GetCodePage() == (int)SciMsg.SC_CP_UTF8;
+			string buffer = new string('\0', Constants.CURRENTWORD_MAXLENGTH);
+			IntPtr pBuf = isUnicode ? Marshal.StringToHGlobalUni(buffer) : Marshal.StringToHGlobalAnsi(buffer);
+			string result = string.Empty;
+			try
+			{
+				if (Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)message, (uint)buffer.Length, pBuf))
+					result = isUnicode ? Marshal.PtrToStringUni(pBuf) : Marshal.PtrToStringAnsi(pBuf);
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(pBuf);
+			}
+			return result;
 		}
 
 		/// <summary>
@@ -121,7 +161,7 @@ namespace Npp.DotNet.Plugin
 		/// <see langword="false"/> if the out parameter is a byte buffer (<c>char*</c>).
 		/// </param>
 		/// <returns>String returned by Notepad++.</returns>
-		public static string GetString(NppMsg message, bool returnsWideString = true)
+		static string GetString(NppMsg message, bool returnsWideString = true)
 		{
 			int len = Win32.SendMessage(
 					PluginData.NppData.NppHandle,

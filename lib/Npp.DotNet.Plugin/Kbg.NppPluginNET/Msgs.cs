@@ -17,6 +17,10 @@ namespace Npp.DotNet.Plugin
         public const int CONT_BOTTOM = 3;
         public const int DOCKCONT_MAX = 4;
         public const int MENU_TITLE_LENGTH = 64;
+        /// <summary>
+        /// Defined in <c>PowerEditor/src/WinControls/StaticDialog/RunDlg/RunDlg.h</c>
+        /// </summary>
+        public const int CURRENTWORD_MAXLENGTH = 0x800;
     }
 
     public enum LangType
@@ -195,7 +199,6 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED = NPPMSG + 21,
-        /// <inheritdoc cref="NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED"/>
         [Obsolete("Replaced by NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED", true)]
         NPPM_DESTROYSCINTILLAHANDLE = NPPM_DESTROYSCINTILLAHANDLE_DEPRECATED,
         /// <summary>
@@ -381,7 +384,6 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         /// <returns>TRUE</returns>
         NPPM_ADDTOOLBARICON_DEPRECATED = NPPMSG + 41,
-        /// <inheritdoc cref="NPPM_ADDTOOLBARICON_DEPRECATED"/>
         [Obsolete("Replaced by NPPM_ADDTOOLBARICON_DEPRECATED", true)]
         NPPM_ADDTOOLBARICON = NPPM_ADDTOOLBARICON_DEPRECATED,
         /// <summary>
@@ -715,7 +717,6 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         /// <returns>TRUE if NPPM_ALLOCATECMDID is supported</returns>
         NPPM_ALLOCATESUPPORTED_DEPRECATED = NPPMSG + 80,
-        /// <inheritdoc cref="NPPM_ALLOCATESUPPORTED_DEPRECATED"/>
         [Obsolete("Replaced by NPPM_ALLOCATESUPPORTED_DEPRECATED", true)]
         NPPM_ALLOCATESUPPORTED = NPPM_ALLOCATESUPPORTED_DEPRECATED,
         /// <summary>
