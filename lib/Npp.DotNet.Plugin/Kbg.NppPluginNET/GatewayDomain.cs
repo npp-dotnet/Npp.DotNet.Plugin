@@ -80,6 +80,12 @@ namespace Npp.DotNet.Plugin
             get { return _pos; }
         }
 
+        public static explicit operator IntPtr(Position pos) => new IntPtr(pos._pos);
+        public static explicit operator UIntPtr(Position pos) => new UIntPtr((ulong)pos._pos);
+        public static implicit operator Position(IntPtr ptrInt) => new Position(ptrInt);
+        public static implicit operator Position(long pLong) => new Position(pLong);
+        public static implicit operator long(Position pos) => pos._pos;
+
         public static Position operator +(Position a, Position b)
         {
             return new Position(a._pos + b._pos);
@@ -1025,7 +1031,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         SC_MODEVENTMASKALL = 0x7FFFFF,
         /// <summary>
-        /// Used with <see cref="INotepadPPGateway.DefaultModificationFlagsChanged"/> to determine if the default <see cref="ModificationFlags"/>
+        /// Used with <see cref="NotepadPPGateway.DefaultModificationFlagsChanged"/> to determine if the default <see cref="ModificationFlags"/>
         /// have been changed by another plugin.
         /// </summary>
         NPP_DEFAULT_SC_MOD_MASK =

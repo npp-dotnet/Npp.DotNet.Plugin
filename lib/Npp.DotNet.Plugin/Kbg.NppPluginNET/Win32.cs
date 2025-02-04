@@ -118,8 +118,6 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// You should try to avoid calling this method in your plugin code. Rather use one of the gateways such as
         /// <see cref="ScintillaGateway"/> or <see cref="NotepadPPGateway"/>.<br/><br/>
-        /// If gateways are missing or incomplete, please help extend them and send your code to the project
-        /// at <see href="https://github.com/molsonkiko/NppCSharpPluginPack"/>
         /// </summary>
         [DllImport("user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, UIntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);

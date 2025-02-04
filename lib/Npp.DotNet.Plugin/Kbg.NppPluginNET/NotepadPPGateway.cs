@@ -108,14 +108,14 @@ namespace Npp.DotNet.Plugin
 		/// </summary>
 		/// <returns>The word under the caret.</returns>
 		public string GetCurrentWord()
-			=> GetDocumentString(NppMsg.NPPM_GETCURRENTWORD);
+			=> GetUnicodeString(NppMsg.NPPM_GETCURRENTWORD);
 
 		/// <summary>
 		/// Gets the text of the currently active line.
 		/// </summary>
 		/// <returns>The text of the active line.</returns>
 		public string GetCurrentLine()
-			=> GetDocumentString(NppMsg.NPPM_GETCURRENTLINESTR);
+			=> GetUnicodeString(NppMsg.NPPM_GETCURRENTLINESTR);
 
 		/// <summary>
 		/// Gets the path of the current document.
@@ -126,25 +126,18 @@ namespace Npp.DotNet.Plugin
 		}
 
 		/// <summary>
-		/// Gets a string of text in the code page of the current document.
+		/// Gets a string from a null-terminated buffer of <c>wchar_t</c> that was allocated by Notepad++.
 		/// </summary>
 		/// <param name="message">The <see cref="NppMsg"/> to be sent.</param>
-		/// <returns>A string of document text, or <see cref="string.Empty"/>.</returns>
-		static string GetDocumentString(NppMsg message)
+		/// <returns>A string decoded from a <c>wchar_t</c> buffer, or <see cref="string.Empty"/>.</returns>
+		static unsafe string GetUnicodeString(NppMsg message)
 		{
-			var sci = new ScintillaGateway(Utils.GetCurrentScintilla());
-			bool isUnicode = sci.GetCodePage() == (int)SciMsg.SC_CP_UTF8;
-			string buffer = new string('\0', Constants.CURRENTWORD_MAXLENGTH);
-			IntPtr pBuf = isUnicode ? Marshal.StringToHGlobalUni(buffer) : Marshal.StringToHGlobalAnsi(buffer);
 			string result = string.Empty;
-			try
+			byte[] buffer = new byte[Constants.CURRENTWORD_MAXLENGTH * Marshal.SystemDefaultCharSize];
+			fixed (byte* pBuf = buffer)
 			{
-				if (Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)message, (uint)buffer.Length, pBuf))
-					result = isUnicode ? Marshal.PtrToStringUni(pBuf) : Marshal.PtrToStringAnsi(pBuf);
-			}
-			finally
-			{
-				Marshal.FreeHGlobal(pBuf);
+				if (Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)message, (UIntPtr)buffer.Length, (IntPtr)pBuf))
+					result = ScintillaGateway.NullTerminatedBufferToString(buffer, Encoding.Unicode);
 			}
 			return result;
 		}
