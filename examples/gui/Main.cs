@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
+using Npp.DotNet.Plugin.Extensions;
 using Npp.DotNet.Plugin.Winforms;
 using static Npp.DotNet.Plugin.Win32;
 using static Npp.DotNet.Plugin.Winforms.WinUser;
@@ -399,10 +400,10 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
             int bufCapacity = 512;
             var pos = NppUtils.Editor.GetCurrentPos();
-            int currentPos = pos;
-            int beginPos = currentPos - (bufCapacity - 1);
-            int startPos = (beginPos > 0) ? beginPos : 0;
-            int size = currentPos - startPos;
+            long currentPos = pos;
+            long beginPos = currentPos - (bufCapacity - 1);
+            long startPos = (beginPos > 0) ? beginPos : 0;
+            int size = unchecked(Convert.ToInt32(currentPos - startPos));
 
             if (size < 3)
                 return;

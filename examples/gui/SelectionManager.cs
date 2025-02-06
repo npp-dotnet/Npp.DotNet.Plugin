@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Gui.Demo
 {
     public class SelectionManager
     {
@@ -16,30 +16,30 @@ namespace Npp.DotNet.Plugin
 
         public static bool IsStartEnd(string x) => START_END_REGEX.IsMatch(x);
 
-        public static (int start, int end) ParseStartEndAsTuple(string startEnd)
+        public static (long start, long end) ParseStartEndAsTuple(string startEnd)
         {
-            int[] startEndNums = ParseStartEnd(startEnd);
+            long[] startEndNums = ParseStartEnd(startEnd);
             return (startEndNums[0], startEndNums[1]);
         }
 
-        public static List<(int start, int end)> GetSelectedRanges()
+        public static List<(long start, long end)> GetSelectedRanges()
         {
-            var selList = new List<(int start, int end)>();
+            var selList = new List<(long start, long end)>();
             int selCount = NppUtils.Editor.GetSelections();
             for (int ii = 0; ii < selCount; ii++)
                 selList.Add((NppUtils.Editor.GetSelectionNStart(ii), NppUtils.Editor.GetSelectionNEnd(ii)));
             return selList;
         }
 
-        public static bool NoTextSelected(IList<(int start, int end)> selections)
+        public static bool NoTextSelected(IList<(long start, long end)> selections)
         {
-            (int start, int end) = selections[0];
+            (long start, long end) = selections[0];
             return selections.Count < 2 && start == end;
         }
 
         public static bool NoTextSelected(IList<string> selections)
         {
-            int[] startEnd = ParseStartEnd(selections[0]);
+            long[] startEnd = ParseStartEnd(selections[0]);
             return selections.Count < 2 && startEnd[0] == startEnd[1];
         }
 
@@ -49,19 +49,19 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         /// <param name="startEnd"></param>
         /// <returns></returns>
-        public static int[] ParseStartEnd(string startEnd)
+        public static long[] ParseStartEnd(string startEnd)
         {
-            return startEnd.Split(',').Select(s => int.Parse(s)).ToArray();
+            return startEnd.Split(',').Where(s => long.TryParse(s, out long _)).Select(v => long.Parse(v)).ToArray();
         }
 
-        public static List<(int start, int end)> SetSelectionsFromStartEnds(IEnumerable<string> startEnds)
+        public static List<(long start, long end)> SetSelectionsFromStartEnds(IEnumerable<string> startEnds)
         {
             int ii = 0;
             NppUtils.Editor.ClearSelections();
-            var result = new List<(int start, int end)>();
+            var result = new List<(long start, long end)>();
             foreach (string startEnd in startEnds)
             {
-                (int start, int end) = ParseStartEndAsTuple(startEnd);
+                (long start, long end) = ParseStartEndAsTuple(startEnd);
                 if (start > end)
                     (start, end) = (end, start);
                 result.Add((start, end));
@@ -97,7 +97,7 @@ namespace Npp.DotNet.Plugin
             return StartFromStartEnd(s1).CompareTo(StartFromStartEnd(s2));
         }
 
-        public static int StartEndCompareByStart((int start, int end) se1, (int start, int end) se2)
+        public static int StartEndCompareByStart((long start, long end) se1, (long start, long end) se2)
         {
             return se1.start.CompareTo(se2.start);
         }
@@ -109,7 +109,7 @@ namespace Npp.DotNet.Plugin
         /// * StartEndListToString([(1, 2), (5, 7)], "], [") returns "1,2], [5,7"<br></br>
         /// * StartEndListToString([(1, 2), (9, 20), (30,45)], " ") returns "1,2 9,20 30,45"
         /// </summary>
-        public static string StartEndListToString(IEnumerable<(int start, int end)> selections, string sep = " ")
+        public static string StartEndListToString(IEnumerable<(long start, long end)> selections, string sep = " ")
         {
             return string.Join(sep, selections.OrderBy(x => x.start).Select(x => $"{x.start},{x.end}"));
         }

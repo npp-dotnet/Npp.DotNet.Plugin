@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Extensions
 {
     public class NanInf
     {

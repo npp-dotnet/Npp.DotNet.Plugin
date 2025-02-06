@@ -6,6 +6,7 @@
 
 using Figgle;
 using System.Runtime.InteropServices;
+using static System.Diagnostics.FileVersionInfo;
 using static Npp.DotNet.Plugin.Win32;
 
 namespace Npp.DotNet.Plugin.Demo
@@ -116,8 +117,8 @@ namespace Npp.DotNet.Plugin.Demo
         static void HelloNpp()
         {
             NppUtils.Notepad.FileNew();
-            NppUtils.Editor.SetText(HelloTo);
-            NppUtils.AddLine(HelloFrom);
+            NppUtils.Editor.SetText(HelloTo.Replace("\r\n", NppUtils.Editor.LineDelimiter));
+            NppUtils.AddLine(HelloFrom.Replace("\r\n", NppUtils.Editor.LineDelimiter));
         }
 
         /// <summary>
@@ -130,7 +131,7 @@ namespace Npp.DotNet.Plugin.Demo
             _ =
                 MsgBoxDialog(
                     PluginData.NppData.NppHandle,
-                    $"{MenuTitles._4}: {NppUtils.AssemblyVersionString}\0",
+                    $"{MenuTitles._4}: {AssemblyVersionString}\0",
                     $"{MenuTitles._5} {PluginName}",
                    mbMask
                 );
@@ -152,6 +153,27 @@ namespace Npp.DotNet.Plugin.Demo
         private static readonly Main Instance;
         private static readonly PluginOptions Config;
         private static readonly PluginMenuTitles MenuTitles;
+
+        private static string AssemblyVersionString
+        {
+            get
+            {
+                string version = "1.0.0.0";
+                try
+                {
+                    string assemblyName = typeof(Main).Namespace!;
+                    version =
+                        GetVersionInfo(
+                            Path.Combine(
+                                NppUtils.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+                            )
+                        .FileVersion!;
+                }
+                catch { }
+                return version;
+            }
+        }
+
         public static readonly string PluginName = ".NET Demo Plugin\0";
         public static string PluginFolderName => PluginName.Trim(new char[] { '\0', '.' });
     }

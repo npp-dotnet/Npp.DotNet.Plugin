@@ -9,10 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Extensions
 {
     public static class ArrayExtensions
     {
+        // C# has a range operator since version 8.0
+        // https://learn.microsoft.com/dotnet/csharp/language-reference/operators/member-access-operators#range-operator-
+#if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
         /// Allows the use of Python-style slices, where start, stop, and stride must be declared as individual paramters.<br></br>
         /// Thus e.g. arr.Slice(2, null, -1) is just like arr[slice(2, None, -1)] in Python.<br></br>
@@ -103,6 +106,7 @@ namespace Npp.DotNet.Plugin
                 }
             }
         }
+#endif
 
         /// <summary>
         /// If num is negative, use Python-style negative indices (e.g., -1 is the last element, -len is the first elememnt)
@@ -126,6 +130,7 @@ namespace Npp.DotNet.Plugin
             return num;
         }
 
+#if !NETCOREAPP3_0_OR_GREATER
         ///<summary>
         /// Allows the use of Python-style slices, passed as strings (e.g., ":", "1::-2").<br></br>
         /// Because LazySlice is an extension method, all arrays in this namespace can use this method.<br></br>
@@ -287,6 +292,7 @@ namespace Npp.DotNet.Plugin
         {
             return new string(source.ToCharArray().LazySlice(slicer).ToArray());
         }
+#endif
 
         /// <summary>
         /// randomize the order of the elements in arr
@@ -326,17 +332,7 @@ namespace Npp.DotNet.Plugin
         /// <returns></returns>
         public static string ArrayToString<T>(this IList<T> list)
         {
-            var sb = new StringBuilder();
-            sb.Append('[');
-            for (int ii = 0; ii < list.Count; ii++)
-            {
-                T x = list[ii];
-                sb.Append(x?.ToString());
-                if (ii < list.Count - 1)
-                    sb.Append(", ");
-            }
-            sb.Append(']');
-            return sb.ToString();
+            return $"[{string.Join(", ", list)}]";
         }
 
         /// <summary>

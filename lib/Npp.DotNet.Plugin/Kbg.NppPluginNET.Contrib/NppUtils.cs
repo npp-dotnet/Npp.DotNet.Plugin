@@ -45,6 +45,46 @@ namespace Npp.DotNet.Plugin
 
         public static string ConfigDirectory => Notepad.GetConfigDirectory();
 
+#pragma warning disable CS1587
+        /// <summary>
+        /// Gets the version of the currently executing assembly as a formatted string.
+        /// </summary>
+#if NET7_0_OR_GREATER
+        /// <remarks>
+        /// <para><em><b>Warning</b></em></para>
+        /// <para>
+        /// If this method is called in a native compiled app, the return value is the file version of
+        /// the <c>Npp.DotNet.Plugin.dll</c> assembly, <em>not</em> the version of the app as expected.
+        /// </para>
+        /// <para>
+        /// To properly fetch the file version of a native app, pass the fully qualified file name
+        /// to <see cref="System.Diagnostics.FileVersionInfo.GetVersionInfo"/> and use the
+        /// <see cref="System.Diagnostics.FileVersionInfo.FileVersion"/> property.
+        /// </para>
+        /// <example>
+        /// For example, assuming <c>Main</c> is the main class of a native app:
+        /// <code>
+        ///     using System.IO;
+        ///     using static System.Diagnostics.FileVersionInfo;
+        ///     // ...
+        ///     version = "";
+        ///     try
+        ///     {
+        ///         string assemblyName = typeof(Main).Namespace!;
+        ///         version =
+        ///             GetVersionInfo(
+        ///                 Path.Combine(
+        ///                     NppUtils.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+        ///                 )
+        ///             .FileVersion!;
+        ///     }
+        ///     catch {}
+        /// </code>
+        /// </example>
+        /// </remarks>
+#endif
+#pragma warning restore CS1587
+
         public static string AssemblyVersionString
         {
             get
@@ -66,8 +106,7 @@ namespace Npp.DotNet.Plugin
         /// <param name="inp"></param>
         public static void AddLine(string inp)
         {
-            Editor.AppendText(Encoding.UTF8.GetByteCount(inp), inp);
-            Editor.AppendText(Environment.NewLine.Length, Environment.NewLine);
+            Editor.AppendText($"{inp}{Editor.LineDelimiter}");
         }
 
         public enum PathType
@@ -136,14 +175,14 @@ namespace Npp.DotNet.Plugin
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static string GetSlice(int start, int end)
+        public static string GetSlice(long start, long end)
         {
-            int len = end - start;
+            long len = end - start;
             IntPtr rangePtr = Editor.GetRangePointer(start, len);
-            string ansi = Marshal.PtrToStringAnsi(rangePtr, len);
+            string ansi = Marshal.PtrToStringAnsi(rangePtr, unchecked(Convert.ToInt32(len)));
             // TODO: figure out a way to do this that involves less memcopy for non-ASCII
             if (ansi.Any(c => c >= 128))
-                return Encoding.UTF8.GetString(Encoding.Default.GetBytes(ansi));
+                return Encoding.UTF8.GetString(Editor.CodePage.GetBytes(ansi));
             return ansi;
         }
 
@@ -151,6 +190,7 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>0: CRLF, 1: CR, 2: LF<br></br>
         /// Anything less than 0 or greater than 2: LF</summary>
+        [Obsolete("Use the Npp.DotNet.Plugin.IScintillaGateway.LineDelimiter property instead ")]
         public static string GetEndOfLineString(int eolType)
         {
             if (eolType < 0 || eolType >= 3)
@@ -164,7 +204,16 @@ namespace Npp.DotNet.Plugin
             string nppVerStr = $"{major}.{minor}.{revision}";
             return include32bitVs64bit ? $"{nppVerStr} {IntPtr.Size * 8}bit" : nppVerStr;
         }
+    }
+}
 
+namespace Npp.DotNet.Plugin.Extensions
+{
+    /// <summary>
+    /// Utilities ported from the <a href="https://github.com/molsonkiko/JsonToolsNppPlugin">JSON Tools</a> plugin.
+    /// </summary>
+    public static class JsonUtils
+    {
         /// <summary>
         /// appends the JSON representation of char c to a StringBuilder.<br></br>
         /// for most characters, this just means appending the character itself, but for example '\n' would become "\\n", '\t' would become "\\t",<br></br>
