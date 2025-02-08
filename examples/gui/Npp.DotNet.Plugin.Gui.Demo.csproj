@@ -75,9 +75,12 @@
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <SelfContained>true</SelfContained>
+    <StackTraceSupport>false</StackTraceSupport>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <IlcTrimMetadata>true</IlcTrimMetadata>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <InvariantGlobalization>false</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <OptimizationPreference>Size</OptimizationPreference>
     <IlcOptimizationPreference>Size</IlcOptimizationPreference>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>

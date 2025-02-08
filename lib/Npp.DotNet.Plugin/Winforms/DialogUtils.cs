@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Npp.DotNet.Plugin.Winforms
@@ -11,12 +12,36 @@ namespace Npp.DotNet.Plugin.Winforms
     /// <summary>
     /// Provides readonly access to Notepad++'s GUI connector, with some additional helper methods.
     /// </summary>
-    public class DialogUtils
+    public static class DialogUtils
     {
         /// <summary>
         /// Connector to Notepad++'s GUI.
         /// </summary>
         public static PluginDialogBase NotepadGUI { get; } = new PluginDialogBase();
+
+        /// <summary>
+        /// Gets a translucent <see cref="Color"/> from the RGB values of <paramref name="rgb"/> and the given <paramref name="alpha"/> value.
+        /// </summary>
+        /// <param name="rgb">A <see cref="Colour"/> representing a 24-bit opaque color.</param>
+        /// <param name="alpha">The alpha component of the returned <see cref="Color"/>.</param>
+        public static Color GetColorAlpha(Colour rgb, int alpha = 0xff)
+        {
+            return Color.FromArgb(alpha, rgb.Red, rgb.Green, rgb.Blue);
+        }
+
+        /// <summary>
+        /// Gets a translucent <see cref="Color"/> from the alpha component and RGB values of <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">A 32-bit color value in ABGR format.</param>
+        public static Color GetColorAlpha(uint value)
+        {
+            return Color.FromArgb(GetByte(value, 24), GetByte(value), GetByte(value, 8), GetByte(value, 16));
+
+#if NETCOREAPP3_0_OR_GREATER
+            static
+#endif
+            int GetByte(uint n, int shift = 0) => unchecked(System.Convert.ToInt32(n >> shift)) & 0xFF;
+        }
 
         /// <summary>
         /// Trying to copy an empty string or null to the clipboard raises an error.<br></br>
@@ -34,7 +59,7 @@ namespace Npp.DotNet.Plugin.Winforms
                 );
                 return;
             }
-            Clipboard.SetText(text);
+            NppUtils.Editor.CopyText(text);
         }
 
         /// <summary>

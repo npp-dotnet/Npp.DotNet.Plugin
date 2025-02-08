@@ -40,6 +40,7 @@ namespace Npp.DotNet.Plugin
 		void SetStatusBarSection(string message, StatusBarSection section);
 		void SetModificationFlags(ModificationFlags flags);
 		bool DefaultModificationFlagsChanged();
+		bool IsDarkModeEnabled();
 	}
 
 	/// <summary>
@@ -318,6 +319,18 @@ namespace Npp.DotNet.Plugin
 		{
 			var sci = new ScintillaGateway(Utils.GetCurrentScintilla());
 			return sci.GetModEventMask() != ModificationFlags.NPP_DEFAULT_SC_MOD_MASK;
+		}
+
+		/// <summary>
+		/// Checks the return value of the <see cref="NppMsg.NPPM_ISDARKMODEENABLED"/> message.
+		/// </summary>
+		/// <returns><see langword="true"/> if <see cref="NppMsg.NPPM_ISDARKMODEENABLED"/> returns 1, otherwise <see langword="false"/>.</returns>
+		/// <remarks>
+		/// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/1eb5b10e41d7ab92b60aa32b28d4fe7739d15b53">8.4.1</a>
+		/// </remarks>
+		public bool IsDarkModeEnabled()
+		{
+			return Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ISDARKMODEENABLED);
 		}
 
 		/// <summary>

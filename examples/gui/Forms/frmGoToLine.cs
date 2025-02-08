@@ -8,7 +8,9 @@
 using Npp.DotNet.Plugin;
 using Npp.DotNet.Plugin.Winforms;
 using Npp.DotNet.Plugin.Winforms.Classes;
+using System.Runtime.InteropServices;
 using static Npp.DotNet.Plugin.Win32;
+using static Npp.DotNet.Plugin.Winforms.DarkMode;
 
 namespace Kbg.Demo.Namespace
 {
@@ -20,6 +22,26 @@ namespace Kbg.Demo.Namespace
         {
             this.editor = editor;
             InitializeComponent();
+            ToggleDarkMode(NppUtils.Notepad.IsDarkModeEnabled());
+        }
+
+        public override void ToggleDarkMode(bool isDark)
+        {
+            if (isDark)
+            {
+                DarkModeColors theme = new();
+                label1.BackColor = theme.PureBackground;
+                label1.ForeColor = theme.Text;
+                button1.BackColor = theme.SofterBackground;
+                button1.ForeColor = theme.Text;
+            }
+            else
+            {
+                label1.BackColor = Label.DefaultBackColor;
+                label1.ForeColor = Label.DefaultForeColor;
+                button1.BackColor = Color.FromKnownColor(KnownColor.ButtonFace);
+                button1.ForeColor = Button.DefaultForeColor;
+            }
         }
 
         /// <summary>
@@ -32,7 +54,7 @@ namespace Kbg.Demo.Namespace
             switch (wmNotifyMsg.Msg)
             {
                 case WM_NOTIFY:
-                    TagNMHDR nmdr = (TagNMHDR)wmNotifyMsg.GetLParam(typeof(TagNMHDR))!;
+                    TagNMHDR nmdr = Marshal.PtrToStructure<TagNMHDR>(wmNotifyMsg.LParam)!;
 
                     if (nmdr.hwndFrom == PluginData.NppData.NppHandle)
                     {

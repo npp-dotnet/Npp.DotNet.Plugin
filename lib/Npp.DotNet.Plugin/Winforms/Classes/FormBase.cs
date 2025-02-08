@@ -37,6 +37,16 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         private static WindowLongSetter WndLongSetter { get; set; } = SetWindowLongPtr;
 
         /// <summary>
+        /// Handles the <see cref="NppMsg.NPPN_DARKMODECHANGED"/> notification.
+        /// </summary>
+        /// <param name="isDark">Set this to <see langword="true"/> if dark mode has changed from disabled to enabled,
+        /// or <see langword="false"/> if <em>vice versa</em>.</param>
+        /// <remarks>
+        /// Deriving classes should ensure all components have been initialied before calling this method.
+        /// </remarks>
+        public virtual void ToggleDarkMode(bool isDark) { }
+
+        /// <summary>
         /// superclass of all forms in the application.<br></br>
         /// Implements many useful handlers, and deals with some weird behaviors induced by interoperating with Notepad++.
         /// </summary>

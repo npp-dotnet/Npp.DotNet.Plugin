@@ -15,7 +15,7 @@ namespace Npp.DotNet.Plugin
     /// If you set all intensities to 255, the colour is white. If you set all intensities to 0, the colour is black.
     /// When you set a colour, you are making a request. What you will get depends on the capabilities of the system and the current screen mode.
     /// </summary>
-    public class Colour
+    public readonly struct Colour
     {
         public readonly int Red, Green, Blue;
 
@@ -63,7 +63,7 @@ namespace Npp.DotNet.Plugin
     /// If you use messages, there is nothing to stop you setting a position that is in the middle of a CRLF pair, or in the middle of a 2 byte character.
     /// However, keyboard commands will not move the caret into such positions.
     /// </summary>
-    public class Position : IEquatable<Position>
+    public readonly struct Position
     {
         private readonly Int64 _pos;
 
@@ -98,7 +98,7 @@ namespace Npp.DotNet.Plugin
 
         public static bool operator ==(Position a, Position b)
         {
-            return ReferenceEquals(a, b) || (!ReferenceEquals(a, null) && !ReferenceEquals(b, null) && a._pos == b._pos);
+            return a._pos == b._pos;
         }
 
         public static bool operator !=(Position a, Position b)
@@ -133,12 +133,12 @@ namespace Npp.DotNet.Plugin
 
         public bool Equals(Position other)
         {
-            return !ReferenceEquals(other, null) && (ReferenceEquals(this, other) || _pos == other._pos);
+            return _pos == other._pos;
         }
 
         public override bool Equals(object obj)
         {
-            return !ReferenceEquals(obj, null) && (ReferenceEquals(this, obj) || (obj.GetType() == this.GetType() && Equals((Position)obj)));
+            return obj.GetType() == this.GetType() && Equals((Position)obj);
         }
 
         public override int GetHashCode()
@@ -158,7 +158,7 @@ namespace Npp.DotNet.Plugin
     /// On OS X, the Command key is mapped to SCMOD_CTRL and the Control key to SCMOD_META.SCMOD_SUPER is only available on GTK+ which is commonly the Windows key.
     /// If you are building a table, you might want to use SCMOD_NORM, which has the value 0, to mean no modifiers.
     /// </summary>
-    public class KeyModifier
+    public readonly struct KeyModifier
     {
         private readonly int _value;
 
@@ -199,9 +199,9 @@ namespace Npp.DotNet.Plugin
         public IntPtr cpMax;
     }
 
-    public class Cells
+    public readonly struct Cells
     {
-        internal char[] CharactersAndStyles;
+        internal readonly char[] CharactersAndStyles;
 
         public Cells(char[] charactersAndStyles)
         {

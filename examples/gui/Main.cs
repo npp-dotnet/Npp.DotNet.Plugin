@@ -19,7 +19,7 @@ using static Npp.DotNet.Plugin.Winforms.WinGDI;
 namespace Npp.DotNet.Plugin.Gui.Demo
 {
     /// <summary>
-    /// Implements the <see cref="IDotNetPlugin"/> interface.
+    /// Extends <see cref="DotNetPlugin"/>.
     /// </summary>
     partial class Main : DotNetPlugin
     {
@@ -37,7 +37,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         static Main()
         {
             Instance = new Main();
-            PluginData.PluginNamePtr = Marshal.StringToHGlobalUni(PluginName);
+            PluginData.PluginNamePtr = Marshal.StringToHGlobalUni(PluginMenuName);
         }
         #endregion
 
@@ -60,6 +60,9 @@ namespace Npp.DotNet.Plugin.Gui.Demo
                     case NppMsg.NPPN_TBMODIFICATION:
                         PluginData.FuncItems.RefreshItems();
                         SetToolBarIcon();
+                        break;
+                    case NppMsg.NPPN_DARKMODECHANGED:
+                        Kbg.Demo.Namespace.Main.frmGoToLine?.ToggleDarkMode(NppUtils.Notepad.IsDarkModeEnabled());
                         break;
                     case NppMsg.NPPN_SHUTDOWN:
                         PluginCleanUp();
@@ -93,6 +96,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         /// <summary><see cref="Main"/> should be a singleton class</summary>
         private Main() { }
         private static readonly Main Instance;
+        private static readonly string PluginMenuName = ".NET WinForms Demo Plugin\0";
         internal static string PluginName { get { return Kbg.Demo.Namespace.Main.PluginName; } }
     }
 }
@@ -109,7 +113,7 @@ namespace Kbg.Demo.Namespace
         static readonly string keyName = "doCloseTag";
         static bool doCloseTag = false;
         static string? sessionFilePath = null;
-        static frmGoToLine? frmGoToLine = null;
+        internal static frmGoToLine? frmGoToLine = null;
         static internal int idFrmGotToLine = -1;
 
         // toolbar icons

@@ -10,7 +10,7 @@ To be a candidate for Native AOT, a library must be "[trimmable]", which in turn
 
 Microsoft's documentation suggests [COM wrappers] as a strategy to provide the static type guarantees that COM marshalling ordinarily precludes. Third-party attempts to bring trimmable COM marshalling to Windows Forms have [already appeared](https://github.com/kant2002/WinFormsComInterop), but support is [still lacking](https://github.com/kant2002/WinFormsComInterop/issues/62) for a long-term-support framework (currently .NET 8). Fortunately, it looks like Microsoft intends to eventually [refactor Windows Forms](https://github.com/dotnet/winforms/issues/4649) for Native AOT.
 
-To make this technical discussion more concrete (and, hopefully, to invite contributions), this repository includes a broken [demo project](../examples/gui#readme) using Windows Forms. A Native AOT build should complete successfully, but with several warnings from the IL compiler ("ILC"), e.g.,
+To make this technical discussion more concrete (and, hopefully, to invite contributions), this repository includes a [demo project](../examples/gui#readme) using Windows Forms. A Native AOT build should complete successfully, but with several warnings from the IL compiler ("ILC"), e.g.,
 
 <details>
 <summary>Publishing a WinForms project with Native AOT</summary>
@@ -62,7 +62,7 @@ MSBuild version 17.9.6+a4ecab324 for .NET
 </pre>
 </details>
 
-The warnings are significant. A module that is not properly trimmed is basically a .NET assembly. If placed in the plugin path, it may throw an unhandled exception at any time, crashing Notepad++.
+The warnings may or may not be significant; a runtime exception may still be thrown, for reasons that were not detectable at compile time.
 
 
 ## Lack of AOT-compatible third-party .NET libraries
