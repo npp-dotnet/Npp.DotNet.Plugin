@@ -29,6 +29,8 @@ The command line arguments are the following:
 
 Start the Notepad++ application. In the "Plugins" menu, look for ".NET WinForms Demo Plugin" and try one of the commands.
 
+<img alt="GUI plugin menu" src="../../doc/img/npp.dotnet.plugin.gui.demo.toolbar.menu.png" width="800"/>
+
 [portable Notepad++]: ../minimal/README.mkd/#user-content-portable-npp
 [general build requirements]: ../../README.mkd/#requirements
 [Developer Command Prompt or PowerShell]: https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell

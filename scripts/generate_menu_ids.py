@@ -51,7 +51,13 @@ def generate(out: StringIO):
                 with open(hdr_path, 'w', encoding='utf-8') as msgs:
                     msgs.write(get_resource(val))
 
-            print(f"\n    public enum {key[1]} : uint\n    {{", file=out)
+            version = \
+                re.search(r'(?i)(?:^.*NOTEPAD_PLUS_VERSION L"Notepad\+\+ )?(?P<version>.*)"\s*$',
+                         get_resource(RESOURCE_H)[:1024], re.MULTILINE)
+
+            version = version.groupdict()['version'] if version is not None else ''
+            print(f"\n    /// <remarks>Definitions for Notepad++ {version}</remarks>", file=out)
+            print(f"    public enum {key[1]} : uint\n    {{", file=out)
 
             with open(hdr_path, 'r', encoding='utf-8') as hdr:
                 for line in hdr.read().splitlines():

@@ -13,4 +13,8 @@
 		<SharedFramework>$(TargetFramework)</SharedFramework>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$([MSBuild]::IsOSUnixLike())">
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
+	</PropertyGroup>
+
 </Project>

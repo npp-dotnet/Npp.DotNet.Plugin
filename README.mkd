@@ -31,7 +31,7 @@ A functional plugin demo can be built from the project under the [examples/minim
 
 The demo project's output can be validated by running the test project under the [test](test) subtree.
 
-An experimental, *non-functioning* plugin can be built from the project under the [examples/gui] subtree.
+A plugin using Windows Forms can be built from the project under the [examples/gui] subtree.
 See the [known issues](doc/ISSUES.mkd#windows-forms) to learn more.
 
 ### Using Visual Studio
