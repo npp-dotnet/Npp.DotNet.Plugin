@@ -14,9 +14,11 @@ namespace Npp.DotNet.Plugin
 {
     /// <summary>
     /// Encapsulates a plugin's functions as a managed collection of <see cref="FuncItem"/> items.<br/>
+    /// </summary>
+    /// <remarks>
     /// Extracted and adapted for .NET SDK from <c>NppPluginNETHelper.cs</c>, part of
     /// <a href="https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/">NotepadPlusPlusPluginPack.Net</a>.
-    /// </summary>
+    /// </remarks>
     public class PluginFuncArray : IDisposable
     {
         [DllImport("kernel32")]

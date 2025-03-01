@@ -9,12 +9,9 @@ using System.Runtime.InteropServices;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <summary>
-    /// Colours are set using the RGB format (Red, Green, Blue). The intensity of each colour is set in the range 0 to 255.
-    /// If you have three such intensities, they are combined as: red | (green &lt;&lt; 8) | (blue &lt;&lt; 16).
-    /// If you set all intensities to 255, the colour is white. If you set all intensities to 0, the colour is black.
-    /// When you set a colour, you are making a request. What you will get depends on the capabilities of the system and the current screen mode.
-    /// </summary>
+    /// <remarks>
+    /// See <see href="https://www.scintilla.org/ScintillaDoc.html#colour"/>
+    /// </remarks>
     public readonly struct Colour
     {
         public readonly int Red, Green, Blue;
@@ -49,20 +46,9 @@ namespace Npp.DotNet.Plugin
         }
     }
 
-    /// <summary>
-    /// Positions within the Scintilla document refer to a character or the gap before that character.
-    /// The first character in a document is 0, the second 1 and so on. If a document contains nLen characters, the last character is numbered nLen-1. The caret exists between character positions and can be located from before the first character (0) to after the last character (nLen).
-    /// <br/>
-    /// There are places where the caret can not go where two character bytes make up one character.
-    /// This occurs when a DBCS character from a language like Japanese is included in the document or when line ends are marked with the CP/M
-    /// standard of a carriage return followed by a line feed.The INVALID_POSITION constant(-1) represents an invalid position within the document.
-    /// <br/>
-    /// All lines of text in Scintilla are the same height, and this height is calculated from the largest font in any current style.This restriction
-    /// is for performance; if lines differed in height then calculations involving positioning of text would require the text to be styled first.
-    /// <br/>
-    /// If you use messages, there is nothing to stop you setting a position that is in the middle of a CRLF pair, or in the middle of a 2 byte character.
-    /// However, keyboard commands will not move the caret into such positions.
-    /// </summary>
+    /// <remarks>
+    /// See <see href="https://www.scintilla.org/ScintillaDoc.html#TextRetrievalAndModification"/>
+    /// </remarks>
     public readonly struct Position
     {
         private readonly Int64 _pos;
@@ -148,32 +134,60 @@ namespace Npp.DotNet.Plugin
     }
 
     /// <summary>
-    /// Class containing key and modifiers
-    /// <br/>
-    /// The key code is a visible or control character or a key from the SCK_* enumeration, which contains:
-    /// SCK_ADD, SCK_BACK, SCK_DELETE, SCK_DIVIDE, SCK_DOWN, SCK_END, SCK_ESCAPE, SCK_HOME, SCK_INSERT, SCK_LEFT, SCK_MENU, SCK_NEXT(Page Down), SCK_PRIOR(Page Up), S
-    /// CK_RETURN, SCK_RIGHT, SCK_RWIN, SCK_SUBTRACT, SCK_TAB, SCK_UP, and SCK_WIN.
-    /// <br/>
-    /// The modifiers are a combination of zero or more of SCMOD_ALT, SCMOD_CTRL, SCMOD_SHIFT, SCMOD_META, and SCMOD_SUPER.
-    /// On OS X, the Command key is mapped to SCMOD_CTRL and the Control key to SCMOD_META.SCMOD_SUPER is only available on GTK+ which is commonly the Windows key.
-    /// If you are building a table, you might want to use SCMOD_NORM, which has the value 0, to mean no modifiers.
+    /// A visible or control character. The lower 16-bits are used to form a key definition.
     /// </summary>
+    /// <remarks>
+    /// See <see cref="KeyModifier(ScKeyCode, KeyMod)"/>
+    /// </remarks>
+    public enum ScKeyCode
+    {
+        DOWN = (int)SciMsg.SCK_DOWN,
+        UP = (int)SciMsg.SCK_UP,
+        LEFT = (int)SciMsg.SCK_LEFT,
+        RIGHT = (int)SciMsg.SCK_RIGHT,
+        HOME = (int)SciMsg.SCK_HOME,
+        END = (int)SciMsg.SCK_END,
+        /// <summary>Page Up</summary>
+        PRIOR = (int)SciMsg.SCK_PRIOR,
+        /// <summary>Page Down</summary>
+        NEXT = (int)SciMsg.SCK_NEXT,
+        DELETE = (int)SciMsg.SCK_DELETE,
+        INSERT = (int)SciMsg.SCK_INSERT,
+        ESCAPE = (int)SciMsg.SCK_ESCAPE,
+        BACK = (int)SciMsg.SCK_BACK,
+        TAB = (int)SciMsg.SCK_TAB,
+        RETURN = (int)SciMsg.SCK_RETURN,
+        ADD = (int)SciMsg.SCK_ADD,
+        SUBTRACT = (int)SciMsg.SCK_SUBTRACT,
+        DIVIDE = (int)SciMsg.SCK_DIVIDE,
+        WIN = (int)SciMsg.SCK_WIN,
+        RWIN = (int)SciMsg.SCK_RWIN,
+        MENU = (int)SciMsg.SCK_MENU,
+    }
+
+    /// <summary>
+    /// Class containing key and modifiers.
+    /// </summary>
+    /// <remarks>
+    /// See <see href="https://www.scintilla.org/ScintillaDoc.html#keyDefinition"/>
+    /// </remarks>
     public readonly struct KeyModifier
     {
         private readonly int _value;
 
-        /// <summary>
-        /// The key code is a visible or control character or a key from the SCK_* enumeration, which contains:
-        /// SCK_ADD, SCK_BACK, SCK_DELETE, SCK_DIVIDE, SCK_DOWN, SCK_END, SCK_ESCAPE, SCK_HOME, SCK_INSERT, SCK_LEFT, SCK_MENU, SCK_NEXT(Page Down), SCK_PRIOR(Page Up),
-        /// SCK_RETURN, SCK_RIGHT, SCK_RWIN, SCK_SUBTRACT, SCK_TAB, SCK_UP, and SCK_WIN.
-        /// <br/>
-        /// The modifiers are a combination of zero or more of SCMOD_ALT, SCMOD_CTRL, SCMOD_SHIFT, SCMOD_META, and SCMOD_SUPER.
-        /// On OS X, the Command key is mapped to SCMOD_CTRL and the Control key to SCMOD_META.SCMOD_SUPER is only available on GTK+ which is commonly the Windows key.
-        /// If you are building a table, you might want to use SCMOD_NORM, which has the value 0, to mean no modifiers.
-        /// </summary>
-        public KeyModifier(SciMsg SCK_KeyCode, SciMsg SCMOD_modifier)
+        /// <param name="keyCode">
+        /// A visible or control character or a key from the <see cref="ScKeyCode"/> enumeration.
+        /// </param>
+        /// <param name="modifier">
+        /// A combination of zero or more of <see cref="KeyMod.ALT"/>, <see cref="KeyMod.CTRL"/>, <see cref="KeyMod.SHIFT"/>,
+        /// <see cref="KeyMod.META"/>, and <see cref="KeyMod.SUPER"/>.
+        /// On macOS, the Command key is mapped to <see cref="KeyMod.CTRL"/> and the Control key to <see cref="KeyMod.META"/>.
+        /// <see cref="KeyMod.SUPER"/> is only available on GTK which is commonly the Windows key.
+        /// If you are building a table, you might want to use <see cref="KeyMod.NORM"/>, which has the value 0, to mean no modifiers.
+        /// </param>
+        public KeyModifier(ScKeyCode keyCode, KeyMod modifier)
         {
-            _value = (int)SCK_KeyCode | ((int)SCMOD_modifier << 16);
+            _value = (int)keyCode | ((int)modifier << 16);
         }
 
         public int Value
@@ -199,6 +213,13 @@ namespace Npp.DotNet.Plugin
         public IntPtr cpMax;
     }
 
+    /// <summary>
+    /// Each byte in a Scintilla document is associated with a byte of styling information.
+    /// The combination of a character byte and a style byte is called a cell.
+    /// </summary>
+    /// <remarks>
+    /// See <see href="https://www.scintilla.org/ScintillaDoc.html#TextRetrievalAndModification"/>
+    /// </remarks>
     public readonly struct Cells
     {
         internal readonly char[] CharactersAndStyles;
@@ -331,7 +352,8 @@ namespace Npp.DotNet.Plugin
 
 
     /* ++Autogenerated -- start of section automatically generated from Scintilla.iface */
-    /// <summary>Is undo history being collected? (Scintilla feature SCWS_)</summary>
+    /// <summary>Make white space characters invisible, always visible or visible outside indentation. (Scintilla feature SCWS_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.SetViewWS"/></remarks>
     public enum WhiteSpace
     {
         INVISIBLE = 0,
@@ -339,30 +361,28 @@ namespace Npp.DotNet.Plugin
         VISIBLEAFTERINDENT = 2,
         VISIBLEONLYININDENT = 3
     }
-    /// <summary>Make white space characters invisible, always visible or visible outside indentation. (Scintilla feature SCTD_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetTabDrawMode"/>. (Scintilla feature SCTD_)</summary>
     public enum TabDrawMode
     {
         LONGARROW = 0,
         STRIKEOUT = 1
     }
-    /// <summary>Retrieve the position of the last correctly styled character. (Scintilla feature SC_EOL_)</summary>
+    /// <summary>Return value of <see cref="IScintillaGateway.GetEOLMode"/>. (Scintilla feature SC_EOL_)</summary>
     public enum EndOfLine
     {
         CRLF = 0,
         CR = 1,
         LF = 2
     }
-    /// <summary>
-    /// Set the code page used to interpret the bytes of the document as characters.
-    /// The SC_CP_UTF8 value can be used to enter Unicode mode.
-    /// (Scintilla feature SC_IME_)
-    /// </summary>
+    /// <summary>Choose to display the the IME in a window or inline. (Scintilla feature SC_IME_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.SetIMEInteraction"/></remarks>
     public enum IMEInteraction
     {
         WINDOWED = 0,
         INLINE = 1
     }
-    /// <summary>Choose to display the the IME in a winow or inline. (Scintilla feature SC_MARK_)</summary>
+    /// <summary>Symbols used for a particular marker number. (Scintilla feature SC_MARK_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.MarkerDefine"/></remarks>
     public enum MarkerSymbol
     {
         CIRCLE = 0,
@@ -387,6 +407,7 @@ namespace Npp.DotNet.Plugin
         CIRCLEPLUSCONNECTED = 19,
         CIRCLEMINUS = 20,
         CIRCLEMINUSCONNECTED = 21,
+        /// <summary>Invisible mark that only sets the line background colour.</summary>
         BACKGROUND = 22,
         DOTDOTDOT = 23,
         ARROWS = 24,
@@ -400,7 +421,7 @@ namespace Npp.DotNet.Plugin
         VERTICALBOOKMARK = 32,
         CHARACTER = 10000
     }
-    /// <summary>Invisible mark that only sets the line background colour. (Scintilla feature SC_MARKNUM_)</summary>
+    /// <summary>Markers used for outlining and change history columns. (Scintilla feature SC_MARKNUM_)</summary>
     public enum MarkerOutline
     {
         FOLDEREND = 25,
@@ -411,7 +432,7 @@ namespace Npp.DotNet.Plugin
         FOLDER = 30,
         FOLDEROPEN = 31
     }
-    /// <summary>Set the alpha used for a marker that is drawn in the text area, not the margin. (Scintilla feature SC_MARGIN_)</summary>
+    /// <summary>Set a margin to be either numeric or symbolic. (Scintilla feature SC_MARGIN_)</summary>
     public enum MarginType
     {
         SYMBOL = 0,
@@ -437,7 +458,7 @@ namespace Npp.DotNet.Plugin
         MAX = 255
     }
     /// <summary>
-    /// Character set identifiers are used in StyleSetCharacterSet.
+    /// Character set identifiers are used in <see cref="IScintillaGateway.StyleSetCharacterSet"/>.
     /// The values are the same as the Windows *_CHARSET values.
     /// (Scintilla feature SC_CHARSET_)
     /// </summary>
@@ -466,7 +487,7 @@ namespace Npp.DotNet.Plugin
         THAI = 222,
         _8859_15 = 1000
     }
-    /// <summary>Set a style to be underlined or not. (Scintilla feature SC_CASE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.StyleSetCase"/>. (Scintilla feature SC_CASE_)</summary>
     public enum CaseVisible
     {
         MIXED = 0,
@@ -518,6 +539,9 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         EXPLORERLINK = 23,
     }
+    /// <summary>
+    /// Range of indicators reserved for change history.
+    /// </summary>
     /// <remarks>
     /// Added in <a href="https://sourceforge.net/p/scintilla/code/ci/7f7dbf80b0d6">5.3.0</a>
     /// </remarks>
@@ -564,7 +588,8 @@ namespace Npp.DotNet.Plugin
     {
         VALUEFORE = 1
     }
-    /// <summary>Is the horizontal scroll bar visible? (Scintilla feature SC_IV_)</summary>
+    /// <summary><see cref="IndentView.NONE"/> turns the feature off but the other 3 states determine how far the guides appear on empty lines. (Scintilla feature SC_IV_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.SetIndentationGuides"/></remarks>
     public enum IndentView
     {
         NONE = 0,
@@ -572,17 +597,23 @@ namespace Npp.DotNet.Plugin
         LOOKFORWARD = 2,
         LOOKBOTH = 3
     }
-    /// <summary>Returns the print magnification. (Scintilla feature SC_PRINT_)</summary>
+    /// <summary>Print colour mode. (Scintilla feature SC_PRINT_)</summary>
     public enum PrintOption
     {
+        /// <summary>Use same colours as screen, with the exception of line number margins, which use a white background.</summary>
         NORMAL = 0,
+        /// <summary>Invert the light value of each style.</summary>
         INVERTLIGHT = 1,
+        /// <summary>Force black text on white background.</summary>
         BLACKONWHITE = 2,
+        /// <summary>Text stays coloured, but all background is forced to be white.</summary>
         COLOURONWHITE = 3,
+        /// <summary>Only the default-background is forced to be white for printing.</summary>
         COLOURONWHITEDEFAULTBG = 4,
+        /// <summary>Use same colours as screen, including line number margins.</summary>
         SCREENCOLOURS = 5
     }
-    /// <summary>Returns the print colour mode. (Scintilla feature SCFIND_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.FindText(FindOption, TextToFindFull)"/>. (Scintilla feature SCFIND_)</summary>
     [Flags]
     public enum FindOption
     {
@@ -594,7 +625,7 @@ namespace Npp.DotNet.Plugin
         POSIX = 0x00400000,
         CXX11REGEX = 0x00800000
     }
-    /// <summary>The number of display lines needed to wrap a document line (Scintilla feature SC_FOLDLEVEL)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetFoldLevel"/>. (Scintilla feature SC_FOLDLEVEL)</summary>
     public enum FoldLevel
     {
         BASE = 0x400,
@@ -602,14 +633,15 @@ namespace Npp.DotNet.Plugin
         HEADERFLAG = 0x2000,
         NUMBERMASK = 0x0FFF
     }
-    /// <summary>Switch a header line between expanded and contracted and show some text after the line. (Scintilla feature SC_FOLDDISPLAYTEXT_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.FoldDisplayTextSetStyle"/>. (Scintilla feature SC_FOLDDISPLAYTEXT_)</summary>
     public enum FoldDisplayTextStyle
     {
         HIDDEN = 0,
         STANDARD = 1,
         BOXED = 2
     }
-    /// <summary>Get the default fold display text. (Scintilla feature SC_FOLDACTION_)</summary>
+    /// <summary>Expand or contract a fold header. (Scintilla feature SC_FOLDACTION_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.FoldLine"/></remarks>
     [Flags]
     public enum FoldAction
     {
@@ -624,7 +656,8 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         CONTRACTEVERYLEVEL = 4
     }
-    /// <summary>Ensure a particular line is visible by expanding any header line hiding it. (Scintilla feature SC_AUTOMATICFOLD_)</summary>
+    /// <summary>Get automatic folding behaviours. (Scintilla feature SC_AUTOMATICFOLD_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.GetAutomaticFold"/></remarks>
     [Flags]
     public enum AutomaticFold
     {
@@ -633,7 +666,8 @@ namespace Npp.DotNet.Plugin
         CLICK = 0x0002,
         CHANGE = 0x0004
     }
-    /// <summary>Get automatic folding behaviours. (Scintilla feature SC_FOLDFLAG_)</summary>
+    /// <summary>Set some style options for folding. (Scintilla feature SC_FOLDFLAG_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.SetFoldFlags"/></remarks>
     [Flags]
     public enum FoldFlag
     {
@@ -645,7 +679,7 @@ namespace Npp.DotNet.Plugin
         LEVELNUMBERS = 0x0040,
         LINESTATE = 0x0080
     }
-    /// <summary>Is the range start..end considered a word? (Scintilla feature SC_IDLESTYLING_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetIdleStyling"/>. (Scintilla feature SC_IDLESTYLING_)</summary>
     public enum IdleStyling
     {
         NONE = 0,
@@ -653,7 +687,7 @@ namespace Npp.DotNet.Plugin
         AFTERVISIBLE = 2,
         ALL = 3
     }
-    /// <summary>Retrieve the limits to idle styling. (Scintilla feature SC_WRAP_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetWrapMode"/>. (Scintilla feature SC_WRAP_)</summary>
     public enum Wrap
     {
         NONE = 0,
@@ -661,7 +695,7 @@ namespace Npp.DotNet.Plugin
         CHAR = 2,
         WHITESPACE = 3
     }
-    /// <summary>Retrieve whether text is word wrapped. (Scintilla feature SC_WRAPVISUALFLAG_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetWrapVisualFlags"/>. (Scintilla feature SC_WRAPVISUALFLAG_)</summary>
     public enum WrapVisualFlag
     {
         NONE = 0x0000,
@@ -669,14 +703,14 @@ namespace Npp.DotNet.Plugin
         START = 0x0002,
         MARGIN = 0x0004
     }
-    /// <summary>Retrive the display mode of visual flags for wrapped lines. (Scintilla feature SC_WRAPVISUALFLAGLOC_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetWrapVisualFlagsLocation"/>. (Scintilla feature SC_WRAPVISUALFLAGLOC_)</summary>
     public enum WrapVisualLocation
     {
         DEFAULT = 0x0000,
         END_BY_TEXT = 0x0001,
         START_BY_TEXT = 0x0002
     }
-    /// <summary>Retrive the start indent for wrapped lines. (Scintilla feature SC_WRAPINDENT_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetWrapIndentMode"/>. (Scintilla feature SC_WRAPINDENT_)</summary>
     public enum WrapIndentMode
     {
         FIXED = 0,
@@ -684,7 +718,7 @@ namespace Npp.DotNet.Plugin
         INDENT = 2,
         DEEPINDENT = 3
     }
-    /// <summary>Retrieve how wrapped sublines are placed. Default is fixed. (Scintilla feature SC_CACHE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetLayoutCache"/>. (Scintilla feature SC_CACHE_)</summary>
     public enum LineCache
     {
         NONE = 0,
@@ -692,7 +726,7 @@ namespace Npp.DotNet.Plugin
         PAGE = 2,
         DOCUMENT = 3
     }
-    /// <summary>Append a string to the end of the document without changing the selection. (Scintilla feature SC_PHASES_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetPhasesDraw"/>. (Scintilla feature SC_PHASES_)</summary>
     public enum PhasesDraw
     {
         [Obsolete("Use SC_PHASES_TWO or SC_PHASES_MULTIPLE instead: https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]
@@ -701,6 +735,7 @@ namespace Npp.DotNet.Plugin
         MULTIPLE = 2
     }
     /// <summary>Control font anti-aliasing. (Scintilla feature SC_EFF_)</summary>
+    /// <remarks>See <see cref="IScintillaGateway.SetFontQuality"/></remarks>
     public enum FontQuality
     {
         QUALITY_MASK = 0xF,
@@ -709,19 +744,19 @@ namespace Npp.DotNet.Plugin
         QUALITY_ANTIALIASED = 2,
         QUALITY_LCD_OPTIMIZED = 3
     }
-    /// <summary>Scroll so that a display line is at the top of the display. (Scintilla feature SC_MULTIPASTE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetMultiPaste"/>. (Scintilla feature SC_MULTIPASTE_)</summary>
     public enum MultiPaste
     {
         ONCE = 0,
         EACH = 1
     }
-    /// <summary>Set the other colour used as a chequerboard pattern in the fold margin (Scintilla feature SC_ACCESSIBILITY_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetAccessibility"/>. (Scintilla feature SC_ACCESSIBILITY_)</summary>
     public enum Accessibility
     {
         DISABLED = 0,
         ENABLED = 1
     }
-    /// <summary>Set which document modification events are sent to the container. (Scintilla feature EDGE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetEdgeMode"/>. (Scintilla feature EDGE_)</summary>
     public enum EdgeVisualStyle
     {
         NONE = 0,
@@ -729,21 +764,21 @@ namespace Npp.DotNet.Plugin
         BACKGROUND = 2,
         MULTILINE = 3
     }
-    /// <summary>Retrieves the number of lines completely visible. (Scintilla feature SC_POPUP_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.UsePopUp"/>. (Scintilla feature SC_POPUP_)</summary>
     public enum PopUp
     {
         NEVER = 0,
         ALL = 1,
         TEXT = 2
     }
-    /// <summary>Retrieve the zoom level. (Scintilla feature SC_DOCUMENTOPTION_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.CreateDocument"/>. (Scintilla feature SC_DOCUMENTOPTION_)</summary>
     public enum DocumentOption
     {
         DEFAULT = 0,
         STYLES_NONE = 0x1,
         TEXT_LARGE = 0x100
     }
-    /// <summary>Get internal focus flag. (Scintilla feature SC_STATUS_)</summary>
+    /// <summary>Return value of <see cref="IScintillaGateway.GetStatus"/>. (Scintilla feature SC_STATUS_)</summary>
     public enum Status
     {
         OK = 0,
@@ -752,7 +787,7 @@ namespace Npp.DotNet.Plugin
         WARN_START = 1000,
         WARN_REGEX = 1001
     }
-    /// <summary>Get whether mouse wheel can be active outside the window. (Scintilla feature SC_CURSOR)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetCursor"/>. (Scintilla feature SC_CURSOR)</summary>
     public enum CursorShape
     {
         NORMAL = -1,
@@ -760,13 +795,13 @@ namespace Npp.DotNet.Plugin
         WAIT = 4,
         REVERSEARROW = 7
     }
-    /// <summary>Constants for use with SetVisiblePolicy, similar to SetCaretPolicy. (Scintilla feature VISIBLE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetVisiblePolicy"/>. (Scintilla feature VISIBLE_)</summary>
     public enum VisiblePolicy
     {
         SLOP = 0x01,
         STRICT = 0x04
     }
-    /// <summary>Set the focus to this Scintilla widget. (Scintilla feature CARET_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetXCaretPolicy"/> and <see cref="IScintillaGateway.SetYCaretPolicy"/>. (Scintilla feature CARET_)</summary>
     [Flags]
     public enum CaretPolicy
     {
@@ -775,7 +810,7 @@ namespace Npp.DotNet.Plugin
         JUMPS = 0x10,
         EVEN = 0x08
     }
-    /// <summary>Copy argument text to the clipboard. (Scintilla feature SC_SEL_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetSelectionMode"/>. (Scintilla feature SC_SEL_)</summary>
     public enum SelectionMode
     {
         STREAM = 0,
@@ -783,38 +818,33 @@ namespace Npp.DotNet.Plugin
         LINES = 2,
         THIN = 3
     }
-    /// <summary>
-    /// Get currently selected item text in the auto-completion list
-    /// Returns the length of the item text
-    /// Result is NUL-terminated.
-    /// (Scintilla feature SC_CASEINSENSITIVEBEHAVIOUR_)
-    /// </summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.AutoCSetCaseInsensitiveBehaviour"/>. (Scintilla feature SC_CASEINSENSITIVEBEHAVIOUR_)</summary>
     public enum CaseInsensitiveBehaviour
     {
         RESPECTCASE = 0,
         IGNORECASE = 1
     }
-    /// <summary>Get auto-completion case insensitive behaviour. (Scintilla feature SC_MULTIAUTOC_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.AutoCSetMulti"/>. (Scintilla feature SC_MULTIAUTOC_)</summary>
     public enum MultiAutoComplete
     {
         ONCE = 0,
         EACH = 1
     }
-    /// <summary>Retrieve the effect of autocompleting when there are multiple selections. (Scintilla feature SC_ORDER_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.AutoCSetOrder"/>. (Scintilla feature SC_ORDER_)</summary>
     public enum Ordering
     {
         PRESORTED = 0,
         PERFORMSORT = 1,
         CUSTOM = 2
     }
-    /// <summary>Stop the caret preferred x position changing when the user types. (Scintilla feature SC_CARETSTICKY_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetCaretSticky"/>. (Scintilla feature SC_CARETSTICKY_)</summary>
     public enum CaretSticky
     {
         OFF = 0,
         ON = 1,
         WHITESPACE = 2
     }
-    /// <summary>Duplicate the selection. If selection empty duplicate the line containing the caret. (Scintilla feature SC_ALPHA_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetSelAlpha"/>. (Scintilla feature SC_ALPHA_)</summary>
     public enum Alpha
     {
         TRANSPARENT = 0,
@@ -822,7 +852,7 @@ namespace Npp.DotNet.Plugin
         [Obsolete("Use SCI_SETSELECTIONLAYER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETSELECTIONLAYER")]
         NOALPHA = 256
     }
-    /// <summary>Get the background alpha of the caret line. (Scintilla feature CARETSTYLE_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetCaretStyle"/>. (Scintilla feature CARETSTYLE_)</summary>
     [Flags]
     public enum CaretStyle
     {
@@ -835,13 +865,13 @@ namespace Npp.DotNet.Plugin
         CURSES = 0x20,
         BLOCK_AFTER = 0x100
     }
-    /// <summary>Get the start of the range of style numbers used for margin text (Scintilla feature SC_MARGINOPTION_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetMarginOptions"/>. (Scintilla feature SC_MARGINOPTION_)</summary>
     public enum MarginOption
     {
         NONE = 0,
         SUBLINESELECT = 1
     }
-    /// <summary>Clear the annotations from all lines (Scintilla feature ANNOTATION_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.AnnotationSetVisible"/>. (Scintilla feature ANNOTATION_)</summary>
     public enum AnnotationVisible
     {
         HIDDEN = 0,
@@ -849,13 +879,13 @@ namespace Npp.DotNet.Plugin
         BOXED = 2,
         INDENTED = 3
     }
-    /// <summary>Allocate some extended (>255) style numbers and return the start of the range (Scintilla feature UNDO_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.AddUndoAction"/>. (Scintilla feature UNDO_)</summary>
     public enum UndoFlags
     {
         NONE = 0,
         MAY_COALESCE = 1
     }
-    /// <summary>Return the virtual space of the anchor of the rectangular selection. (Scintilla feature SCVS_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetVirtualSpaceOptions"/>. (Scintilla feature SCVS_)</summary>
     public enum VirtualSpace
     {
         NONE = 0,
@@ -863,7 +893,7 @@ namespace Npp.DotNet.Plugin
         USERACCESSIBLE = 2,
         NOWRAPLINESTART = 4
     }
-    /// <summary>Scroll to end of document. (Scintilla feature SC_TECHNOLOGY_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetTechnology"/>. (Scintilla feature SC_TECHNOLOGY_)</summary>
     public enum Technology
     {
         DEFAULT = 0,
@@ -882,11 +912,7 @@ namespace Npp.DotNet.Plugin
         DEFAULT = 0,
         UNICODE = 1
     }
-    /// <summary>
-    /// Retrieve a '\n' separated list of properties understood by the current lexer.
-    /// Result is NUL-terminated.
-    /// (Scintilla feature SC_TYPE_)
-    /// </summary>
+    /// <summary>Return value of <see cref="IScintillaGateway.PropertyType"/>. (Scintilla feature SC_TYPE_)</summary>
     public enum TypeProperty
     {
         BOOLEAN = 0,
@@ -1034,6 +1060,9 @@ namespace Npp.DotNet.Plugin
         /// Used with <see cref="NotepadPPGateway.DefaultModificationFlagsChanged"/> to determine if the default <see cref="ModificationFlags"/>
         /// have been changed by another plugin.
         /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/d888fb5f1263f5ea036c610b6980e5c4381ce7eb">8.7.7</a>
+        /// </remarks>
         NPP_DEFAULT_SC_MOD_MASK =
             SC_MOD_DELETETEXT |
             SC_MOD_INSERTTEXT |
@@ -1042,7 +1071,6 @@ namespace Npp.DotNet.Plugin
             SC_MOD_CHANGEINDICATOR,
     }
     /// <summary>
-    /// Notifications
     /// Type of modification and the action which caused the modification.
     /// These are defined as a bit mask to make it easy to specify which notifications are wanted.
     /// One bit is set from each of SC_MOD_* and SC_PERFORMED_*.
@@ -1062,6 +1090,7 @@ namespace Npp.DotNet.Plugin
     /// Extended keys above 300.
     /// (Scintilla feature SCMOD_)
     /// </summary>
+    [Flags]
     public enum KeyMod
     {
         NORM = 0,
@@ -1072,10 +1101,7 @@ namespace Npp.DotNet.Plugin
         META = 16
     }
     /// <summary>
-    /// Symbolic key codes and modifier flags.
-    /// ASCII and other printable characters below 256.
-    /// Extended keys above 300.
-    /// (Scintilla feature SC_AC_)
+    /// The value passed in <see cref="ScNotification.ListCompletionMethod"/> indicating the way in which the completion occurred.
     /// </summary>
     public enum CompletionMethods
     {
@@ -1092,7 +1118,9 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         SINGLECHOICE = 6
     }
-    /// <summary>characterSource for SCN_CHARADDED (Scintilla feature SC_CHARACTERSOURCE_)</summary>
+    /// <summary>
+    /// The value passed in <see cref="ScNotification.CharacterSource"/> when <see cref="SciMsg.SCN_CHARADDED"/> is emitted.
+    /// </summary>
     public enum CharacterSource
     {
         DIRECT_INPUT = 0,
@@ -1236,14 +1264,18 @@ namespace Npp.DotNet.Plugin
         DATAFLEX = 129,
         AUTOMATIC = 1000
     }
-    /// <summary>GTK Specific to work around focus and accelerator problems: (Scintilla feature SC_BIDIRECTIONAL_)</summary>
+
+#if !SCI_DISABLE_PROVISIONAL
+    /// <summary>Possible options for <see cref="IScintillaGateway.SetBidirectional"/>. (Scintilla feature SC_BIDIRECTIONAL_)</summary>
     public enum Bidirectional
     {
         DISABLED = 0,
         L2R = 1,
         R2L = 2
     }
-    /// <summary>Set bidirectional text display state. (Scintilla feature SC_LINECHARACTERINDEX_)</summary>
+#endif
+
+    /// <summary>Return value of <see cref="IScintillaGateway.GetLineCharacterIndex"/>. (Scintilla feature SC_LINECHARACTERINDEX_)</summary>
     public enum LineCharacterIndexType
     {
         NONE = 0,

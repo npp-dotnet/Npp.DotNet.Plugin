@@ -90,7 +90,9 @@ namespace Npp.DotNet.Plugin
         public ShortcutKey PShKey;
     }
 
-    /// <inheritdoc cref="NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE"/>
+    /// <remarks>
+    /// See <see cref="NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE"/>
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     public struct ToolbarIconDarkMode
     {
@@ -108,7 +110,9 @@ namespace Npp.DotNet.Plugin
         public IntPtr HToolbarIconDarkMode;
     }
 
-    /// <inheritdoc cref="NppMsg.NPPM_ADDTOOLBARICON_DEPRECATED"/>
+    /// <remarks>
+    /// See <see cref="NppMsg.NPPM_ADDTOOLBARICON_DEPRECATED"/>
+    /// </remarks>
     [Obsolete("Use ToolbarIconDarkMode instead", false)]
     [StructLayout(LayoutKind.Sequential)]
     public struct ToolbarIcon
@@ -119,7 +123,9 @@ namespace Npp.DotNet.Plugin
         public IntPtr HToolbarIcon;
     }
 
-    /// <inheritdoc cref="NppMsg.NPPM_SAVESESSION"/>
+    /// <remarks>
+    /// See <see cref="NppMsg.NPPM_SAVESESSION"/>
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct SessionInfo
     {
@@ -139,7 +145,9 @@ namespace Npp.DotNet.Plugin
         public string[] Files;
     }
 
-    /// <inheritdoc cref="NppMsg.NPPM_MSGTOPLUGIN"/>
+    /// <remarks>
+    /// See <see cref="NppMsg.NPPM_MSGTOPLUGIN"/>
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct CommunicationInfo
     {

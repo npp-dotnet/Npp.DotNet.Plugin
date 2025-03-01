@@ -19,8 +19,10 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Get the scroll information of a scroll bar or window with scroll bar<br/>
-        /// <see href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-scrollinfo"/>
         /// </summary>
+        /// <remarks>
+        /// See <see href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-scrollinfo"/>
+        /// </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct ScrollInfo
         {

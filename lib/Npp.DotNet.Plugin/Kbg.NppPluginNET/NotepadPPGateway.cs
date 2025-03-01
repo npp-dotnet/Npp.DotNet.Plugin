@@ -1,6 +1,7 @@
 ﻿/*
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>
  *						   2023 Mark Johnston Olson <https://github.com/molsonkiko>
+ *						   2024, 2025 Robert Di Pardo  <https://github.com/rdipardo>
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -22,24 +23,40 @@ namespace Npp.DotNet.Plugin
 		void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon);
 		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
+		/// <inheritdoc cref="NotepadPPGateway.GetNppPath"/>
 		string GetNppPath();
+		/// <inheritdoc cref="NotepadPPGateway.GetPluginsHomePath"/>
 		string GetPluginsHomePath();
+		/// <inheritdoc cref="NotepadPPGateway.GetPluginConfigPath"/>
 		string GetPluginConfigPath();
 		string GetSessionFilePath();
+		/// <inheritdoc cref="NotepadPPGateway.GetCurrentWord"/>
 		string GetCurrentWord();
+		/// <inheritdoc cref="NotepadPPGateway.GetCurrentLine"/>
 		string GetCurrentLine();
+		/// <inheritdoc cref="NotepadPPGateway.GetCurrentFilePath"/>
 		string GetCurrentFilePath();
+		/// <inheritdoc cref="NotepadPPGateway.GetFilePath"/>
 		string GetFilePath(UIntPtr bufferId);
+		/// <inheritdoc cref="NotepadPPGateway.GetNativeLanguage"/>
 		string GetNativeLanguage();
 		void SetCurrentLanguage(LangType language);
+		/// <inheritdoc cref="NotepadPPGateway.OpenFile"/>
 		bool OpenFile(string path);
+		/// <inheritdoc cref="NotepadPPGateway.SaveCurrentFile"/>
 		bool SaveCurrentFile();
+		/// <inheritdoc cref="NotepadPPGateway.GetConfigDirectory"/>
 		string GetConfigDirectory();
+		/// <inheritdoc cref="NotepadPPGateway.GetNppVersion"/>
 		(int, int, int) GetNppVersion();
 		string[] GetOpenFileNames();
+		/// <inheritdoc cref="NotepadPPGateway.SetStatusBarSection"/>
 		void SetStatusBarSection(string message, StatusBarSection section);
+		/// <inheritdoc cref="NotepadPPGateway.SetModificationFlags"/>
 		void SetModificationFlags(ModificationFlags flags);
+		/// <inheritdoc cref="NotepadPPGateway.DefaultModificationFlagsChanged"/>
 		bool DefaultModificationFlagsChanged();
+		/// <inheritdoc cref="NotepadPPGateway.IsDarkModeEnabled"/>
 		bool IsDarkModeEnabled();
 	}
 
@@ -200,7 +217,7 @@ namespace Npp.DotNet.Plugin
 		/// File - Open menu.
 		/// </summary>
 		/// <param name="path">The path to the file to open.</param>
-		/// <returns>True on success.</returns>
+		/// <returns><see langword="true"/> on success, otherwise <see langword="false"/>.</returns>
 		public bool OpenFile(string path)
 			=> Win32.SendMessage(
 				PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DOOPEN, UnusedW, path).ToInt32()
@@ -223,9 +240,9 @@ namespace Npp.DotNet.Plugin
 		}
 
 		/// <summary>
-		/// open a standard save file dialog to save the current file<br></br>
-		/// Returns true if the file was saved
+		/// Open a standard save file dialog to save the current file.
 		/// </summary>
+		/// <returns><see langword="true"/> if the file was saved, otherwise <see langword="false"/>.</returns>
 		public bool SaveCurrentFile()
 		{
 			IntPtr result = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SAVECURRENTFILEAS);
@@ -234,7 +251,7 @@ namespace Npp.DotNet.Plugin
 
 		/// <summary>
 		/// Figure out default N++ config file path<br></br>
-		/// Path is usually -&gt; .\Users\&lt;username&gt;\AppData\Roaming\Notepad++\plugins\config\
+		/// Path is usually <c>%UserProfile%\AppData\Roaming\Notepad++\plugins\config</c>
 		/// </summary>
 		public string GetConfigDirectory()
 		{
@@ -269,11 +286,11 @@ namespace Npp.DotNet.Plugin
 		}
 
 		/// <summary>
-		/// the status bar is the bar at the bottom with the document type, EOL type, current position, line, etc.<br></br>
+		/// The status bar is the bar at the bottom with the document type, EOL type, current position, line, etc.<br></br>
 		/// Set the message for one of the sections of that bar.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="section"></param>
+		/// <param name="message">Text to display.</param>
+		/// <param name="section">A <see cref="StatusBarSection"/> value.</param>
 		public void SetStatusBarSection(string message, StatusBarSection section)
 		{
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETSTATUSBAR, (uint)section, message);
