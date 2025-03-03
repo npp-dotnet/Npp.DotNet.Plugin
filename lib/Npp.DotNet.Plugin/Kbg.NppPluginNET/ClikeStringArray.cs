@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using Npp.DotNet.Plugin.Extensions;
 
 namespace Npp.DotNet.Plugin
 {
@@ -32,11 +33,11 @@ namespace Npp.DotNet.Plugin
         /// </remarks>
         public ClikeStringArray(int num, int stringLength)
         {
-            _nativeArray = Marshal.AllocHGlobal((num + 1) * IntPtr.Size);
+            _nativeArray = Marshal.AllocHGlobal(UncheckedMath.Increment(num) * IntPtr.Size);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
-                int cbSize = Math.Min(stringLength + 1, Win32.MAX_PATH - 1) * Marshal.SystemDefaultCharSize;
+                int cbSize = Math.Min(UncheckedMath.Increment(stringLength), Win32.MAX_PATH - 1) * Marshal.SystemDefaultCharSize;
                 IntPtr item = Marshal.AllocHGlobal(cbSize);
                 Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);

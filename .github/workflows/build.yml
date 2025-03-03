@@ -42,17 +42,30 @@ jobs:
             8.0.x
             9.0.x
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
+
       - name: Restore projects
         run: |
           dotnet restore
           dotnet restore test
 
-      - name: Run tests
+      - name: Build native dependencies
+        run: |
+          msbuild /v:m /t:Build /p:Configuration=${{ matrix.build_config }} /p:Platform=${{ matrix.target_runtime }} .\test\Buffers\Unmanaged
+
+      - name: Test memory layout
         if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
           dotnet msbuild /t:Build /p:SharedFramework=net9.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
-          dotnet test -f net9.0-windows --no-build
+          dotnet test -f net9.0-windows --no-build .\Memory
+
+      - name: Test unmanaged string buffer allocation
+        if: matrix.target_runtime == 'x64' && matrix.plugin_demo == 'minimal'
+        working-directory: ./test
+        run: |
+          dotnet test -f net9.0-windows -c ${{ matrix.build_config }} .\Buffers
 
       - name: Build demo plugins
         run: |
@@ -73,28 +86,28 @@ jobs:
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
           path: examples/minimal/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'gui'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
           path: examples/gui/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
           path: examples/vbnet/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'fsharp'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
           path: examples/fsharp/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll

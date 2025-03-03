@@ -5,10 +5,12 @@
 *[xX][mM][lL]                   text eol=crlf
 *.[iI][nN][iI]                  text eol=crlf
 *.[cC][sS]                      text eol=crlf
+*.[cC][xX][xX]                  text eol=crlf
 *.[sS][lL][nN]                  text eol=crlf
 *.[rR][eE][sS][xX]              text eol=crlf
 *.[pP][rR][oO][pP][sS]          text eol=crlf
 *.[cC][sS][pP][rR][oO][jJ]      text eol=crlf
+*.[vV][cC][xX][pP][rR][oO][jJ]  text eol=crlf
 *.[tT][aA][rR][gG][eE][tT][sS]  text eol=crlf
 
 # Force batch scripts to always use CRLF line endings so that if a repo is accessed

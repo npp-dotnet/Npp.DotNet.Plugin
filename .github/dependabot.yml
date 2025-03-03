@@ -6,9 +6,10 @@ updates:
   - package-ecosystem: "nuget"
     directories:
       - "/examples/minimal"
+      - "/test/Buffers"
       - "/test/Memory"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       dev-dependencies:
         patterns:

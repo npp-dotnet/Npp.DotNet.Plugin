@@ -4,14 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-using System.Reflection;
-
 namespace Npp.DotNet.Plugin.Tests.Memory
 {
     [TestClass]
-    public class LayoutTests
+    public class LayoutTests : Harness
     {
-        private static readonly string Module = "Npp.DotNet.Plugin";
         private static PEImage? _dll;
         private static ModuleDefinition? _module;
         private static bool _is64bit = true;
@@ -26,9 +23,8 @@ namespace Npp.DotNet.Plugin.Tests.Memory
         {
             try
             {
-                string cwd = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-                string libPath = Path.Combine(cwd, $"{Module}.dll");
-                string dllPath = Path.Combine(cwd, $"{Module}.Demo.dll");
+                string libPath = Path.Combine(ModulePath, $"{ModuleName}.dll");
+                string dllPath = Path.Combine(ModulePath, $"{ModuleName}.Demo.dll");
                 _module = ModuleDefinition.FromFile(libPath);
                 _dll = PEImage.FromFile(dllPath);
                 _is64bit = !$"{_module.MachineType}".StartsWith("I386");
@@ -107,9 +103,9 @@ namespace Npp.DotNet.Plugin.Tests.Memory
         // --------------------------------------------------------------------------------------------------
         private void TestExports()
         {
-            Assert.IsNotNull(_dll?.Exports, $"{Module} has no export table");
+            Assert.IsNotNull(_dll?.Exports, $"{ModuleName} has no export table");
             int exports = (_dll?.Exports?.Entries?.Count).GetValueOrDefault();
-            Assert.IsTrue(exports >= 6, $"{Module} exports only {exports} function(s)");
+            Assert.IsTrue(exports >= 6, $"{ModuleName} exports only {exports} function(s)");
         }
 
         private void TestLayoutOfNotificationStruct()
@@ -128,7 +124,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
             }
             else
             {
-                throw new AssertFailedException($"{Module} does not define the 'ScNotification' type");
+                throw new AssertFailedException($"{ModuleName} does not define the 'ScNotification' type");
             }
         }
 
@@ -149,19 +145,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
             }
             else
             {
-                throw new AssertFailedException($"{Module} does not define the 'ShortcutKey' type");
-            }
-        }
-
-        private static void TryExecute(Action testCase)
-        {
-            try
-            {
-                testCase();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail($"{e.GetType().Name}: {e.Message}");
+                throw new AssertFailedException($"{ModuleName} does not define the 'ShortcutKey' type");
             }
         }
 

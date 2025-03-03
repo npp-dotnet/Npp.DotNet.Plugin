@@ -1,10 +1,24 @@
 Npp.DotNet.Plugin.Tests
 -----------------------
 
+### Buffers
+
+Checks that [ClikeStringArray] allocates enough memory for unmanaged UTF-16 strings.
+
+> [!Important]
+> The test class depends on a C++ library that must be built separately with the Visual C++ toolchain.
+> To do that, start the [Developer Command Prompt or PowerShell] and run:
+>
+>     msbuild /t:Build /p:Configuration=Debug|Release /p:Platform=x64|ARM64 test\Buffers\Unmanaged
+>
+
+See:
+
+- <https://github.com/notepad-plus-plus/notepad-plus-plus/issues/15997#issuecomment-2566862521>
+
 ### Memory
 
-This is currently the only test project.
-It checks the alignment of some potentially problematic Scintilla structures.
+Checks the alignment of some potentially problematic Scintilla structures.
 It was inspired by past issues caused by wrongly sized fields in the CLR `struct` used to hold notification data.
 
 See:
@@ -28,3 +42,6 @@ See [the minimal demo's README] for the command-line workflow.
 [general build requirements]: ../README.mkd/#requirements
 [the central README]: ../README.mkd/#tests
 [the minimal demo's README]: ../examples/minimal/README.mkd/#testing
+
+[Developer Command Prompt or PowerShell]: https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell
+[ClikeStringArray]: https://npp-dotnet.github.io/Npp.DotNet.Plugin/api/Npp.DotNet.Plugin.ClikeStringArray.html

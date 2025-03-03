@@ -18,7 +18,7 @@ SPDX-FileCopyrightText = "Public Domain"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = ["**.pubxml", "**.sln", "**.props", "**.targets", "**.snk", "lib/**.csproj", "examples/**/**.csproj", "examples/**/**.fsproj", "examples/**/**.vbproj", "test/**/**.csproj"]
+path = ["**.pubxml", "**.sln", "**.props", "**.targets", "**.vcxproj", "**.snk", "lib/**.csproj", "examples/**/**.csproj", "examples/**/**.fsproj", "examples/**/**.vbproj", "test/**/**.csproj"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 Robert Di Pardo"
 SPDX-License-Identifier = "Apache-2.0"
