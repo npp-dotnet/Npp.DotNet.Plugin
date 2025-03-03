@@ -10,15 +10,13 @@ using System.Runtime.InteropServices;
 namespace Npp.DotNet.Plugin
 {
     /// <summary>
-    /// Compatible with Windows NMHDR.
-    /// hwndFrom is really an environment specific window handle or pointer
-    /// but most clients of Scintilla.h do not have this type visible.
+    /// Compatible with Windows' <see cref="Win32.TagNMHDR"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ScNotificationHeader
     {
         /// <summary>
-        /// environment specific window handle/pointer
+        /// Environment specific window handle or pointer
         /// </summary>
         public IntPtr HwndFrom;
 

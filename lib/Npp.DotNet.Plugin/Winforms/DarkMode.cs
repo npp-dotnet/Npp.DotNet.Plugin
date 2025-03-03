@@ -16,8 +16,10 @@ namespace Npp.DotNet.Plugin.Winforms
 	{
 		/// <summary>
 		/// Contains the color values of the active dark mode theme.
-		/// See <see href="https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/NppDarkMode.h"/>
 		/// </summary>
+		/// <remarks>
+		/// See <see href="https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/PowerEditor/src/NppDarkMode.h"/>
+		/// </remarks>
 		public class DarkModeColors
 		{
 			public DarkModeColors()

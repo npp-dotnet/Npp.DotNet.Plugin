@@ -459,7 +459,7 @@ namespace Npp.DotNet.Plugin
     }
     /// <summary>
     /// Character set identifiers are used in <see cref="IScintillaGateway.StyleSetCharacterSet"/>.
-    /// The values are the same as the Windows *_CHARSET values.
+    /// The values are the same as the <a href="https://learn.microsoft.com/windows/win32/intl/code-page-identifiers">Windows *CHARSET values</a>.
     /// (Scintilla feature SC_CHARSET_)
     /// </summary>
     public enum CharacterSet
@@ -565,11 +565,13 @@ namespace Npp.DotNet.Plugin
         REVERTED_TO_MODIFIED_DELETION = 43,
     }
     /// <summary>
-    /// INDIC_CONTAINER, INDIC_IME, INDIC_IME_MAX, and INDIC_MAX are indicator numbers,
-    /// not IndicatorStyles so should not really be in the INDIC_ enumeration.
-    /// They are redeclared in IndicatorNumbers INDICATOR_.
-    /// (Scintilla feature INDICATOR_)
+    /// Indicator numbers. (Scintilla feature INDICATOR_)
     /// </summary>
+    /// <remarks>
+    /// <see cref="IndicatorNumbers.CONTAINER"/>, <see cref="IndicatorNumbers.IME"/>, <see cref="IndicatorNumbers.IME_MAX"/>,
+    /// and <see cref="IndicatorNumbers.MAX"/> are indicator <em>numbers</em>, not indicator <em>styles</em>, so should not really be in
+    /// the <see cref="IndicatorStyle"/> enumeration.
+    /// </remarks>
     public enum IndicatorNumbers
     {
         CONTAINER = 8,
@@ -583,9 +585,10 @@ namespace Npp.DotNet.Plugin
         BIT = 0x1000000,
         MASK = 0xFFFFFF
     }
-    /// <summary>Retrieve the foreground hover colour of an indicator. (Scintilla feature SC_INDICFLAG_)</summary>
+    /// <summary>Possible options for <see cref="IScintillaGateway.IndicSetFlags"/>. (Scintilla feature SC_INDICFLAG_)</summary>
     public enum IndicFlag
     {
+        NONE = 0,
         VALUEFORE = 1
     }
     /// <summary><see cref="IndentView.NONE"/> turns the feature off but the other 3 states determine how far the guides appear on empty lines. (Scintilla feature SC_IV_)</summary>
@@ -902,11 +905,13 @@ namespace Npp.DotNet.Plugin
         DIRECTWRITEDC = 3
     }
     /// <summary>
-    /// Line end types which may be used in addition to LF, CR, and CRLF
-    /// SC_LINE_END_TYPE_UNICODE includes U+2028 Line Separator,
-    /// U+2029 Paragraph Separator, and U+0085 Next Line
+    /// Line end types which may be used in addition to LF, CR, and CRLF.
     /// (Scintilla feature SC_LINE_END_TYPE_)
     /// </summary>
+    /// <remarks>
+    /// <see cref="LineEndType.UNICODE"/> includes U+2028 Line Separator,
+    /// U+2029 Paragraph Separator, and U+0085 Next Line
+    /// </remarks>
     public enum LineEndType
     {
         DEFAULT = 0,
@@ -923,7 +928,7 @@ namespace Npp.DotNet.Plugin
     /// The <see cref="ScNotification.ModificationType"/> field of a <see cref="ScNotification"/>.
     /// These are defined as a bit mask to make it easy to specify which notifications are wanted.
     /// One bit is set from each of SC_MOD_* and SC_PERFORMED_*.
-    /// (Scintilla feature SC_MOD_ SC_PERFORMED_ SC_MULTISTEPUNDOREDO SC_LASTSTEPINUNDOREDO SC_MULTILINEUNDOREDO SC_STARTACTION SC_MODEVENTMASKALL)
+    /// (Scintilla feature SC_MOD_)
     /// </summary>
     [Flags]
     public enum ModificationFlags

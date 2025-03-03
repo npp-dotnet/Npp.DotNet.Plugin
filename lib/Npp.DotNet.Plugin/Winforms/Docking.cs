@@ -60,15 +60,44 @@ namespace Npp.DotNet.Plugin.Winforms
         DWS_DF_FLOATING = 0x80000000
     }
 
+    /// <summary>
+    /// Messages that can be sent to docking dialogs in the <see cref="Win32.TagNMHDR.Code"/> field of a <see cref="Win32.TagNMHDR"/>.
+    /// </summary>
+    /// <remarks>
+    /// <example>
+    /// Example
+    /// <code>
+    ///  protected override void WndProc(ref Message wmNotifyHeader)
+    ///  {
+    ///    switch (wmNotifyHeader.Msg)
+    ///    {
+    ///      case WM_NOTIFY:
+    ///        TagNMHDR nmdr = Marshal.PtrToStructure&lt;TagNMHDR&gt;(wmNotifyHeader.LParam);
+    ///        if (nmdr.HwndFrom == PluginData.NppData.NppHandle)
+    ///        {
+    ///          switch ((DockMgrMsg)nmdr.Code)
+    ///          {
+    ///            case DockMgrMsg.DMN_DOCK:
+    ///              // ...
+    ///              break;
+    ///            case DockMgrMsg.DMN_FLOAT:
+    ///              // ...
+    ///              break;
+    ///            case DockMgrMsg.DMN_CLOSE:
+    ///              // ...
+    ///              break;
+    ///          }
+    ///        }
+    ///        break;
+    ///    }
+    ///    base.WndProc(ref wmNotifyHeader);
+    ///  }
+    /// </code>
+    /// </example>
+    /// </remarks>
     [Flags]
     public enum DockMgrMsg : uint
     {
-        IDB_CLOSE_DOWN = 137,
-        IDB_CLOSE_UP = 138,
-        IDD_CONTAINER_DLG = 139,
-        IDC_TAB_CONT = 1027,
-        IDC_CLIENT_TAB = 1028,
-        IDC_BTN_CAPTION = 1050,
         DMM_MSG = 0x5000,
         DMM_CLOSE = (DMM_MSG + 1),
         DMM_DOCK = (DMM_MSG + 2),
@@ -83,17 +112,6 @@ namespace Npp.DotNet.Plugin.Winforms
         DMM_MOVE_SPLITTER = (DMM_MSG + 11),
         DMM_CANCEL_MOVE = (DMM_MSG + 12),
         DMM_LBUTTONUP = (DMM_MSG + 13),
-        /// <summary>
-        /// <example>
-        /// Usage: <c>nmhdr.Code = DWORD(DMN_XXX, int newContainer)</c><br/>
-        /// e.g.,
-        /// <code>
-        ///     nmhdr.Code = DWORD(DMN_CLOSE, 0));
-        ///     nmhdr.hwndFrom = hwndNpp;
-        ///     nmhdr.IdFrom = ctrlIdNpp;
-        /// </code>
-        /// </example>
-        /// </summary>
         DMN_FIRST = 1050,
         DMN_CLOSE = (DMN_FIRST + 1),
         DMN_DOCK = (DMN_FIRST + 2),
@@ -101,6 +119,19 @@ namespace Npp.DotNet.Plugin.Winforms
         DMN_SWITCHIN  = (DMN_FIRST + 4),
         DMN_SWITCHOFF = (DMN_FIRST + 5),
         DMN_FLOATDROPPED = (DMN_FIRST + 6)
+    }
+
+    /// <summary>
+    /// Resource IDs for pre-defined dialog components.
+    /// </summary>
+    public enum DockingResource : ushort
+    {
+        IDB_CLOSE_DOWN = 137,
+        IDB_CLOSE_UP = 138,
+        IDD_CONTAINER_DLG = 139,
+        IDC_TAB_CONT = 1027,
+        IDC_CLIENT_TAB = 1028,
+        IDC_BTN_CAPTION = 1050
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

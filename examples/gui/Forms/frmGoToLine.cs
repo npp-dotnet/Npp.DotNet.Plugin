@@ -56,9 +56,9 @@ namespace Kbg.Demo.Namespace
                 case WM_NOTIFY:
                     TagNMHDR nmdr = Marshal.PtrToStructure<TagNMHDR>(wmNotifyMsg.LParam)!;
 
-                    if (nmdr.hwndFrom == PluginData.NppData.NppHandle)
+                    if (nmdr.HwndFrom == PluginData.NppData.NppHandle)
                     {
-                        switch ((DockMgrMsg)(nmdr.code & 0xFFFFU))
+                        switch ((DockMgrMsg)(nmdr.Code & 0xFFFFU))
                         {
                             case DockMgrMsg.DMN_DOCK:
                                 break;

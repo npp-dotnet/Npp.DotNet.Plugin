@@ -18,7 +18,7 @@ namespace Npp.DotNet.Plugin
         public static readonly NativeBool TRUE = NativeBool.True;
 
         /// <summary>
-        /// Get the scroll information of a scroll bar or window with scroll bar<br/>
+        /// Contains the scroll information of a scroll bar, or a window with a scroll bar.
         /// </summary>
         /// <remarks>
         /// See <see href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-scrollinfo"/>
@@ -63,14 +63,18 @@ namespace Npp.DotNet.Plugin
         /// Holds message data sent with <see cref="WM_NOTIFY"/>.
         /// </summary>
         /// <remarks>
+        /// Compare <see cref="ScNotificationHeader"/>.<br/>
         /// See <see href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr"/>
         /// </remarks>
         [StructLayout(LayoutKind.Sequential)]
         public struct TagNMHDR
         {
-            public IntPtr hwndFrom;
-            public UIntPtr idFrom;
-            public uint code;
+            /// <inheritdoc cref="ScNotificationHeader.HwndFrom"/>
+            public IntPtr HwndFrom;
+            /// <inheritdoc cref="ScNotificationHeader.IdFrom"/>
+            public UIntPtr IdFrom;
+            /// <summary>A message code.</summary>
+            public uint Code;
         }
 
         /// <summary>
