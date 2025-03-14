@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.7.7</remarks>
+    /// <remarks>Definitions for Notepad++ v8.7.8</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -532,7 +532,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.7.7</remarks>
+    /// <remarks>Definitions for Notepad++ v8.7.8</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -542,8 +542,7 @@ namespace Npp.DotNet.Plugin
         IDI_M30ICON = 100,
         IDI_CHAMELEON = 101,
         IDI_CHAMELEON_DM = 102,
-        IDI_TAIWANSSOVEREIGNTY = 105,
-        IDI_TAIWANSSOVEREIGNTY_DM = 106,
+        IDI_WITHUKRAINE = 105,
         IDR_RT_MANIFEST = 103,
         IDI_ICONABSENT = 104,
         IDI_NEW_ICON = 201,
@@ -1065,6 +1064,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_LWINDENT = (NOTEPADPLUS_USER_INTERNAL + 105),
         NPPM_INTERNAL_CHECKDOCSTATUS = (NOTEPADPLUS_USER_INTERNAL + 106),
         NPPM_INTERNAL_HIDEMENURIGHTSHORTCUTS = (NOTEPADPLUS_USER_INTERNAL + 107),
+        NPPM_INTERNAL_RELOADFUNCTIONLIST = (NOTEPADPLUS_USER_INTERNAL + 108),
         SCINTILLA_USER = (WM_USER + 2000),
         MACRO_USER = (WM_USER + 4000),
         WM_MACRODLGRUNMACRO = (MACRO_USER + 02),
@@ -1088,7 +1088,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.7.7</remarks>
+    /// <remarks>Definitions for Notepad++ v8.7.8</remarks>
     public enum Preference : uint
     {
         PREF_MSG_SETGUITOOLICONSSET = (WM_USER + 4),
