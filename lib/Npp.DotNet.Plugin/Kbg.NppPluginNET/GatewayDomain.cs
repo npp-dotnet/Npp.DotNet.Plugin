@@ -899,10 +899,16 @@ namespace Npp.DotNet.Plugin
     /// <summary>Possible options for <see cref="IScintillaGateway.SetTechnology"/>. (Scintilla feature SC_TECHNOLOGY_)</summary>
     public enum Technology
     {
+        /// <summary>Use older GDI API which is compatible with all versions of Windows including Windows Vista and XP</summary>
         DEFAULT = 0,
+        /// <summary>Use the Direct2D and DirectWrite APIs for higher quality anti-aliased drawing</summary>
         DIRECTWRITE = 1,
+        /// <summary>Request that the frame is retained after being presented which may prevent drawing failures on some cards and drivers</summary>
         DIRECTWRITERETAIN = 2,
-        DIRECTWRITEDC = 3
+        /// <summary>Use DirectWrite to draw into a GDI DC. This mode may work for remote access sessions</summary>
+        DIRECTWRITEDC = 3,
+        /// <summary>Use DirectWrite in a lower level way that manages graphics state more explicitly</summary>
+        DIRECTWRITE_1 = 4
     }
     /// <summary>
     /// Line end types which may be used in addition to LF, CR, and CRLF.

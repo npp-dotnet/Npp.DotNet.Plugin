@@ -39,7 +39,7 @@ namespace Npp.DotNet.Plugin
         L_MMIXAL, L_NIM, L_NNCRONTAB, L_OSCRIPT, L_REBOL,
         L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VISUALPROLOG,
         L_TYPESCRIPT, L_JSON5, L_MSSQL, L_GDSCRIPT, L_HOLLYWOOD,
-        L_GOLANG, L_RAKU, L_TOML,
+        L_GOLANG, L_RAKU, L_TOML, L_SAS,
         // Don't use L_JS, use L_JAVASCRIPT instead
         // The end of enumerated language type, so it should be always at the end
         L_EXTERNAL
