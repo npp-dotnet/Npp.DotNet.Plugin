@@ -14,6 +14,11 @@ namespace Npp.DotNet.Plugin.Winforms
 	/// </summary>
 	public static class DarkMode
 	{
+		/// <summary>Standard flag for main parent after its children are initialized</summary>
+		public const uint dmfInit = 0x0000000B;
+		/// <summary>Standard flag for main parent usually used in <see cref="NppMsg.NPPN_DARKMODECHANGED"/></summary>
+		public const uint dmfHandleChange = 0x0000000C;
+
 		/// <summary>
 		/// Contains the color values of the active dark mode theme.
 		/// </summary>

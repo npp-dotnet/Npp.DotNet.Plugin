@@ -97,15 +97,15 @@ namespace Npp.DotNet.Plugin
     public struct ToolbarIconDarkMode
     {
         /// <summary>
-        /// Standard 16x16 bitmap
+        /// Standard 16x16 bitmap handle
         /// </summary>
         public IntPtr HToolbarBmp;
         /// <summary>
-        /// Fluent UI 32x32 icon for light mode
+        /// Fluent UI icon handle for light mode
         /// </summary>
         public IntPtr HToolbarIcon;
         /// <summary>
-        /// Fluent UI 32x32 icon for dark mode
+        /// Fluent UI icon handle for dark mode
         /// </summary>
         public IntPtr HToolbarIconDarkMode;
     }
@@ -119,7 +119,7 @@ namespace Npp.DotNet.Plugin
     {
         /// <inheritdoc cref="ToolbarIconDarkMode.HToolbarBmp"/>
         public IntPtr HToolbarBmp;
-        /// <inheritdoc cref="ToolbarIconDarkMode.HToolbarIcon"/>
+        /// <summary>Standard 32x32 icon handle</summary>
         public IntPtr HToolbarIcon;
     }
 
@@ -130,16 +130,16 @@ namespace Npp.DotNet.Plugin
     public struct SessionInfo
     {
         /// <summary>
-        /// Full session file path name to be saved
+        /// Full path name of the session file to be saved
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Win32.MAX_PATH)]
         public string SessionFilePathName;
         /// <summary>
-        /// Size of "files" array - number of files to be saved in session
+        /// Size of the <see cref="Files"/> array (i.e., the number of files to be saved in the session)
         /// </summary>
         public int NumFiles;
         /// <summary>
-        /// Array of file name (full path) to be saved in session
+        /// Array of file names (full path) to be saved in the session
         /// </summary>
         [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_LPWSTR)]
         public string[] Files;

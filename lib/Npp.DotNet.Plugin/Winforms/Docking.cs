@@ -19,19 +19,19 @@ namespace Npp.DotNet.Plugin.Winforms
     public enum NppTbMsg : uint
     {
         /// <summary>
-        /// Icon for tabs are available
+        /// Display an icon on the docking tab (i.e., when this dialog loses focus in a dock group)
         /// </summary>
         DWS_ICONTAB = 0x00000001,
         /// <summary>
-        /// Icon for icon bar are available (currently not supported)
+        /// Display an icon in the title bar (currently not supported)
         /// </summary>
         DWS_ICONBAR = 0x00000002,
         /// <summary>
-        /// Additional information are in use
+        /// Display a string of additional information in the title bar
         /// </summary>
         DWS_ADDINFO = 0x00000004,
         /// <summary>
-        /// Use plugin's own dark mode
+        /// Use plugin's own dark mode (i.e., prevent automatic subclassing; see <see cref="NppMsg.NPPM_DARKMODESUBCLASSANDTHEME"/>)
         /// </summary>
         DWS_USEOWNDARKMODE = 0x00000008,
         /// <summary>
@@ -134,6 +134,10 @@ namespace Npp.DotNet.Plugin.Winforms
         IDC_BTN_CAPTION = 1050
     }
 
+
+    /// <summary>
+    /// See <see cref="NppMsg.NPPM_DMMREGASDCKDLG"/>.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct NppTbData
     {
@@ -146,7 +150,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// </summary>
         public string PszName;
         /// <summary>
-        /// Command id of the plugin function that will launch the window
+        /// User-provided index of the plugin command associated with this toolbar item &#2014; <em>not to be confused with <see cref="FuncItem.CmdID"/></em>
         /// </summary>
         public int DlgID;
         /// <summary>
@@ -154,11 +158,11 @@ namespace Npp.DotNet.Plugin.Winforms
         /// </summary>
         public NppTbMsg UMask;
         /// <summary>
-        /// Icon for tabs
+        /// Icon for tabs, provided the <see cref="NppTbMsg.DWS_ICONTAB"/> flag is set
         /// </summary>
         public IntPtr HIconTab;
         /// <summary>
-        /// Additional information (shown in window's title bar)
+        /// Additional information (shown in window's title bar), provided the <see cref="NppTbMsg.DWS_ADDINFO"/> flag is set
         /// </summary>
         public string PszAddInfo;
         /// <summary>

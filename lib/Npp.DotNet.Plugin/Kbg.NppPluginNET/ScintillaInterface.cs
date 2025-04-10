@@ -21,12 +21,12 @@ namespace Npp.DotNet.Plugin
         public IntPtr HwndFrom;
 
         /// <summary>
-        /// CtrlID of the window issuing the notification
+        /// Control ID of the window issuing the notification
         /// </summary>
         public UIntPtr IdFrom;
 
         /// <summary>
-        /// The SCN_* notification Code
+        /// A <c>SCN_*</c> notification code
         /// </summary>
         public uint Code;
     }
