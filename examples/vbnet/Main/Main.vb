@@ -5,6 +5,7 @@
 Option Explicit On
 Option Strict On
 
+Imports System.Diagnostics.FileVersionInfo
 Imports System.Runtime.InteropServices
 Imports Npp.DotNet.Plugin.Win32
 
@@ -74,16 +75,28 @@ Public Class Main
     ''' Creates a new buffer and inserts text into it.
     ''' </summary>
     Shared Sub HelloNpp()
-        NppUtils.Notepad.FileNew()
-        NppUtils.Editor.SetText("Hello, Notepad++ ... from VB.NET!")
+        PluginData.Notepad.FileNew()
+        PluginData.Editor.SetText("Hello, Notepad++ ... from VB.NET!")
     End Sub
 
     ''' <summary>
     ''' Shows the plugin's version number in a system dialog.
     ''' </summary>
     Shared Sub DisplayInfo()
+        Dim version As String = "1.0.0.0"
+        Try
+            Dim assemblyName As String = GetType(Main).Namespace
+            version =
+                GetVersionInfo(
+                    System.IO.Path.Combine(
+                        PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+                    ).FileVersion
+        Catch
+            Exit Try
+        End Try
+
         MsgBoxDialog(PluginData.NppData.NppHandle,
-                    $"Current version: {NppUtils.AssemblyVersionString}" & ChrW(0),
+                    $"Current version: {version}" & ChrW(0),
                     $"About {PluginName}",
                     CUInt(MsgBox.ICONQUESTION Or MsgBox.OK))
     End Sub

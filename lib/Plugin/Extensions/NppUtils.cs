@@ -11,39 +11,20 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-// Miscellaneous useful things like a connector to Notepad++
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Extensions
 {
     /// <summary>
-    /// Contains connectors to Scintilla (<see cref="NppUtils.Editor"/>) and Notepad++ (<see cref="NppUtils.Notepad"/>).
+    /// Miscellaneous helper methods for some common use cases.
     /// </summary>
-    public class NppUtils
+    public static class NppUtils
     {
-        private static IScintillaGateway _editor = new ScintillaGateway(Utils.GetCurrentScintilla());
-        private static INotepadPPGateway _notepad = new NotepadPPGateway();
-
-        /// <summary>
-        /// Connector to Scintilla. Can be reset after initialization.
-        /// </summary>
-        public static IScintillaGateway Editor { get => _editor; set { _editor = _editor ?? value; } }
-
-        /// <summary>
-        /// Connector to Notepad++.
-        /// </summary>
-        public static INotepadPPGateway Notepad { get => _notepad; set { _notepad = _notepad ?? value; } }
-
-        /// <summary>
-        /// this should only be instantiated once in your entire project
-        /// </summary>
-        public static readonly Random Random = new Random();
-
-        public static readonly (int, int, int) NppVersion = Notepad.GetNppVersion();
+        public static readonly (int, int, int) NppVersion = PluginData.Notepad.GetNppVersion();
 
         public static readonly string NppVersionStr = NppVersionString(true);
 
         public static readonly bool NppVersionAtLeast8 = NppVersion.Item1 >= 8;
 
-        public static string ConfigDirectory => Notepad.GetConfigDirectory();
+        public static string ConfigDirectory => PluginData.Notepad.GetConfigDirectory();
 
 #pragma warning disable CS1587
         /// <summary>
@@ -74,7 +55,7 @@ namespace Npp.DotNet.Plugin
         ///         version =
         ///             GetVersionInfo(
         ///                 Path.Combine(
-        ///                     NppUtils.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+        ///                     PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
         ///                 )
         ///             .FileVersion!;
         ///     }
@@ -106,7 +87,8 @@ namespace Npp.DotNet.Plugin
         /// <param name="inp"></param>
         public static void AddLine(string inp)
         {
-            Editor.AppendText($"{inp}{Editor.LineDelimiter}");
+            var editor = PluginData.Editor;
+            editor.AppendText($"{inp}{editor.LineDelimiter}");
         }
 
         public enum PathType
@@ -163,7 +145,7 @@ namespace Npp.DotNet.Plugin
 
         public static void CreateConfigSubDirectoryIfNotExists()
         {
-            var ConfigDirInfo = new DirectoryInfo(Notepad.GetConfigDirectory());
+            var ConfigDirInfo = new DirectoryInfo(PluginData.Notepad.GetConfigDirectory());
             if (!ConfigDirInfo.Exists)
                 ConfigDirInfo.Create();
         }
@@ -178,11 +160,12 @@ namespace Npp.DotNet.Plugin
         public static string GetSlice(long start, long end)
         {
             long len = end - start;
-            IntPtr rangePtr = Editor.GetRangePointer(start, len);
+            var editor = PluginData.Editor;
+            IntPtr rangePtr = editor.GetRangePointer(start, len);
             string ansi = Marshal.PtrToStringAnsi(rangePtr, unchecked(Convert.ToInt32(len)));
             // TODO: figure out a way to do this that involves less memcopy for non-ASCII
             if (ansi.Any(c => c >= 128))
-                return Encoding.UTF8.GetString(Editor.CodePage.GetBytes(ansi));
+                return Encoding.UTF8.GetString(editor.CodePage.GetBytes(ansi));
             return ansi;
         }
 
@@ -200,15 +183,12 @@ namespace Npp.DotNet.Plugin
 
         private static string NppVersionString(bool include32bitVs64bit)
         {
-            (int major, int minor, int revision) = Notepad.GetNppVersion();
+            (int major, int minor, int revision) = NppVersion;
             string nppVerStr = $"{major}.{minor}.{revision}";
             return include32bitVs64bit ? $"{nppVerStr} {IntPtr.Size * 8}bit" : nppVerStr;
         }
     }
-}
 
-namespace Npp.DotNet.Plugin.Extensions
-{
     /// <summary>
     /// Utilities ported from the <a href="https://github.com/molsonkiko/JsonToolsNppPlugin">JSON Tools</a> plugin.
     /// </summary>

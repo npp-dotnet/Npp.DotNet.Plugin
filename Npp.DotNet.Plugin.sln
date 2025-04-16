@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buffers", "test\Buffers\Buf
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{3A8DF596-E814-FECC-DD4B-D8EF8AAC1A0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npp.DotNet.Plugin", "lib\Npp.DotNet.Plugin.csproj", "{A8F1098E-6032-4CAE-84B6-65CE74AEB8B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npp.DotNet.Plugin", "lib\Npp.DotNet.csproj", "{A8F1098E-6032-4CAE-84B6-65CE74AEB8B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

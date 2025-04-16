@@ -7,12 +7,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Npp.DotNet.Plugin.Extensions
 {
     public static class ArrayExtensions
     {
+        // There should be only one instance of this for the lifetime of the program.
+        private static readonly Random Random = new Random();
+
         // C# has a range operator since version 8.0
         // https://learn.microsoft.com/dotnet/csharp/language-reference/operators/member-access-operators#range-operator-
 #if !NETCOREAPP3_0_OR_GREATER
@@ -301,7 +303,7 @@ namespace Npp.DotNet.Plugin.Extensions
         {
             for (int ii = 1; ii < arr.Count; ii++)
             {
-                int swapWith = NppUtils.Random.Next(0, ii + 1);
+                int swapWith = Random.Next(0, ii + 1);
                 if (swapWith < ii)
                 {
                     (arr[swapWith], arr[ii]) = (arr[ii], arr[swapWith]);

@@ -4,7 +4,7 @@
 #
 try {
     pushd $PSScriptRoot\..\lib
-    [xml]$proj = Get-Content .\Npp.DotNet.Plugin.csproj
+    [xml]$proj = Get-Content .\Npp.DotNet.csproj
     $tfms = Select-Xml -Xml $proj -XPath '/Project/PropertyGroup/TargetFrameworks' | `
       Select-Object -ExpandProperty Node | `
       Select-object -ExpandProperty InnerText

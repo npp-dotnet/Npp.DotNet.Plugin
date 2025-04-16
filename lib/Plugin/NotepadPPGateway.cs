@@ -61,7 +61,7 @@ namespace Npp.DotNet.Plugin
 	}
 
 	/// <summary>
-	/// Helpers for sending messages defined in <a href="https://github.com/npp-dotnet/Npp.DotNet.Plugin/blob/main/lib/Npp.DotNet.Plugin/Kbg.NppPluginNET/Msgs.cs">Msgs.cs</a>.
+	/// Helpers for sending messages defined in <see cref="NppMsg"/>.
 	/// </summary>
 	public class NotepadPPGateway : INotepadPPGateway
 	{
@@ -139,9 +139,7 @@ namespace Npp.DotNet.Plugin
 		/// Gets the path of the current document.
 		/// </summary>
 		public string GetCurrentFilePath()
-		{
-			return NppUtils.GetCurrentPath(NppUtils.PathType.FULL_CURRENT_PATH);
-		}
+			=> GetUnicodeString(NppMsg.NPPM_GETFULLCURRENTPATH);
 
 		/// <summary>
 		/// Gets a string from a null-terminated buffer of <c>wchar_t</c> that was allocated by Notepad++.

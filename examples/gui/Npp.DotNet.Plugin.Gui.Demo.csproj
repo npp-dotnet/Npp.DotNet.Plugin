@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../lib/npp.dotnet.plugin.csproj">
+    <ProjectReference Include="../../lib/Npp.DotNet.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
   </ItemGroup>

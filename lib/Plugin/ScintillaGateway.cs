@@ -89,7 +89,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         internal static bool HasV5Apis()
         {
-            (int x, int y, int _) = NppUtils.NppVersion;
+            (int x, int y, int _) = PluginData.Notepad.GetNppVersion();
             return x > 8 || (x == 8 && y >= 4);
         }
 

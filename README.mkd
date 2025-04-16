@@ -1,5 +1,5 @@
 
-![Project Status] [![Build Status]][gh-actions]
+![Project Status] [![Discussion Topics]][discussions] [![Build Status]][gh-actions]
 
 ## What's in here
 
@@ -108,8 +108,6 @@ This README and all other documentation, including images, are distributed under
 [CC0]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/CC0-1.0.txt
 
 <!-- source refs -->
-[Npp.DotNet.Plugin.SettingsBase]: lib/Npp.DotNet.Plugin/Kbg.NppPluginNET.Contrib/SettingsBase.cs
-[Npp.DotNet.Plugin.Winforms.SettingsDialog]: lib/Npp.DotNet.Plugin/Winforms/SettingsDialog.cs
 [examples/minimal/README.mkd]: examples/minimal/README.mkd
 [examples/gui/README.mkd]: examples/gui/README.mkd
 [examples/minimal]: examples/minimal
@@ -117,5 +115,7 @@ This README and all other documentation, including images, are distributed under
 
 <!-- badges -->
 [Project Status]: https://img.shields.io/badge/Work%20in%20Progress-EEBE53?style=for-the-badge
-[Build Status]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml/badge.svg
+[Discussion Topics]: https://img.shields.io/github/discussions-search?query=repo%3Anpp-dotnet%2FNpp.DotNet.Plugin%20is%3Aopen&style=for-the-badge&logo=github&label=Discussions&color=93CDBA
+[discussions]: https://github.com/orgs/npp-dotnet/discussions
+[Build Status]: https://img.shields.io/github/actions/workflow/status/npp-dotnet/Npp.DotNet.Plugin/build.yml?logo=github&style=for-the-badge
 [gh-actions]: https://github.com/npp-dotnet/npp.dotnet.plugin/actions/workflows/build.yml

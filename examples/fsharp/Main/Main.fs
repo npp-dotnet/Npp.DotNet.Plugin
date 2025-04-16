@@ -9,6 +9,7 @@ open Microsoft.FSharp.Core.LanguagePrimitives
 open System.Runtime.InteropServices
 open Npp.DotNet.Plugin
 
+open type System.Diagnostics.FileVersionInfo
 open type Npp.DotNet.Plugin.Win32
 
 /// <summary>
@@ -39,16 +40,26 @@ type Main =
         /// Creates a new buffer and inserts text into it.
         /// </summary>
         let helloNpp () =
-            NppUtils.Notepad.FileNew()
-            NppUtils.Editor.SetText("Hello, Notepad++ ... from F#!")
+            PluginData.Notepad.FileNew()
+            PluginData.Editor.SetText("Hello, Notepad++ ... from F#!")
 
         /// <summary>
         /// Shows the plugin's version number in a system dialog.
         /// </summary>
         let displayInfo () =
+            let mutable version = "1.0.0.0"
+            try
+                let assemblyName = typeof<Main>.Namespace
+                version <-
+                    GetVersionInfo(
+                        System.IO.Path.Combine(
+                            PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+                        ).FileVersion
+            with _ -> ()
+
             MsgBoxDialog(
                 PluginData.NppData.NppHandle,
-                $"Current version: {NppUtils.AssemblyVersionString}\000",
+                $"Current version: {version}\000",
                 $"About {pluginName}",
                 (uint) (MsgBox.ICONQUESTION ||| MsgBox.OK))
             |> ignore

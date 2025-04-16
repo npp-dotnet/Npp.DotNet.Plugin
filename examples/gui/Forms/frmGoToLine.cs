@@ -22,7 +22,7 @@ namespace Kbg.Demo.Namespace
         {
             this.editor = editor;
             InitializeComponent();
-            ToggleDarkMode(NppUtils.Notepad.IsDarkModeEnabled());
+            ToggleDarkMode(PluginData.Notepad.IsDarkModeEnabled());
         }
 
         public override void ToggleDarkMode(bool isDark)

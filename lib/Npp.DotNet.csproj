@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>Npp.DotNet.Plugin</AssemblyName>
     <VersionPrefix>0.2.0.0</VersionPrefix>
     <VersionSuffix>alpha.1</VersionSuffix>
     <Authors>Kasper B. Graversen, Mark Johnston Olson, Robert Di Pardo</Authors>

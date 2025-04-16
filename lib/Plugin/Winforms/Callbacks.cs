@@ -68,7 +68,7 @@ namespace Npp.DotNet.Plugin.Winforms
                 if (isModal)
                     form.Close();
                 else
-                    NppUtils.Editor.GrabFocus();
+                    PluginData.Editor.GrabFocus();
             }
             // Tab -> go through controls, Shift+Tab -> go through controls backward
             else if (e.KeyCode == Keys.Tab && isModal)

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 using System.ComponentModel;
+using Npp.DotNet.Plugin.Extensions;
 
 namespace Npp.DotNet.Plugin.Demo
 {
@@ -33,15 +34,16 @@ namespace Npp.DotNet.Plugin.Demo
         {
             get
             {
-                var configDir = new DirectoryInfo(Path.Combine(NppUtils.ConfigDirectory, Main.PluginFolderName));
+                string configPath = Path.Combine(PluginData.Notepad.GetConfigDirectory(), Main.PluginFolderName);
+                var configDir = new DirectoryInfo(configPath);
                 if (!configDir.Exists)
-                    configDir = Directory.CreateDirectory(Path.Combine(NppUtils.ConfigDirectory, Main.PluginFolderName));
+                    configDir = Directory.CreateDirectory(configPath);
                 return Path.Combine(configDir.FullName, "settings.example.ini");
             }
         }
 
         public void Load() => base.Load(FilePath);
         public void Save() => base.Save(FilePath);
-        public override void OpenFile() => NppUtils.Notepad.OpenFile(FilePath);
+        public override void OpenFile() => PluginData.Notepad.OpenFile(FilePath);
     }
 }

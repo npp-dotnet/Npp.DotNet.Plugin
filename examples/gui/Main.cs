@@ -62,7 +62,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
                         SetToolBarIcon();
                         break;
                     case NppMsg.NPPN_DARKMODECHANGED:
-                        Kbg.Demo.Namespace.Main.frmGoToLine?.ToggleDarkMode(NppUtils.Notepad.IsDarkModeEnabled());
+                        Kbg.Demo.Namespace.Main.frmGoToLine?.ToggleDarkMode(PluginData.Notepad.IsDarkModeEnabled());
                         break;
                     case NppMsg.NPPN_SHUTDOWN:
                         PluginCleanUp();
@@ -141,7 +141,7 @@ namespace Kbg.Demo.Namespace
             StringBuilder sbIniFilePath = new StringBuilder(MAX_PATH);
             SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, sbIniFilePath);
             iniFilePath = sbIniFilePath.ToString();
-            toolbarIconPath = Path.Combine(NppUtils.Notepad.GetPluginsHomePath(), PluginName, "Properties");
+            toolbarIconPath = Path.Combine(PluginData.Notepad.GetPluginsHomePath(), PluginName, "Properties");
 
             // if config path doesn't exist, we create it
             if (!Directory.Exists(iniFilePath))
@@ -201,10 +201,11 @@ namespace Kbg.Demo.Namespace
         /// </summary>
         static void PrintScrollInformation()
         {
-            ScrollInfo scrollInfo = NppUtils.Editor.GetScrollInfo(ScrollInfoMask.SIF_RANGE | ScrollInfoMask.SIF_TRACKPOS | ScrollInfoMask.SIF_PAGE, ScrollInfoBar.SB_VERT);
+            var editor = PluginData.Editor;
+            ScrollInfo scrollInfo = editor.GetScrollInfo(ScrollInfoMask.SIF_RANGE | ScrollInfoMask.SIF_TRACKPOS | ScrollInfoMask.SIF_PAGE, ScrollInfoBar.SB_VERT);
             var scrollRatio = (double)scrollInfo.nTrackPos / (scrollInfo.nMax - scrollInfo.nPage);
             var scrollPercentage = Math.Min(scrollRatio, 1) * 100;
-            NppUtils.Editor.ReplaceSel($@"The maximum row in the current document was {scrollInfo.nMax + 1}.
+            editor.ReplaceSel($@"The maximum row in the current document was {scrollInfo.nMax + 1}.
 A maximum of {scrollInfo.nPage} rows is visible at a time.
 The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 ");
@@ -277,10 +278,11 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         #region " Menu functions "
         static void hello()
         {
-            NppUtils.Notepad.FileNew();
-            NppUtils.Editor.SetText("Hello, Notepad++...from.NET!");
-            var rest = NppUtils.Editor.GetLine(0);
-            NppUtils.Editor.SetText(rest + rest + rest);
+            PluginData.Notepad.FileNew();
+            var editor = PluginData.Editor;
+            editor.SetText("Hello, Notepad++ ... from .NET!");
+            var rest = editor.GetLine(0);
+            editor.SetText(string.Join(editor.LineDelimiter, new string[] { rest, rest, rest }));
         }
 
         static void helloFX()
@@ -291,27 +293,28 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static void callbackHelloFX()
         {
-            int currentZoomLevel = NppUtils.Editor.GetZoom();
+            var editor = PluginData.Editor;
+            int currentZoomLevel = editor.GetZoom();
             int i = currentZoomLevel;
             for (int j = 0; j < 4; j++)
             {
                 for (; i >= -10; i--)
                 {
-                    NppUtils.Editor.SetZoom(i);
+                    editor.SetZoom(i);
                     Thread.Sleep(30);
                 }
                 Thread.Sleep(100);
                 for (; i <= 20; i++)
                 {
                     Thread.Sleep(30);
-                    NppUtils.Editor.SetZoom(i);
+                    editor.SetZoom(i);
                 }
                 Thread.Sleep(100);
             }
             for (; i >= currentZoomLevel; i--)
             {
                 Thread.Sleep(30);
-                NppUtils.Editor.SetZoom(i);
+                editor.SetZoom(i);
             }
         }
 
@@ -331,7 +334,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         static void callbackWhatIsNpp(object data)
         {
             string text2display = (string)data;
-            NppUtils.Notepad.FileNew();
+            PluginData.Notepad.FileNew();
 
             Random srand = new Random(DateTime.Now.Millisecond);
             int rangeMin = 0;
@@ -339,7 +342,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             for (int i = 0; i < text2display.Length; i++)
             {
                 Thread.Sleep(srand.Next(rangeMin, rangeMax) + 30);
-                NppUtils.Editor.AppendTextAndMoveCursor(text2display[i].ToString());
+                PluginData.Editor.AppendTextAndMoveCursor(text2display[i].ToString());
             }
         }
 
@@ -366,7 +369,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             StringBuilder path = new StringBuilder(MAX_PATH);
             SendMessage(PluginData.NppData.NppHandle, (uint)msg, 0, path);
 
-            NppUtils.Editor.ReplaceSel(path.ToString());
+            PluginData.Editor.ReplaceSel(path.ToString());
         }
 
         static void insertShortDateTime()
@@ -380,7 +383,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         static void insertDateTime(bool longFormat)
         {
             string dateTime = string.Format("{0} {1}", DateTime.Now.ToShortTimeString(), longFormat ? DateTime.Now.ToLongDateString() : DateTime.Now.ToShortDateString());
-            NppUtils.Editor.ReplaceSel(dateTime);
+            PluginData.Editor.ReplaceSel(dateTime);
         }
 
         static void checkInsertHtmlCloseTag()
@@ -403,7 +406,8 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                 return;
 
             int bufCapacity = 512;
-            var pos = NppUtils.Editor.GetCurrentPos();
+            var editor = PluginData.Editor;
+            var pos = editor.GetCurrentPos();
             long currentPos = pos;
             long beginPos = currentPos - (bufCapacity - 1);
             long startPos = (beginPos > 0) ? beginPos : 0;
@@ -414,7 +418,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
             using (TextRangeFull tr = new(startPos, currentPos, bufCapacity))
             {
-                NppUtils.Editor.GetTextRange(tr);
+                editor.GetTextRange(tr);
                 string buf = tr.LpStrText!;
 
                 if (buf[size - 2] == '/')
@@ -439,10 +443,10 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
                     if (insertString.Length > 3)
                     {
-                        NppUtils.Editor.BeginUndoAction();
-                        NppUtils.Editor.ReplaceSel(insertString.ToString());
-                        NppUtils.Editor.SetSel(pos, pos);
-                        NppUtils.Editor.EndUndoAction();
+                        editor.BeginUndoAction();
+                        editor.ReplaceSel(insertString.ToString());
+                        editor.SetSel(pos, pos);
+                        editor.EndUndoAction();
                     }
                 }
             }
@@ -461,7 +465,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         }
         static void getSessionFileNamesDemo()
         {
-            sessionFilePath = NppUtils.Notepad.GetSessionFilePath();
+            sessionFilePath = PluginData.Notepad.GetSessionFilePath();
             int nbFile = (int)SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETNBSESSIONFILES, 0, sessionFilePath);
 
             if (nbFile < 1)
@@ -492,7 +496,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             // You can create your own non dockable dialog - in this case you don't nedd this demonstration.
             if (frmGoToLine == null)
             {
-                frmGoToLine = new frmGoToLine(NppUtils.Editor);
+                frmGoToLine = new frmGoToLine(PluginData.Editor);
 
                 using (Bitmap newBmp = new Bitmap(16, 16))
                 {
@@ -553,8 +557,8 @@ NaN == NanInf.Nan: {nan_correct}
 If you want these constants in your plugin, you can find them in the NanInf class in PluginInfrastructure.
 DO NOT USE double.PositiveInfinity, double.NegativeInfinity, or double.NaN.
 You will get a compiler error if you do.";
-            NppUtils.Notepad.FileNew();
-            NppUtils.Editor.AppendTextAndMoveCursor(naninf);
+            PluginData.Notepad.FileNew();
+            PluginData.Editor.AppendTextAndMoveCursor(naninf);
         }
         #endregion
     }

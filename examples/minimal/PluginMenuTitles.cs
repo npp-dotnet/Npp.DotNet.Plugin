@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+using Npp.DotNet.Plugin.Extensions;
 
 namespace Npp.DotNet.Plugin.Demo
 {
@@ -45,11 +46,11 @@ namespace Npp.DotNet.Plugin.Demo
             {
                 var localeDir =
                     new DirectoryInfo(
-                        Path.Combine(NppUtils.Notepad.GetConfigDirectory(), Main.PluginFolderName, "localizations"));
+                        Path.Combine(PluginData.Notepad.GetConfigDirectory(), Main.PluginFolderName, "localizations"));
 
                 var assetDir =
                     new DirectoryInfo(
-                        Path.Combine(NppUtils.Notepad.GetPluginsHomePath(), typeof(Main).Namespace!, "localizations"));
+                        Path.Combine(PluginData.Notepad.GetPluginsHomePath(), typeof(Main).Namespace!, "localizations"));
 
                 if (!localeDir.Exists)
                 {
@@ -61,7 +62,7 @@ namespace Npp.DotNet.Plugin.Demo
                     }
                 }
 
-                string localeFile = Path.Combine(localeDir.FullName, $"{NppUtils.Notepad.GetNativeLanguage()}.ini");
+                string localeFile = Path.Combine(localeDir.FullName, $"{PluginData.Notepad.GetNativeLanguage()}.ini");
                 string assetFile = Path.Combine(assetDir.FullName, Path.GetFileName(localeFile));
                 if (!File.Exists(localeFile) && File.Exists(assetFile))
                     File.Copy(assetFile, localeFile);

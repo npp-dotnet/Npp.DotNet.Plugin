@@ -65,7 +65,7 @@ namespace Npp.DotNet.Plugin.Demo
                         // create your toolbar icon(s)
                         break;
                     case NppMsg.NPPN_FILESAVED:
-                        if (string.Compare(Config.FilePath, NppUtils.GetCurrentPath(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                        if (string.Compare(Config.FilePath, PluginData.Notepad.GetCurrentFilePath(), StringComparison.InvariantCultureIgnoreCase) == 0)
                             Config?.Load();
                         break;
                     case NppMsg.NPPN_NATIVELANGCHANGED:
@@ -116,9 +116,11 @@ namespace Npp.DotNet.Plugin.Demo
         /// </summary>
         static void HelloNpp()
         {
-            NppUtils.Notepad.FileNew();
-            NppUtils.Editor.SetText(HelloTo.Replace("\r\n", NppUtils.Editor.LineDelimiter));
-            NppUtils.AddLine(HelloFrom.Replace("\r\n", NppUtils.Editor.LineDelimiter));
+            var editor = PluginData.Editor;
+            var eol = editor.LineDelimiter;
+            PluginData.Notepad.FileNew();
+            editor.SetText(HelloTo.Replace("\r\n", eol));
+            editor.AppendText(string.Format("{0}{1}", HelloFrom.Replace("\r\n", eol), eol));
         }
 
         /// <summary>
@@ -147,7 +149,7 @@ namespace Npp.DotNet.Plugin.Demo
         private Main() { }
         private static bool NativeLangIsRTL()
         {
-            string nativeLang = NppUtils.Notepad.GetNativeLanguage();
+            string nativeLang = PluginData.Notepad.GetNativeLanguage();
             return new string[] { "arabic", "farsi" }.Any(lang => nativeLang.IndexOf(lang) > -1);
         }
         private static readonly Main Instance;
@@ -165,7 +167,7 @@ namespace Npp.DotNet.Plugin.Demo
                     version =
                         GetVersionInfo(
                             Path.Combine(
-                                NppUtils.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+                                PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
                             )
                         .FileVersion!;
                 }

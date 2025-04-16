@@ -59,7 +59,7 @@ namespace Npp.DotNet.Plugin.Winforms
                 );
                 return;
             }
-            NppUtils.Editor.CopyText(text);
+            PluginData.Editor.CopyText(text);
         }
 
         /// <summary>

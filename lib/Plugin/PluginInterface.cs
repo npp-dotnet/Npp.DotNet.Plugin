@@ -20,6 +20,16 @@ namespace Npp.DotNet.Plugin
         public static PluginFuncArray FuncItems { get => _funcArray = _funcArray ?? new PluginFuncArray(); }
 
         /// <summary>
+        /// Gets an instance of <see cref="IScintillaGateway"/> created from the active Scintilla handle.
+        /// </summary>
+        public static IScintillaGateway Editor { get => new ScintillaGateway(Utils.GetCurrentScintilla()); }
+
+        /// <summary>
+        /// Gets an instance of <see cref="INotepadPPGateway"/>.
+        /// </summary>
+        public static INotepadPPGateway Notepad { get; } = new NotepadPPGateway();
+
+        /// <summary>
         /// Provides global access to an allocated pointer to the plugin's name string.
         /// Plugins can deallocate it by setting this property to <see cref="IntPtr.Zero"/>.
         /// </summary>

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../lib/Npp.DotNet.Plugin.csproj" />
+    <ProjectReference Include="../../../lib/Npp.DotNet.csproj" />
   </ItemGroup>
 
 </Project>

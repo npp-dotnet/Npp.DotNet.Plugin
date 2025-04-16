@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Npp.DotNet.Plugin.Gui.Demo
@@ -25,9 +23,10 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         public static List<(long start, long end)> GetSelectedRanges()
         {
             var selList = new List<(long start, long end)>();
-            int selCount = NppUtils.Editor.GetSelections();
+            var editor = PluginData.Editor;
+            int selCount = editor.GetSelections();
             for (int ii = 0; ii < selCount; ii++)
-                selList.Add((NppUtils.Editor.GetSelectionNStart(ii), NppUtils.Editor.GetSelectionNEnd(ii)));
+                selList.Add((editor.GetSelectionNStart(ii), editor.GetSelectionNEnd(ii)));
             return selList;
         }
 
@@ -57,7 +56,8 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         public static List<(long start, long end)> SetSelectionsFromStartEnds(IEnumerable<string> startEnds)
         {
             int ii = 0;
-            NppUtils.Editor.ClearSelections();
+            var editor = PluginData.Editor;
+            editor.ClearSelections();
             var result = new List<(long start, long end)>();
             foreach (string startEnd in startEnds)
             {
@@ -68,12 +68,12 @@ namespace Npp.DotNet.Plugin.Gui.Demo
                 if (ii++ == 0)
                 {
                     // first selection is handled differently
-                    NppUtils.Editor.SetSelectionStart(start);
-                    NppUtils.Editor.SetSelectionEnd(end);
+                    editor.SetSelectionStart(start);
+                    editor.SetSelectionEnd(end);
                 }
                 else
                 {
-                    NppUtils.Editor.AddSelection(start, end);
+                    editor.AddSelection(start, end);
                 }
             }
             return result;

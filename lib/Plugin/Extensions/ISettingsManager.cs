@@ -15,7 +15,7 @@ using System.Text;
 using System.Diagnostics.CodeAnalysis;
 #endif
 
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Extensions
 {
 	/// <summary>
 	/// Provides plugins with methods to read and write INI configuration files.

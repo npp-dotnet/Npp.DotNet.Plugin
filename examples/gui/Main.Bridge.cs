@@ -12,7 +12,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
     partial class Main
     {
         #region "3. Expose interface methods to unmanaged callers (like notepad++.exe)"
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnSetInfo" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.OnSetInfo" />
         [UnmanagedCallersOnly(EntryPoint = "setInfo", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal unsafe static void SetInfo(NppData* notepadPlusData)
         {
@@ -20,14 +20,14 @@ namespace Npp.DotNet.Plugin.Gui.Demo
             Instance.OnSetInfo();
         }
 
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnBeNotified" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.OnBeNotified" />
         [UnmanagedCallersOnly(EntryPoint = "beNotified", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal unsafe static void BeNotified(ScNotification* notification)
         {
             Instance.OnBeNotified(*notification);
         }
 
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnMessageProc" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.OnMessageProc" />
         [UnmanagedCallersOnly(EntryPoint = "messageProc", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal static NativeBool MessageProc(uint msg, UIntPtr wParam, IntPtr lParam)
         {
@@ -35,15 +35,15 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         }
         #endregion
 
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.GetFuncsArray" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.GetFuncsArray" />
         [UnmanagedCallersOnly(EntryPoint = "getFuncsArray", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal static IntPtr GetFuncsArray(IntPtr nbF) => OnGetFuncsArray(nbF);
 
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.GetName" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.GetName" />
         [UnmanagedCallersOnly(EntryPoint = "getName", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal static IntPtr GetName() => OnGetName();
 
-        /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.IsUnicode" />
+        /// <inheritdoc cref="Npp.DotNet.Plugin.DotNetPlugin.IsUnicode" />
         [UnmanagedCallersOnly(EntryPoint = "isUnicode", CallConvs = new[] { typeof(CallConvCdecl) })]
         internal static NativeBool IsUnicode() => OnIsUnicode();
     }
