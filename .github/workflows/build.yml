@@ -78,12 +78,6 @@ jobs:
         run: |
           7z a -tzip ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip ${{ env.PLUGIN_NAME }}.dll ${{ github.workspace }}\examples\minimal\localizations -y
 
-      - name: Pack WinForms plugin assets
-        if: matrix.build_config == 'Release' && matrix.plugin_demo == 'gui'
-        working-directory: examples/gui/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native
-        run: |
-          7z a -tzip ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}.zip ${{ env.PLUGIN_NS }}.Gui.Demo.dll ..\Properties -y
-
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -96,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
-          path: examples/gui/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}.zip
+          path: examples/gui/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'

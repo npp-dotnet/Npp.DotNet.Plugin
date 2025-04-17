@@ -5,13 +5,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
 using Npp.DotNet.Plugin.Extensions;
 using Npp.DotNet.Plugin.Winforms;
+using Npp.DotNet.Plugin.Gui.Demo.Properties;
 using static Npp.DotNet.Plugin.Win32;
 using static Npp.DotNet.Plugin.Winforms.WinUser;
 using static Npp.DotNet.Plugin.Winforms.WinGDI;
@@ -38,6 +38,13 @@ namespace Npp.DotNet.Plugin.Gui.Demo
         {
             Instance = new Main();
             PluginData.PluginNamePtr = Marshal.StringToHGlobalUni(PluginMenuName);
+            using MemoryStream bmpStream = new(Resources.star_bmp);
+            using MemoryStream icoStream = new(Resources.star_black);
+            using MemoryStream icoDMStream = new(Resources.star_white);
+            (int icoX, int icoY) = GetLogicalPixels(32, 32);
+            Kbg.Demo.Namespace.Main.tbBmp_tbTab = (Bitmap)Image.FromStream(bmpStream);
+            Kbg.Demo.Namespace.Main.tbIco = new Icon(icoStream, new Size(icoX, icoY));
+            Kbg.Demo.Namespace.Main.tbIcoDM = new Icon(icoDMStream, new Size(icoX, icoY));
         }
         #endregion
 
@@ -108,7 +115,6 @@ namespace Kbg.Demo.Namespace
         #region " Fields "
         internal static readonly string PluginName = typeof(Npp.DotNet.Plugin.Gui.Demo.Main).Namespace!;
         static string iniFilePath = string.Empty;
-        static string toolbarIconPath = string.Empty;
         static readonly string sectionName = "Insert Extension";
         static readonly string keyName = "doCloseTag";
         static bool doCloseTag = false;
@@ -117,10 +123,9 @@ namespace Kbg.Demo.Namespace
         static internal int idFrmGotToLine = -1;
 
         // toolbar icons
-        static Bitmap? tbBmp_tbTab = null;
-        static Icon? tbIco = null;
-        static Icon? tbIcoDM = null;
-        static Icon? tbIcon = null;
+        internal static Bitmap? tbBmp_tbTab = null;
+        internal static Icon? tbIco = null;
+        internal static Icon? tbIcoDM = null;
 
         // static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
         // static INotepadPPGateway notepad = new NotepadPPGateway();
@@ -141,7 +146,6 @@ namespace Kbg.Demo.Namespace
             StringBuilder sbIniFilePath = new StringBuilder(MAX_PATH);
             SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, sbIniFilePath);
             iniFilePath = sbIniFilePath.ToString();
-            toolbarIconPath = Path.Combine(PluginData.Notepad.GetPluginsHomePath(), PluginName, "Properties");
 
             // if config path doesn't exist, we create it
             if (!Directory.Exists(iniFilePath))
@@ -214,26 +218,12 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         static internal void SetToolBarIcon()
         {
             // TODO: use ::GetDpiForMonitor
-            long screenDPI = 96;
             int minBmpHeight = 16, minBmpWidth = 16;
 
-            IntPtr hHDC = GetDC(NULL);
-            int bmpX =
-                unchecked((int)((Math.BigMul(minBmpHeight, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSX)) + (screenDPI >> 1)) / screenDPI));
-            int bmpY =
-                unchecked((int)((Math.BigMul(minBmpWidth, GetDeviceCaps(hHDC, DeviceCapability.LOGPIXELSY)) + (screenDPI >> 1)) / screenDPI));
-            _ = ReleaseDC(NULL, hHDC);
-
-            var loadFlags =
-                LoadImageFlag.LR_LOADFROMFILE | LoadImageFlag.LR_LOADTRANSPARENT | LoadImageFlag.LR_LOADMAP3DCOLORS;
-            IntPtr hBmp =
-                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_bmp.bmp"), LoadImageType.IMAGE_BITMAP, bmpX, bmpY, loadFlags);
-
             // add bmp icon
-            if (hBmp != NULL)
-                tbBmp_tbTab = Image.FromHbitmap(hBmp);
-            else
+            if (tbBmp_tbTab?.GetHbitmap() == NULL)
             {
+                (int bmpX, int bmpY) = GetLogicalPixels(minBmpWidth, minBmpHeight);
                 using Bitmap bmp = new(bmpX, bmpY);
                 Graphics bmpIcon = Graphics.FromImage(bmp);
                 Rectangle rect = new(0, 0, bmpX, bmpY);
@@ -241,15 +231,8 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                 tbBmp_tbTab = Image.FromHbitmap(bmp.GetHbitmap());
             }
 
-            IntPtr hIco =
-                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_black.ico"), LoadImageType.IMAGE_ICON, 32, 32, loadFlags);
-            IntPtr hIcoDark =
-                LoadImage(NULL, Path.Combine(toolbarIconPath, "star_white.ico"), LoadImageType.IMAGE_ICON, 32, 32, loadFlags);
-
-            if (hIco == NULL) hIco = GetStandardIcon(WindowsIcon.IDI_APPLICATION);
-            if (hIcoDark == NULL) hIcoDark = hIco;
-            tbIco = Icon.FromHandle(hIco);
-            tbIcoDM = Icon.FromHandle(hIcoDark);
+            if (tbIco?.Handle == NULL) tbIco = Icon.FromHandle(GetStandardIcon(WindowsIcon.IDI_APPLICATION));
+            if (tbIcoDM?.Handle == NULL) tbIcoDM = tbIco;
 
             ToolbarIconDarkMode tbIcons = new()
             {
@@ -497,20 +480,6 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             if (frmGoToLine == null)
             {
                 frmGoToLine = new frmGoToLine(PluginData.Editor);
-
-                using (Bitmap newBmp = new Bitmap(16, 16))
-                {
-                    Graphics g = Graphics.FromImage(newBmp);
-                    ColorMap[] colorMap = new ColorMap[1];
-                    colorMap[0] = new ColorMap();
-                    colorMap[0].OldColor = Color.Fuchsia;
-                    colorMap[0].NewColor = Color.FromKnownColor(KnownColor.ButtonFace);
-                    ImageAttributes attr = new ImageAttributes();
-                    attr.SetRemapTable(colorMap);
-                    g.DrawImage(tbBmp_tbTab!, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
-                    tbIcon = Icon.FromHandle(newBmp.GetHicon());
-                }
-
                 NppTbData _nppTbData = new()
                 {
                     HClient = frmGoToLine.Handle,
@@ -520,7 +489,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                     DlgID = idFrmGotToLine,
                     // define the default docking behaviour
                     UMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR,
-                    HIconTab = (tbIcon?.Handle).GetValueOrDefault(),
+                    HIconTab = (PluginData.Notepad.IsDarkModeEnabled() ? tbIcoDM?.Handle : tbIco?.Handle).GetValueOrDefault(),
                     PszModuleName = $"{PluginName}.dll"
                 };
                 IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));

@@ -84,32 +84,14 @@ namespace Kbg.Demo.Namespace
             editor.GrabFocus();
         }
 
-        private void frmGoToLine_KeyDown(object sender, KeyEventArgs e)
+        private void FrmGoToLineKeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyData == Keys.Return) || (e.Alt && (e.KeyCode == Keys.G)))
-            {
-                button1.PerformClick();
-                e.Handled = true;
-            }
-            else if (e.KeyData == Keys.Escape)
-            {
-                editor.GrabFocus();
-            }
-            else if (e.KeyCode == Keys.Tab)
-            {
-                Control next = GetNextControl((Control)sender, !e.Shift)!;
-                while ((next == null) || (!next.TabStop)) next = GetNextControl(next, !e.Shift)!;
-                next.Focus();
-                e.Handled = true;
-            }
+            Callbacks.GenericKeyUpHandler(this, sender, e, this.IsModal);
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar)
-                && (e.KeyChar != '\b')
-                && (e.KeyChar != '\t'))
-                e.Handled = true;
+            Callbacks.TextBoxKeyPressHandler(sender, e);
         }
 
         void FrmGoToLineVisibleChanged(object sender, EventArgs e)

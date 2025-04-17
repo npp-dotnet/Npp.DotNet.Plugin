@@ -53,7 +53,7 @@
 			this.button1.Text = "&Go";
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
-			this.button1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmGoToLine_KeyDown);
+			this.button1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmGoToLineKeyUp);
 			//
 			// textBox1
 			//
@@ -63,7 +63,7 @@
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(49, 20);
 			this.textBox1.TabIndex = 1;
-			this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmGoToLine_KeyDown);
+			this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmGoToLineKeyUp);
 			this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
 			//
 			// frmGoToLine
@@ -77,7 +77,7 @@
 			this.Name = "frmGoToLine";
 			this.Text = "NppDockableForm";
 			this.VisibleChanged += new System.EventHandler(this.FrmGoToLineVisibleChanged);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmGoToLine_KeyDown);
+			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmGoToLineKeyUp);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
