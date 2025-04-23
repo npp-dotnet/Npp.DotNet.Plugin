@@ -10,10 +10,10 @@ Imports System.Runtime.InteropServices
 Imports Npp.DotNet.Plugin.Win32
 
 ''' <summary>
-''' Extends <see cref="DotNetPlugin"/>.
+''' Implements <see cref="IDotNetPlugin"/>.
 ''' </summary>
 Public Class Main
-    Inherits DotNetPlugin
+    Implements IDotNetPlugin
 
 #Region "1. Initialize"
     ''' <summary>
@@ -32,14 +32,14 @@ Public Class Main
 #End Region
 
 #Region "2. Implement the plugin interface"
-    Public Overrides Sub OnSetInfo()
+    Public Sub OnSetInfo() Implements IDotNetPlugin.OnSetInfo
         Dim sKey As New ShortcutKey([TRUE], [FALSE], [TRUE], 121) ' Ctrl + Shift + F10
         Utils.SetCommand("Say ""&Hello""", AddressOf HelloNpp, sKey)
         Utils.MakeSeparator()
         Utils.SetCommand("&About", AddressOf DisplayInfo)
     End Sub
 
-    Public Overrides Sub OnBeNotified(Notification As ScNotification)
+    Public Sub OnBeNotified(Notification As ScNotification) Implements IDotNetPlugin.OnBeNotified
         If Notification.Header.HwndFrom = PluginData.NppData.NppHandle Then
             Dim code As UInteger = Notification.Header.Code
             Select Case CType(code, NppMsg)
@@ -55,7 +55,8 @@ Public Class Main
         End If
     End Sub
 
-    Public Overrides Function OnMessageProc(Msg As UInteger, WParam As UIntPtr, LParam As IntPtr) As NativeBool
+    Public Function OnMessageProc(Msg As UInteger, WParam As UIntPtr, LParam As IntPtr) As NativeBool _
+      Implements IDotNetPlugin.OnMessageProc
         Select Case Msg
             Case WM_SIZE
                 If CInt(WParam) = SIZE_MAXIMIZED Then
@@ -66,7 +67,7 @@ Public Class Main
                                  CUInt(MsgBox.ICONASTERISK Or MsgBox.OK Or MsgBox.TOPMOST))
                 End If
         End Select
-        OnMessageProc = MyBase.OnMessageProc(Msg, WParam, LParam)
+        OnMessageProc = [TRUE]
     End Function
 #End Region
 
@@ -102,7 +103,7 @@ Public Class Main
     End Sub
 #End Region
 
-    Public Shared ReadOnly Instance As Main
+    Public Shared ReadOnly Instance As IDotNetPlugin
 
     ''' <summary><see cref="Main"/> should be a singleton class</summary>
     Private Sub New()

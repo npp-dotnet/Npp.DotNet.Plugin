@@ -12,11 +12,11 @@ using static Npp.DotNet.Plugin.Win32;
 namespace Npp.DotNet.Plugin.Demo
 {
     /// <summary>
-    /// Extends <see cref="DotNetPlugin"/>.
+    /// Implements <see cref="IDotNetPlugin"/>.
     /// </summary>
     [GenerateFiggleText("HelloTo", "slant", "Hello, Notepad++ ...")]
     [GenerateFiggleText("HelloFrom", "slant", "from .NET!")]
-    partial class Main : DotNetPlugin
+    partial class Main : IDotNetPlugin
     {
         #region "1. Initialize"
         /// <summary>
@@ -39,7 +39,7 @@ namespace Npp.DotNet.Plugin.Demo
 
         #region "2. Implement the plugin interface"
         /// <inheritdoc cref="IDotNetPlugin.OnSetInfo" />
-        public override void OnSetInfo()
+        public void OnSetInfo()
         {
             var sKey = new ShortcutKey(TRUE, FALSE, TRUE, 123); // Ctrl + Shift + F12
             MenuTitles.Load();
@@ -50,7 +50,7 @@ namespace Npp.DotNet.Plugin.Demo
         }
 
         /// <inheritdoc cref="IDotNetPlugin.OnBeNotified" />
-        public override void OnBeNotified(ScNotification notification)
+        public void OnBeNotified(ScNotification notification)
         {
             if (notification.Header.HwndFrom == PluginData.NppData.NppHandle)
             {
@@ -83,7 +83,7 @@ namespace Npp.DotNet.Plugin.Demo
         }
 
         /// <inheritdoc cref="IDotNetPlugin.OnMessageProc" />
-        public override NativeBool OnMessageProc(uint msg, UIntPtr wParam, IntPtr lParam)
+        public NativeBool OnMessageProc(uint msg, UIntPtr wParam, IntPtr lParam)
         {
             switch (msg)
             {
@@ -106,7 +106,7 @@ namespace Npp.DotNet.Plugin.Demo
                     break;
             }
 
-            return base.OnMessageProc(msg, wParam, lParam);
+            return TRUE;
         }
         #endregion
 
@@ -152,7 +152,7 @@ namespace Npp.DotNet.Plugin.Demo
             string nativeLang = PluginData.Notepad.GetNativeLanguage();
             return new string[] { "arabic", "farsi" }.Any(lang => nativeLang.IndexOf(lang) > -1);
         }
-        private static readonly Main Instance;
+        private static readonly IDotNetPlugin Instance;
         private static readonly PluginOptions Config;
         private static readonly PluginMenuTitles MenuTitles;
 

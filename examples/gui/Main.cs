@@ -19,9 +19,9 @@ using static Npp.DotNet.Plugin.Winforms.WinGDI;
 namespace Npp.DotNet.Plugin.Gui.Demo
 {
     /// <summary>
-    /// Extends <see cref="DotNetPlugin"/>.
+    /// Implements <see cref="IDotNetPlugin"/>.
     /// </summary>
-    partial class Main : DotNetPlugin
+    partial class Main : IDotNetPlugin
     {
 
         #region "1. Initialize"
@@ -50,13 +50,13 @@ namespace Npp.DotNet.Plugin.Gui.Demo
 
         #region "2. Implement the plugin interface"
         /// <inheritdoc cref="SetInfo" />
-        public override void OnSetInfo()
+        public void OnSetInfo()
         {
             Kbg.Demo.Namespace.Main.CommandMenuInit();
         }
 
         /// <inheritdoc cref="BeNotified" />
-        public override void OnBeNotified(ScNotification notification)
+        public void OnBeNotified(ScNotification notification)
         {
             uint code = notification.Header.Code;
 
@@ -88,6 +88,9 @@ namespace Npp.DotNet.Plugin.Gui.Demo
                 }
             }
         }
+
+        /// <inheritdoc cref="MessageProc" />
+        public NativeBool OnMessageProc(uint msg, UIntPtr wParam, IntPtr lParam) => TRUE;
         #endregion
 
         static internal void PluginCleanUp()
@@ -102,7 +105,7 @@ namespace Npp.DotNet.Plugin.Gui.Demo
 
         /// <summary><see cref="Main"/> should be a singleton class</summary>
         private Main() { }
-        private static readonly Main Instance;
+        private static readonly IDotNetPlugin Instance;
         private static readonly string PluginMenuName = ".NET WinForms Demo Plugin\0";
         internal static string PluginName { get { return Kbg.Demo.Namespace.Main.PluginName; } }
     }

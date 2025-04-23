@@ -10,6 +10,7 @@
         }
       ],
       "dest": "docfx/api",
+      "filter": "docfx/filterConfig.yml",
       "properties": {
         "TargetFramework": "net481",
         "DefineConstants": "SCI_DISABLE_PROVISIONAL"
@@ -25,6 +26,7 @@
         "src": "docfx",
         "dest": "." ,
         "exclude": [
+          "filterConfig.yml",
           "extra/**",
           "_site/**"
         ]

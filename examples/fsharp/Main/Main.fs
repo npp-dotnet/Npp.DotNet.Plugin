@@ -13,11 +13,9 @@ open type System.Diagnostics.FileVersionInfo
 open type Npp.DotNet.Plugin.Win32
 
 /// <summary>
-/// Extends <see cref="Npp.DotNet.Plugin.DotNetPlugin"/>.
+/// Implements <see cref="Npp.DotNet.Plugin.IDotNetPlugin"/>.
 /// </summary>
-type Main =
-    inherit DotNetPlugin
-
+type Main private () =
     static let pluginName = "F# Demo Plugin\000"
 
     /// <summary>
@@ -33,80 +31,78 @@ type Main =
         PluginData.PluginNamePtr <- Marshal.StringToHGlobalUni(pluginName)
         new Main()
 
-    static member val Instance = instance
+    static member val Instance = instance :> IDotNetPlugin
 
-    override __.OnSetInfo() =
-        /// <summary>
-        /// Creates a new buffer and inserts text into it.
-        /// </summary>
-        let helloNpp () =
-            PluginData.Notepad.FileNew()
-            PluginData.Editor.SetText("Hello, Notepad++ ... from F#!")
+    interface IDotNetPlugin with
+        member __.OnSetInfo() =
+            /// <summary>
+            /// Creates a new buffer and inserts text into it.
+            /// </summary>
+            let helloNpp () =
+                PluginData.Notepad.FileNew()
+                PluginData.Editor.SetText("Hello, Notepad++ ... from F#!")
 
-        /// <summary>
-        /// Shows the plugin's version number in a system dialog.
-        /// </summary>
-        let displayInfo () =
-            let mutable version = "1.0.0.0"
-            try
-                let assemblyName = typeof<Main>.Namespace
-                version <-
-                    GetVersionInfo(
-                        System.IO.Path.Combine(
-                            PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
-                        ).FileVersion
-            with _ -> ()
+            /// <summary>
+            /// Shows the plugin's version number in a system dialog.
+            /// </summary>
+            let displayInfo () =
+                let mutable version = "1.0.0.0"
+                try
+                    let assemblyName = typeof<Main>.Namespace
+                    version <-
+                        GetVersionInfo(
+                            System.IO.Path.Combine(
+                                PluginData.Notepad.GetPluginsHomePath(), assemblyName, $"{assemblyName}.dll")
+                            ).FileVersion
+                with _ -> ()
 
-            MsgBoxDialog(
-                PluginData.NppData.NppHandle,
-                $"Current version: {version}\000",
-                $"About {pluginName}",
-                (uint) (MsgBox.ICONQUESTION ||| MsgBox.OK))
-            |> ignore
+                MsgBoxDialog(
+                    PluginData.NppData.NppHandle,
+                    $"Current version: {version}\000",
+                    $"About {pluginName}",
+                    (uint) (MsgBox.ICONQUESTION ||| MsgBox.OK))
+                |> ignore
 
-        let sKey = ShortcutKey(TRUE, FALSE, TRUE, 116uy) // Ctrl + Shift + F5...harp!
+            let sKey = ShortcutKey(TRUE, FALSE, TRUE, 116uy) // Ctrl + Shift + F5...harp!
 
-        [ ("Say \"&Hello\"", Some(helloNpp), Some(sKey))
-          ("-", None, None)
-          ("&About", Some(displayInfo), None) ]
-        |> List.iter ((fun (name, fn: (unit -> unit) option, key) ->
-                match (fn, key) with
-                | (Some (f), Some (k)) -> Utils.SetCommand(name, f, k)
-                | (Some (f), _) -> Utils.SetCommand(name, f)
-                | _ -> Utils.MakeSeparator())
-            >> ignore)
+            [ ("Say \"&Hello\"", Some(helloNpp), Some(sKey))
+              ("-", None, None)
+              ("&About", Some(displayInfo), None) ]
+            |> List.iter ((fun (name, fn: (unit -> unit) option, key) ->
+                    match (fn, key) with
+                    | (Some (f), Some (k)) -> Utils.SetCommand(name, f, k)
+                    | (Some (f), _) -> Utils.SetCommand(name, f)
+                    | _ -> Utils.MakeSeparator())
+                >> ignore)
 
-    override __.OnBeNotified(notification: ScNotification) =
-        if notification.Header.HwndFrom = PluginData.NppData.NppHandle then
-            match EnumOfValue<uint, NppMsg>(notification.Header.Code) with
-            | NppMsg.NPPN_READY ->
-                // do some late-phase initialization
+        member __.OnBeNotified(notification: ScNotification) =
+            if notification.Header.HwndFrom = PluginData.NppData.NppHandle then
+                match EnumOfValue<uint, NppMsg>(notification.Header.Code) with
+                | NppMsg.NPPN_READY ->
+                    // do some late-phase initialization
+                    ()
+                | NppMsg.NPPN_TBMODIFICATION ->
+                    // create your toolbar icon(s)
+                    ()
+                | NppMsg.NPPN_SHUTDOWN ->
+                    // clean up resources
+                    PluginData.PluginNamePtr <- 0n
+                    PluginData.FuncItems.Dispose()
+                | _ -> ()
+            else
                 ()
-            | NppMsg.NPPN_TBMODIFICATION ->
-                // create your toolbar icon(s)
-                ()
-            | NppMsg.NPPN_SHUTDOWN ->
-                // clean up resources
-                PluginData.PluginNamePtr <- 0n
-                PluginData.FuncItems.Dispose()
+
+        member __.OnMessageProc(msg: uint, wParam: unativeint, lParam: nativeint) : NativeBool =
+            match msg with
+            | Win32.WM_SIZE when (int) wParam = Win32.SIZE_MAXIMIZED ->
+                let (height, width) = (lParam >>> 16, lParam &&& 0xFFFF)
+
+                MsgBoxDialog(
+                    PluginData.NppData.NppHandle,
+                    $"New window size: {height}x{width}\000",
+                    $"{pluginName}",
+                    (uint) (MsgBox.ICONASTERISK ||| MsgBox.OK ||| MsgBox.TOPMOST))
+                |> ignore
             | _ -> ()
-        else
-            ()
 
-    override __.OnMessageProc(msg: uint, wParam: unativeint, lParam: nativeint) : NativeBool =
-        match msg with
-        | Win32.WM_SIZE when (int) wParam = Win32.SIZE_MAXIMIZED ->
-            let (height, width) = (lParam >>> 16, lParam &&& 0xFFFF)
-
-            MsgBoxDialog(
-                PluginData.NppData.NppHandle,
-                $"New window size: {height}x{width}\000",
-                $"{pluginName}",
-                (uint) (MsgBox.ICONASTERISK ||| MsgBox.OK ||| MsgBox.TOPMOST))
-            |> ignore
-        | _ -> ()
-
-        base.OnMessageProc(msg, wParam, lParam)
-
-    /// <summary><see cref="Main"/> should be a singleton class</summary>
-    private new() = { inherit DotNetPlugin() }
+            Win32.TRUE
