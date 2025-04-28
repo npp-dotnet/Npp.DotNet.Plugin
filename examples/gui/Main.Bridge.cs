@@ -37,14 +37,14 @@ namespace Npp.DotNet.Plugin.Gui.Demo
 
         /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnGetFuncsArray" />
         [UnmanagedCallersOnly(EntryPoint = "getFuncsArray", CallConvs = new[] { typeof(CallConvCdecl) })]
-        internal static IntPtr GetFuncsArray(IntPtr nbF) => Instance.OnGetFuncsArray(nbF);
+        internal static IntPtr GetFuncsArray(IntPtr nbF) => IDotNetPlugin.OnGetFuncsArray(nbF);
 
         /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnGetName" />
         [UnmanagedCallersOnly(EntryPoint = "getName", CallConvs = new[] { typeof(CallConvCdecl) })]
-        internal static IntPtr GetName() => Instance.OnGetName();
+        internal static IntPtr GetName() => IDotNetPlugin.OnGetName();
 
         /// <inheritdoc cref="Npp.DotNet.Plugin.IDotNetPlugin.OnIsUnicode" />
         [UnmanagedCallersOnly(EntryPoint = "isUnicode", CallConvs = new[] { typeof(CallConvCdecl) })]
-        internal static NativeBool IsUnicode() => Instance.OnIsUnicode();
+        internal static NativeBool IsUnicode() => IDotNetPlugin.OnIsUnicode();
     }
 }

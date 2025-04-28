@@ -49,7 +49,7 @@ namespace Npp.DotNet.Plugin
         /// A positive non-zero value must be assigned to <paramref name="nbF"/>, and the return value
         /// must not be <see cref="Win32.NULL"/>.
         /// </remarks>
-        sealed IntPtr OnGetFuncsArray(IntPtr nbF)
+        static IntPtr OnGetFuncsArray(IntPtr nbF)
         {
             Marshal.WriteInt32(nbF, (PluginData.FuncItems?.Items.Count).GetValueOrDefault());
             return (PluginData.FuncItems?.NativePointer).GetValueOrDefault(IntPtr.Zero);
@@ -61,12 +61,12 @@ namespace Npp.DotNet.Plugin
         /// <remarks>
         /// The return value must not be <see cref="Win32.NULL"/>.
         /// </remarks>
-        sealed IntPtr OnGetName() => PluginData.PluginNamePtr;
+        static IntPtr OnGetName() => PluginData.PluginNamePtr;
         /// <summary>
         /// Called by the unmanaged <c>isUnicode</c> API function.<br/>
         /// </summary>
         /// <returns><see langword="true"/></returns>
-        sealed NativeBool OnIsUnicode() => Win32.TRUE;
+        static NativeBool OnIsUnicode() => Win32.TRUE;
 #endif
     }
 
