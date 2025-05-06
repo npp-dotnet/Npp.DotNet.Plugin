@@ -14,23 +14,24 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
     public partial class FormBase : Form
     {
         /// <summary>
-        /// if true, this blocks the parent application until closed.<br></br>
-        /// THIS IS ONLY TRUE OF POP-UP DIALOGS.
+        /// <see langword="true"/> if this form blocks the Notepad++ window until closed.
         /// </summary>
         [DefaultValue(false)]
         public bool IsModal { get; private set; }
 
         /// <summary>
-        /// if true, this form's default appearance is docked (attached) to the left, right, bottom, or top of the Notepad++ window.
+        /// <see langword="true"/> if this form's default appearance is docked (attached) to the left, right, bottom, or top of the Notepad++ window.
         /// </summary>
         [DefaultValue(false)]
         public bool IsDocking { get; private set; }
 
         /// <summary>
-        /// indicates whether the form became visible for the first time<br></br>
-        /// this is an unprincipled hack to deal with weirdness surrounding the opening of docking forms<br></br>
-        /// since the Load and Shown events are suppressed on docking form startup.
+        /// <see langword="true"/> if this form is being shown for the first time.
         /// </summary>
+        /// <remarks>
+        /// This is an unprincipled hack to deal with weirdness surrounding the opening of docking forms,
+        /// since the Load and Shown events are suppressed on docking form startup.
+        /// </remarks>
         private bool IsLoaded { get; set; }
 
         private static WindowLongGetter WndLongGetter { get; set; } = GetWindowLongPtr;
@@ -42,16 +43,18 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// <param name="isDark">Set this to <see langword="true"/> if dark mode has changed from disabled to enabled,
         /// or <see langword="false"/> if <em>vice versa</em>.</param>
         /// <remarks>
-        /// Deriving classes should ensure all components have been initialied before calling this method.
+        /// Deriving classes should ensure all components have been initialized before calling this method.
         /// </remarks>
         public virtual void ToggleDarkMode(bool isDark) { }
 
         /// <summary>
-        /// superclass of all forms in the application.<br></br>
-        /// Implements many useful handlers, and deals with some weird behaviors induced by interoperating with Notepad++.
+        /// Ancestor class of all forms created by this plugin.
         /// </summary>
-        /// <param name="isModal">if true, this blocks the parent application until closed. THIS IS ONLY TRUE OF POP-UP DIALOGS</param>
-        /// <param name="isDocking">if true, this form's default appearance is docked (attached) to the left, right, bottom, or top of the Notepad++ window.</param>
+        /// <param name="isModal">See <see cref="IsModal"/>.</param>
+        /// <param name="isDocking">See <see cref="IsDocking"/>.</param>
+        /// <remarks>
+        /// Implements many useful handlers, and deals with some weird behaviors induced by interoperating with Notepad++.
+        /// </remarks>
         public FormBase(bool isModal, bool isDocking)
         {
             InitializeComponent();
@@ -66,11 +69,11 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         }
 
         /// <summary>
-        /// this is called every time the form's visibility changes,
-        /// but it only does anything once, before the form is loaded for the first time.<br></br>
-        /// This adds KeyUp, KeyDown, and KeyPress event handlers to all controls according to the recommendations in NppFormHelper.<br></br>
-        /// It also styles the form using FormStyle.ApplyStyle
+        /// Called when this form's visibility changes.
         /// </summary>
+        /// <remarks>
+        /// This is a "one-shot" handler; it exits early on every call but the first one.
+        /// </remarks>
         public virtual void FormBase_VisibleChanged(object sender, EventArgs e)
         {
             if (IsLoaded || !Visible)
@@ -83,9 +86,13 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         }
 
         /// <summary>
-        /// This adds KeyUp, KeyDown, and KeyPress event handlers to all controls according to the recommendations in NppFormHelper.
+        /// Attaches the <see cref="Callbacks.GenericKeyUpHandler"/>, <see cref="Callbacks.GenericKeyDownHandler"/>,
+        /// and <see cref="Callbacks.TextBoxKeyPressHandler"/> event handlers to the given <paramref name="ctrl"/>.
         /// </summary>
-        /// <param name="ctrl"></param>
+        /// <param name="ctrl">
+        /// If <paramref name="ctrl"/> is an instance of <see cref="TextBox"/>, the key event handlers are attached to it.
+        /// If it contains child controls, this method loops recursively over them.
+        /// </param>
         private void AddKeyUpDownPressHandlers(Control ctrl)
         {
             ctrl = ctrl ?? this;
@@ -112,7 +119,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         }
 
         /// <summary>
-        /// suppress the default response to the Tab key
+        /// Suppress the default response to the Tab key.
         /// </summary>
         protected override bool ProcessDialogKey(Keys keyData)
         {
@@ -121,6 +128,13 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             return base.ProcessDialogKey(keyData);
         }
 
+        /// <summary>
+        /// Sets the <a href="https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles#WS_EX_CONTROLPARENT">WS_EX_CONTROLPARENT</a> flag,
+        /// e.g., whenever the Windows runtime wants to redraw this form.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/issues/17#issuecomment-683455467"/>.
+        /// </remarks>
         protected void AddControlParent()
         {
             if (this.HasChildren)
@@ -133,6 +147,13 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             }
         }
 
+        /// <summary>
+        /// Clears the <a href="https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles#WS_EX_CONTROLPARENT">WS_EX_CONTROLPARENT</a> flag,
+        /// e.g., when the Docking Manager sends <see cref="DockMgrMsg.DMN_FLOAT"/> to this form's window procedure.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://sourceforge.net/p/notepad-plus/discussion/482781/thread/ab626469/#4458"/>.
+        /// </remarks>
         protected void RemoveControlParent()
         {
             if (this.HasChildren)
