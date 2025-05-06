@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildUnmanagedLibrary">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="MSTest" Version="3.8.2" />
+    <PackageReference Include="MSTest" Version="3.8.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,11 +25,18 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <TargetPlatform>$(SharedRuntimeIdentifier.Substring(4))</TargetPlatform>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Content Include="$(MSBuildProjectDirectory)\Unmanaged\bin\$(SharedRuntimeIdentifier.Substring(4))\$(Configuration)\Unmanaged.dll">
+    <Content Include="$(MSBuildProjectDirectory)\Unmanaged\bin\$(TargetPlatform)\$(Configuration)\Unmanaged.dll">
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
+  <Target Name="BuildUnmanagedLibrary">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\Unmanaged" Command="msbuild /v:q /nr:false /t:Build /p:Configuration=$(SharedConfiguration);Platform=$(TargetPlatform)" />
+  </Target>
 </Project>

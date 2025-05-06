@@ -6,8 +6,10 @@ Npp.DotNet.Plugin.Tests
 Checks that [ClikeStringArray] allocates enough memory for unmanaged UTF-16 strings.
 
 > [!Important]
-> The test class depends on a C++ library that must be built separately with the Visual C++ toolchain.
-> To do that, start the [Developer Command Prompt or PowerShell] and run:
+> The test class depends on a C++ library that must be built with the Visual C++ toolchain.
+> Make sure you've installed the [C++ workload][general build requirements] and that `cl.exe` is visible to your `PATH`.
+>
+> To build the C++ library outside of Visual Studio, start the [Developer Command Prompt or PowerShell] and run:
 >
 >     msbuild /t:Build /p:Configuration=Debug|Release /p:Platform=x64|ARM64 test\Buffers\Unmanaged
 >

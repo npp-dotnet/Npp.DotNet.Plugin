@@ -86,7 +86,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus,inline</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -135,7 +135,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus,inline</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -185,7 +185,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
-      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus,inline</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -235,7 +235,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
-      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus,inline</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /source-charset:utf-8 /Zc:__cplusplus /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>

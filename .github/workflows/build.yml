@@ -50,10 +50,6 @@ jobs:
           dotnet restore
           dotnet restore test
 
-      - name: Build native dependencies
-        run: |
-          msbuild /v:m /t:Build /p:Configuration=${{ matrix.build_config }} /p:Platform=${{ matrix.target_runtime }} .\test\Buffers\Unmanaged
-
       - name: Test memory layout
         if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
