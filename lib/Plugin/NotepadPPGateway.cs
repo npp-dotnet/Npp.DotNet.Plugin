@@ -17,10 +17,14 @@ namespace Npp.DotNet.Plugin
 {
 	public interface INotepadPPGateway
 	{
+		/// <inheritdoc cref="NotepadPPGateway.FileNew"/>
 		void FileNew();
+		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, ToolbarIconDarkMode)"/>
 		void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon);
+		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, ToolbarIcon)"/>
 		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon);
+		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, Bitmap)"/>
 		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
 		/// <inheritdoc cref="NotepadPPGateway.GetNppPath"/>
@@ -29,6 +33,7 @@ namespace Npp.DotNet.Plugin
 		string GetPluginsHomePath();
 		/// <inheritdoc cref="NotepadPPGateway.GetPluginConfigPath"/>
 		string GetPluginConfigPath();
+		/// <inheritdoc cref="NotepadPPGateway.GetSessionFilePath"/>
 		string GetSessionFilePath();
 		/// <inheritdoc cref="NotepadPPGateway.GetCurrentWord"/>
 		string GetCurrentWord();
@@ -40,6 +45,7 @@ namespace Npp.DotNet.Plugin
 		string GetFilePath(UIntPtr bufferId);
 		/// <inheritdoc cref="NotepadPPGateway.GetNativeLanguage"/>
 		string GetNativeLanguage();
+		/// <inheritdoc cref="NotepadPPGateway.SetCurrentLanguage"/>
 		void SetCurrentLanguage(LangType language);
 		/// <inheritdoc cref="NotepadPPGateway.OpenFile"/>
 		bool OpenFile(string path);
@@ -68,11 +74,18 @@ namespace Npp.DotNet.Plugin
 		protected const int Unused = 0;
 		protected const uint UnusedW = 0U;
 
+		/// <summary>
+		/// Creates a new buffer by invoking the File - New menu command.
+		/// </summary>
 		public void FileNew()
 		{
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_MENUCOMMAND, UnusedW, MenuCmdId.IDM_FILE_NEW);
 		}
 
+		/// <summary>
+		/// Associates the plugin command identified by <paramref name="funcItemsIndex"/>
+		/// with the set of icons defined by the given <see cref="ToolbarIconDarkMode"/> instance.
+		/// </summary>
 		public void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon)
 		{
 			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf<ToolbarIconDarkMode>());
@@ -92,6 +105,10 @@ namespace Npp.DotNet.Plugin
 		}
 
 #pragma warning disable CS0618
+		/// <summary>
+		/// Associates the plugin command identified by <paramref name="funcItemsIndex"/>
+		/// with the set of icons defined by the given <see cref="ToolbarIcon"/> instance.
+		/// </summary>
 		public void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon)
 		{
 			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf<ToolbarIcon>());
@@ -110,6 +127,9 @@ namespace Npp.DotNet.Plugin
 			}
 		}
 
+		/// <summary>
+		/// Associates the given bitmap with the plugin command identified by <paramref name="funcItemsIndex"/>.
+		/// </summary>
 		public void AddToolbarIcon(int funcItemsIndex, Bitmap icon)
 		{
 			// The dark mode API requires a least one ICO, otherwise nothing will display
@@ -196,6 +216,7 @@ namespace Npp.DotNet.Plugin
 		public string GetPluginConfigPath()
 			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 
+		/// <returns>The path to <c>session.xml</c>.</returns>
 		public string GetSessionFilePath()
 		{
 			// portable installation ?
@@ -232,6 +253,9 @@ namespace Npp.DotNet.Plugin
 			return path.ToString();
 		}
 
+		/// <summary>
+		/// Sets the syntax mode of the current buffer to the given programming <paramref name="language"/>.
+		/// </summary>
 		public void SetCurrentLanguage(LangType language)
 		{
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, UnusedW, (int)language);
@@ -346,18 +370,6 @@ namespace Npp.DotNet.Plugin
 		public bool IsDarkModeEnabled()
 		{
 			return Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ISDARKMODEENABLED);
-		}
-
-		/// <summary>
-		/// This class holds helpers for sending messages defined in the Resource_h.cs file. It is at the moment
-		/// incomplete. Please help fill in the blanks.
-		/// </summary>
-		class NppResource
-		{
-			public static void ClearIndicator()
-			{
-				Win32.SendMessage(PluginData.NppData.NppHandle, (uint)Resource.NPPM_INTERNAL_CLEARINDICATOR, UnusedW, Unused);
-			}
 		}
 	}
 }
