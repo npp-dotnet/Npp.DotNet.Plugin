@@ -37,7 +37,7 @@ namespace Npp.DotNet.Plugin
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
-                int cbSize = Math.Min(UncheckedMath.Increment(stringLength), Win32.MAX_PATH - 1) * Marshal.SystemDefaultCharSize;
+                int cbSize = Math.Min(UncheckedMath.Increment(stringLength), Win32.MAX_PATH) * Marshal.SystemDefaultCharSize;
                 IntPtr item = Marshal.AllocHGlobal(cbSize);
                 Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);
@@ -56,7 +56,8 @@ namespace Npp.DotNet.Plugin
         {
             for (int i = 0; i < stringList.Count; i++)
             {
-                byte[] bytes = Encoding.Unicode.GetBytes(stringList[i]);
+                string str = stringList[i];
+                byte[] bytes = Encoding.Unicode.GetBytes($"{str.Substring(0, Math.Min(str.Length, Win32.MAX_PATH - 1))}\0");
                 Marshal.Copy(bytes, 0, _nativeItems[i], bytes.Length);
             }
         }

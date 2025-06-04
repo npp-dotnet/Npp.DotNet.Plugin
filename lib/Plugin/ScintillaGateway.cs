@@ -3769,7 +3769,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         public unsafe string EncodedFromUTF8(string utf8)
         {
-            fixed (byte* utf8Ptr = Encoding.UTF8.GetBytes(utf8))
+            fixed (byte* utf8Ptr = Encoding.UTF8.GetBytes($"{utf8}\0"))
             {
                 return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_ENCODEDFROMUTF8, CodePage, (UIntPtr)utf8Ptr);
             }
@@ -4713,9 +4713,9 @@ namespace Npp.DotNet.Plugin
                     "See https://www.scintilla.org/ScintillaDoc.html#SCI_SETREPRESENTATION",
                     nameof(representation));
             }
-            fixed (byte* encodedCharacterPtr = CodePage.GetBytes(encodedCharacter))
+            fixed (byte* encodedCharacterPtr = CodePage.GetBytes($"{encodedCharacter}\0"))
             {
-                fixed (byte* representationPtr = Encoding.UTF8.GetBytes(representation))
+                fixed (byte* representationPtr = Encoding.UTF8.GetBytes($"{representation}\0"))
                 {
                     SendMessage(_scintilla, SciMsg.SCI_SETREPRESENTATION, (UIntPtr)encodedCharacterPtr, (IntPtr)representationPtr);
                 }
@@ -4730,7 +4730,7 @@ namespace Npp.DotNet.Plugin
         /// <remarks>See <see cref="ScintillaGateway.SetRepresentation"/></remarks>
         public unsafe string GetRepresentation(string encodedCharacter)
         {
-            fixed (byte* encodedCharacterPtr = CodePage.GetBytes(encodedCharacter))
+            fixed (byte* encodedCharacterPtr = CodePage.GetBytes($"{encodedCharacter}\0"))
             {
                 return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETREPRESENTATION, Encoding.UTF8, (UIntPtr)encodedCharacterPtr);
             }
@@ -4802,7 +4802,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         public unsafe string GetProperty(string key)
         {
-            fixed (byte* keyPtr = Encoding.UTF8.GetBytes(key))
+            fixed (byte* keyPtr = Encoding.UTF8.GetBytes($"{key}\0"))
             {
                 return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETPROPERTY, Encoding.UTF8, (UIntPtr)keyPtr);
             }
@@ -4817,7 +4817,7 @@ namespace Npp.DotNet.Plugin
         [Obsolete("This is now the same as SCI_GETPROPERTY - no expansion is performed. See https://www.scintilla.org/ScintillaDoc.html#SCI_GETPROPERTYEXPANDED")]
         public unsafe string GetPropertyExpanded(string key)
         {
-            fixed (byte* keyPtr = Encoding.UTF8.GetBytes(key))
+            fixed (byte* keyPtr = Encoding.UTF8.GetBytes($"{key}\0"))
             {
                 return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETPROPERTYEXPANDED, Encoding.UTF8, (UIntPtr)keyPtr);
             }
@@ -4873,7 +4873,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         public unsafe string DescribeProperty(string name)
         {
-            fixed (byte* namePtr = Encoding.UTF8.GetBytes(name))
+            fixed (byte* namePtr = Encoding.UTF8.GetBytes($"{name}\0"))
             {
                 return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_DESCRIBEPROPERTY, Encoding.UTF8, (UIntPtr)namePtr);
             }
@@ -5089,7 +5089,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe IntPtr SendEncodedBytes(SciMsg msg, string text, IntPtr lParam)
         {
-            fixed (byte* pText = CodePage.GetBytes(text))
+            fixed (byte* pText = CodePage.GetBytes($"{text}\0"))
             {
                 return SendMessage(_scintilla, msg, (UIntPtr)pText, lParam);
             }
@@ -5100,7 +5100,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe IntPtr SendEncodedBytes(SciMsg msg, string text, UIntPtr wParam)
         {
-            fixed (byte* pText = CodePage.GetBytes(text))
+            fixed (byte* pText = CodePage.GetBytes($"{text}\0"))
             {
                 return SendMessage(_scintilla, msg, wParam, (IntPtr)pText);
             }
@@ -5112,8 +5112,9 @@ namespace Npp.DotNet.Plugin
         unsafe IntPtr SendEncodedBytes(SciMsg msg, string text)
         {
             var cp = CodePage;
-            int length = cp.GetByteCount(text);
-            fixed (byte* pText = cp.GetBytes(text))
+            string pszText = $"{text}\0";
+            int length = cp.GetByteCount(pszText);
+            fixed (byte* pText = cp.GetBytes(pszText))
             {
                 return SendMessage(_scintilla, msg, (UIntPtr)length, (IntPtr)pText);
             }
@@ -5124,7 +5125,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe IntPtr SendUTF8Bytes(SciMsg msg, string text, IntPtr lParam)
         {
-            fixed (byte* pText = Encoding.UTF8.GetBytes(text))
+            fixed (byte* pText = Encoding.UTF8.GetBytes($"{text}\0"))
             {
                 return SendMessage(_scintilla, msg, (UIntPtr)pText, lParam);
             }
@@ -5135,7 +5136,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe IntPtr SendUTF8Bytes(SciMsg msg, string text, UIntPtr wParam)
         {
-            fixed (byte* pText = Encoding.UTF8.GetBytes(text))
+            fixed (byte* pText = Encoding.UTF8.GetBytes($"{text}\0"))
             {
                 return SendMessage(_scintilla, msg, wParam, (IntPtr)pText);
             }
@@ -5146,9 +5147,9 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         unsafe IntPtr SendUTF8Bytes(SciMsg msg, string wParam, string lParam)
         {
-            fixed (byte* wParamBuf = Encoding.UTF8.GetBytes(wParam))
+            fixed (byte* wParamBuf = Encoding.UTF8.GetBytes($"{wParam}\0"))
             {
-                fixed (byte* lParamBuf = Encoding.UTF8.GetBytes(lParam))
+                fixed (byte* lParamBuf = Encoding.UTF8.GetBytes($"{lParam}\0"))
                 {
                     return SendMessage(_scintilla, SciMsg.SCI_SETPROPERTY, (UIntPtr)wParamBuf, (IntPtr)lParamBuf);
                 }
