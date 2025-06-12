@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: Public Domain
+# SPDX-License-Identifier: CC0-1.0
+
+# Reorder file tree to silence IDE0130 diagnostic
+466230fb54d5f5114e38289353b198fd5cf1cea3
+
+# Documentation refresh
+cb48f37cddd94645f3289d45742e5064a93f536e
+
+# Normalize file encodings on UTF-8 with BOM
+60fa297b2b2fdb370fc1cd0bbaa873be0e68de13

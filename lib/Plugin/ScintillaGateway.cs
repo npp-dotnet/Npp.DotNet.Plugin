@@ -316,17 +316,6 @@ namespace Npp.DotNet.Plugin
             return (long)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXTFULL, UnusedW, tr.NativePointer);
         }
 
-        /// <summary>
-        /// Retrieve a buffer of cells.
-        /// Returns the number of bytes in the buffer not including terminating NULs.
-        /// (Scintilla feature 2015)
-        /// </summary>
-        [Obsolete("Use GetStyledText(Npp.DotNet.Plugin.TextRangeFull) instead")]
-        public int GetStyledText(TextRange tr)
-        {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXT, UnusedW, tr.NativePointer);
-        }
-
         /// <summary>Are there any redoable actions in the undo history? (Scintilla feature 2016)</summary>
         public bool CanRedo()
         {
@@ -1603,13 +1592,6 @@ namespace Npp.DotNet.Plugin
             return (long)SendMessage(_scintilla, SciMsg.SCI_FINDTEXTFULL, (UIntPtr)searchFlags, ft.NativePointer);
         }
 
-        /// <summary>Find some text in the document. (Scintilla feature 2150)</summary>
-        [Obsolete("Use FindText(Npp.DotNet.Plugin.FindOption, Npp.DotNet.Plugin.TextRangeFull) instead")]
-        public int FindText(FindOption searchFlags, TextToFind ft)
-        {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_FINDTEXT, (UIntPtr)searchFlags, ft.NativePointer);
-        }
-
         /// <summary>Retrieve the display line at the top of the display. (Scintilla feature 2152)</summary>
         public Position GetFirstVisibleLine()
         {
@@ -1687,17 +1669,6 @@ namespace Npp.DotNet.Plugin
         public long GetTextRange(TextRangeFull tr)
         {
             return (long)SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGEFULL, UnusedW, tr.NativePointer);
-        }
-
-        /// <summary>
-        /// Retrieve a range of text.
-        /// Return the length of the text.
-        /// (Scintilla feature 2162)
-        /// </summary>
-        [Obsolete("Use GetTextRange(Npp.DotNet.Plugin.TextRangeFull) instead")]
-        public int GetTextRange(TextRange tr)
-        {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGE, UnusedW, tr.NativePointer);
         }
 
         /// <summary>Draw the selection either highlighted or in normal (non-highlighted) style. (Scintilla feature 2163)</summary>

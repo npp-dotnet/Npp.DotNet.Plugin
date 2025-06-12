@@ -55,6 +55,7 @@ namespace Npp.DotNet.Plugin
 		string GetConfigDirectory();
 		/// <inheritdoc cref="NotepadPPGateway.GetNppVersion"/>
 		(int, int, int) GetNppVersion();
+		/// <inheritdoc cref="NotepadPPGateway.GetOpenFileNames"/>
 		string[] GetOpenFileNames();
 		/// <inheritdoc cref="NotepadPPGateway.SetStatusBarSection"/>
 		void SetStatusBarSection(string message, StatusBarSection section);
@@ -243,11 +244,12 @@ namespace Npp.DotNet.Plugin
 			!= 0;
 
 		/// <summary>
-		/// Gets the path of the current document.
+		/// Gets the path of the document with the given <paramref name="bufferId"/>.
 		/// </summary>
+		/// <returns>The full file path of the document, if <paramref name="bufferId"/> is valid; otherwise, an empty string.</returns>
 		public string GetFilePath(UIntPtr bufferId)
 		{
-			int len = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLPATHFROMBUFFERID, (uint)bufferId).ToInt32() + 1;
+			int len = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufferId, Unused).ToInt32() + 1;
 			var path = new StringBuilder(len);
 			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETFULLPATHFROMBUFFERID, bufferId, path);
 			return path.ToString();
@@ -295,16 +297,26 @@ namespace Npp.DotNet.Plugin
 			return (major, minor, bugfix);
 		}
 
+		/// <summary>
+		/// Get the full path names of all files currently open in all views.
+		/// </summary>
+		/// <returns>
+		/// The combined list of open files in both the <see cref="NppMsg.PRIMARY_VIEW"/> and the <see cref="NppMsg.SECOND_VIEW"/>.
+		/// </returns>
 		public string[] GetOpenFileNames()
 		{
-			int nbFile = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETNBOPENFILES);
-
-			using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
+			var fileList = new List<string>();
+			foreach (var viewType in new NppMsg[] { NppMsg.PRIMARY_VIEW, NppMsg.SECOND_VIEW } )
 			{
-				if (Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETOPENFILENAMES, (UIntPtr)cStrArray.NativePointer.ToInt64(), nbFile) != IntPtr.Zero)
-					return cStrArray.ManagedStringsUnicode.ToArray();
+				int filesInView = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETNBOPENFILES, UnusedW, (int)viewType);
+				for (int i = 0; i < filesInView; i++)
+				{
+					int view = (int)(viewType == NppMsg.PRIMARY_VIEW ? NppMsg.MAIN_VIEW : NppMsg.SUB_VIEW);
+					UIntPtr bufferId = (UIntPtr)(ulong)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETBUFFERIDFROMPOS, (uint)i, view);
+					if ((long)bufferId > 0L) fileList.Add(GetFilePath(bufferId));
+				}
 			}
-			return new List<string>().ToArray();
+			return fileList.ToArray();
 		}
 
 		/// <summary>

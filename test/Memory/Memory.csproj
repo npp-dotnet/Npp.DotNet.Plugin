@@ -10,11 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="AsmResolver.DotNet" Version="6.0.0-beta.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="MSTest" Version="3.8.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="MSTest" Version="3.9.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../lib/Npp.DotNet.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
     <Compile Include="../Harness.cs" />
   </ItemGroup>
 

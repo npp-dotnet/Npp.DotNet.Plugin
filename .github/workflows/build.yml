@@ -54,7 +54,7 @@ jobs:
         if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
-          dotnet msbuild /t:Build /p:SharedFramework=net9.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
+          dotnet msbuild /t:Build /p:TargetFramework=net9.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
           dotnet test -f net9.0-windows --no-build .\Memory
 
       - name: Test unmanaged string buffer allocation

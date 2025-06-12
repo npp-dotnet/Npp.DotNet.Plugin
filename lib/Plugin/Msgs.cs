@@ -52,6 +52,36 @@ namespace Npp.DotNet.Plugin
     }
 
     /// <summary>
+    /// Return value of <see cref="NppMsg.NPPM_GETTOOLBARICONSETCHOICE"/>.
+    /// </summary>
+    /// <remarks>
+    /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/5406b82">8.8.2</a>
+    /// </remarks>
+    public enum ToolBarStatusType
+    {
+        /// <summary>
+        /// Fluent UI (small)
+        /// </summary>
+        TB_SMALL,
+        /// <summary>
+        /// Fluent UI (large)
+        /// </summary>
+        TB_LARGE,
+        /// <summary>
+        /// Filled Fluent UI (small)
+        /// </summary>
+        TB_SMALL2,
+        /// <summary>
+        /// Filled Fluent UI (large)
+        /// </summary>
+        TB_LARGE2,
+        /// <summary>
+        /// Standard bitmap icons (small)
+        /// </summary>
+        TB_STANDARD
+    }
+
+    /// <summary>
     /// Used with <see cref="NppMsg.NPPM_GETEXTERNALLEXERAUTOINDENTMODE"/> and <see cref="NppMsg.NPPM_SETEXTERNALLEXERAUTOINDENTMODE"/>.
     /// </summary>
     /// <remarks>
@@ -109,13 +139,15 @@ namespace Npp.DotNet.Plugin
         /// <summary>See <seealso cref="NPPM_GETNBOPENFILES"/></summary>
         SECOND_VIEW = 2,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMES(wchar_t** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMES_DEPRECATED(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the full path names of all files currently open in both views. The user must allocate a big enough <c>fileNames</c> array using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - pre-allocated array of file paths</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> - the number of file paths in <c>fileNames</c></para>
         /// <para>Returns the number of files copied to the <c>fileNames</c> array.</para>
         /// </summary>
-        NPPM_GETOPENFILENAMES = NPPMSG + 8,
+        NPPM_GETOPENFILENAMES_DEPRECATED = NPPMSG + 8,
+        [Obsolete("Replaced by NPPM_GETOPENFILENAMES_DEPRECATED", true)]
+        NPPM_GETOPENFILENAMES = NPPM_GETOPENFILENAMES_DEPRECATED,
         /// <summary>
         /// HWND NPPM_MODELESSDIALOG(int action, HWND hDlg)<br/>
         /// Register (or unregister) the plugin dialog with the given handle.
@@ -169,21 +201,25 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         NPPM_SAVECURRENTSESSION = NPPMSG + 16,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMESPRIMARY(wchar_t** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMESPRIMARY_DEPRECATED(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the full path names of all files currently open in the main view. The user must allocate a big enough <c>fileNames</c> array using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - pre-allocated array of file paths</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> - the number of file paths in <c>fileNames</c></para>
         /// <para>Returns the number of files copied to the <c>fileNames</c> array.</para>
         /// </summary>
-        NPPM_GETOPENFILENAMESPRIMARY = NPPMSG + 17,
+        NPPM_GETOPENFILENAMESPRIMARY_DEPRECATED = NPPMSG + 17,
+        [Obsolete("Replaced by NPPM_GETOPENFILENAMESPRIMARY_DEPRECATED", true)]
+        NPPM_GETOPENFILENAMESPRIMARY = NPPM_GETOPENFILENAMESPRIMARY_DEPRECATED,
         /// <summary>
-        /// BOOL NPPM_GETOPENFILENAMESSECOND(wchar_t** fileNames, int nbFileNames)<br/>
+        /// BOOL NPPM_GETOPENFILENAMESSECOND_DEPRECATED(wchar_t** fileNames, int nbFileNames)<br/>
         /// Get the full path names of all files currently open in the sub-view. The user must allocate a big enough <c>fileNames</c> array using <see cref="NPPM_GETNBOPENFILES"/>.
         /// <para>wParam (<see cref="UIntPtr"/>) [out]: <c>fileNames</c> - pre-allocated array of file paths</para>
         /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>nbFileNames</c> - the number of file paths in <c>fileNames</c></para>
         /// <para>Returns the number of files copied to the <c>fileNames</c> array.</para>
         /// </summary>
-        NPPM_GETOPENFILENAMESSECOND = NPPMSG + 18,
+        NPPM_GETOPENFILENAMESSECOND_DEPRECATED = NPPMSG + 18,
+        [Obsolete("Replaced by NPPM_GETOPENFILENAMESSECOND_DEPRECATED", true)]
+        NPPM_GETOPENFILENAMESSECOND = NPPM_GETOPENFILENAMESSECOND_DEPRECATED,
         /// <summary>
         /// HWND NPPM_CREATESCINTILLAHANDLE(0, HWND hParent)<br/>
         /// Get a handle to the active Scintilla control.
@@ -1254,6 +1290,17 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/d888fb5f1263f5ea036c610b6980e5c4381ce7eb">8.7.7</a>
         /// </remarks>
         NPPM_ADDSCNMODIFIEDFLAGS = NPPMSG + 117,
+        /// <summary>
+        /// ToolBarStatusType NPPM_GETTOOLBARICONSETCHOICE(0, 0)<br/>
+        /// Get the currently selected Notepad++ <a href="https://npp-user-manual.org/docs/preferences/#toolbar">toolbar icon set</a>.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: 0 (not used)</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: 0 (not used)</para>
+        /// <para>Returns a <see cref="ToolBarStatusType"/> value.</para>
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/5406b82">8.8.2</a>
+        /// </remarks>
+        NPPM_GETTOOLBARICONSETCHOICE = NPPMSG + 118,
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>

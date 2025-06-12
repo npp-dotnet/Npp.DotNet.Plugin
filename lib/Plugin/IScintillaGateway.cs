@@ -98,18 +98,11 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Retrieve a buffer of cells.
+        /// Returns the number of bytes in the buffer not including terminating NULs.
         /// (Scintilla feature 2778)
         /// </summary>
         /// <returns>The 64-bit number of bytes in the buffer, not including terminating NULs.</returns>
         long GetStyledText(TextRangeFull tr);
-
-        /// <summary>
-        /// Retrieve a buffer of cells.
-        /// Returns the number of bytes in the buffer not including terminating NULs.
-        /// (Scintilla feature 2015)
-        /// </summary>
-        [Obsolete("Use GetStyledText(Npp.DotNet.Plugin.TextRangeFull) instead")]
-        int GetStyledText(TextRange tr);
 
         /// <summary>Are there any redoable actions in the undo history? (Scintilla feature 2016)</summary>
         bool CanRedo();
@@ -822,10 +815,6 @@ namespace Npp.DotNet.Plugin
         /// <summary>Find some text in the document. (Scintilla feature 2196)</summary>
         long FindText(FindOption searchFlags, TextToFindFull ft);
 
-        /// <summary>Find some text in the document. (Scintilla feature 2150)</summary>
-        [Obsolete("Use FindText(Npp.DotNet.Plugin.FindOption, Npp.DotNet.Plugin.TextRangeFull) instead")]
-        int FindText(FindOption searchFlags, TextToFind ft);
-
         /// <summary>Retrieve the display line at the top of the display. (Scintilla feature 2152)</summary>
         Position GetFirstVisibleLine();
 
@@ -867,18 +856,11 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Retrieve a range of text.
+        /// Return the length of the text.
         /// (Scintilla feature 2039)
         /// </summary>
         /// <returns>The 64-bit length of the text.</returns>
         long GetTextRange(TextRangeFull tr);
-
-        /// <summary>
-        /// Retrieve a range of text.
-        /// Return the length of the text.
-        /// (Scintilla feature 2162)
-        /// </summary>
-        [Obsolete("Use GetTextRange(Npp.DotNet.Plugin.TextRangeFull) instead")]
-        int GetTextRange(TextRange tr);
 
         /// <summary>Draw the selection either highlighted or in normal (non-highlighted) style. (Scintilla feature 2163)</summary>
         void HideSelection(bool hide);

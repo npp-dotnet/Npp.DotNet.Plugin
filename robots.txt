@@ -4,9 +4,11 @@ User-agent: AI2Bot
 User-agent: Ai2Bot-Dolma
 User-agent: aiHitBot
 User-agent: Amazonbot
+User-agent: Andibot
 User-agent: anthropic-ai
 User-agent: Applebot
 User-agent: Applebot-Extended
+User-agent: bedrockbot
 User-agent: Brightbot 1.0
 User-agent: Bytespider
 User-agent: CCBot
@@ -23,6 +25,7 @@ User-agent: Diffbot
 User-agent: DOC
 User-agent: Download Ninja
 User-agent: DuckAssistBot
+User-agent: EchoboxBot
 User-agent: FacebookBot
 User-agent: Factset_spyderbot
 User-agent: fast
@@ -68,10 +71,16 @@ User-agent: omgilibot
 User-agent: Operator
 User-agent: Orthogaffe
 User-agent: PanguBot
+User-agent: Panscient
+User-agent: panscient.com
 User-agent: Perplexity-User
 User-agent: PerplexityBot
 User-agent: PetalBot
+User-agent: PhindBot
 User-agent: QualifiedBot
+User-agent: QuillBot
+User-agent: quillbot.com
+User-agent: SBIntuitionsBot
 User-agent: Scrapy
 User-agent: SemrushBot-OCOB
 User-agent: SemrushBot-SWA
@@ -92,6 +101,8 @@ User-agent: WebZIP
 User-agent: wget
 User-agent: wpbot
 User-agent: Xenu
+User-agent: YandexAdditional
+User-agent: YandexAdditionalBot
 User-agent: YouBot
 User-agent: Zao
 User-agent: Zealbot
