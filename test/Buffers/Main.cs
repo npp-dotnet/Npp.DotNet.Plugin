@@ -5,6 +5,7 @@
  */
 
 using System.Runtime.InteropServices;
+using Npp.DotNet.Plugin.Extensions;
 
 namespace Npp.DotNet.Plugin.Tests.Buffers
 {
