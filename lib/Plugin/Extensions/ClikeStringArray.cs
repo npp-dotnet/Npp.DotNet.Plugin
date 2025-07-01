@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using Npp.DotNet.Plugin.Extensions;
 
-namespace Npp.DotNet.Plugin
+namespace Npp.DotNet.Plugin.Extensions
 {
     public class ClikeStringArray : IDisposable
     {

@@ -1762,6 +1762,23 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/446cc980e871d04885f13055bb56acee820636c8">8.7</a>
         /// </remarks>
         NPPN_NATIVELANGCHANGED = NPPN_FIRST + 31,
+
+        /// <summary>
+        /// To notify plugins that the toolbar icon set selection has changed.
+        /// <example>
+        /// <code>
+        /// scnNotification->nmhdr.code = NPPN_TOOLBARICONSETCHANGED;
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp;
+        /// scnNotification->nmhdr.idFrom = iconSetChoice;
+        /// // where iconSetChoice could be 1 of 5 possible values:
+        /// // 0 (Fluent UI: small), 1 (Fluent UI: large), 2 (Filled Fluent UI: small), 3 (Filled Fluent UI: large) and 4 (Standard icons: small).
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <remarks>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/76b1cba609bc04127a748ff24cea6434ab00fc86">8.8.2</a>
+        /// </remarks>
+        NPPN_TOOLBARICONSETCHANGED = NPPN_FIRST + 32,
     }
 
     /// <summary>Enumerates the allowed values of the <c>whichPart</c> parameter of <see cref="NppMsg.NPPM_SETSTATUSBAR"/></summary>
