@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2016 Kasper B. Graversen <https://github.com/kbilsted>
  *                         2024 Mark Johnston Olson <https://github.com/molsonkiko>
  *                         2025 Robert Di Pardo <dipardo.r@gmail.com>
+ *                         2025 Mysterium <https://github.com/Mysterium-Mystery>
  *
  * SPDX-License-Identifier: Apache-2.0
  */
