@@ -125,7 +125,7 @@ namespace Npp.DotNet.Plugin
             byte[] textBuffer = new byte[length];
             fixed (byte* textPtr = textBuffer)
             {
-                SendMessage(_scintilla, msg, wParam, (IntPtr)textPtr);
+                SendMessage(_scintilla, msg, wParam == UIntPtr.Zero ? (UIntPtr)length : wParam, (IntPtr)textPtr);
                 return NullTerminatedBufferToString(textBuffer, encoding);
             }
         }
