@@ -5104,7 +5104,7 @@ namespace Npp.DotNet.Plugin
             int length = cp.GetByteCount(pszText);
             fixed (byte* pText = cp.GetBytes(pszText))
             {
-                return SendMessage(_scintilla, msg, (UIntPtr)length, (IntPtr)pText);
+                return SendMessage(_scintilla, msg, (UIntPtr)(length - cp.GetByteCount("\0")), (IntPtr)pText);
             }
         }
 
