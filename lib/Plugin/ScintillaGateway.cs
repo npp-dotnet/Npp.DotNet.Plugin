@@ -94,16 +94,30 @@ namespace Npp.DotNet.Plugin
             return x > 8 || (x == 8 && y >= 4);
         }
 
-        private static void PadBufferForScintilla5(SciMsg msg, int nullSize, ref int bufLength)
+        /// <summary>
+        /// Checks if <paramref name="msg"/> names a Scintilla API that was changed in 5.1.5.
+        /// If so, adds 1 to <paramref name="bufLength"/> and, if the API specifies that
+        /// a buffer length should be sent with the message, returns <see langword="true"/>.
+        /// </summary>
+        /// <param name="msg">Scintilla message to check.</param>
+        /// <param name="nullSize">Size in bytes of a single <c>NULL</c> in the active document's encoding.</param>
+        /// <param name="bufLength">The buffer length to be padded.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="bufLength"/> should be sent with the message, otherwise <see langword="false"/>.
+        /// </returns>
+        private static bool PadBufferForScintilla5(SciMsg msg, int nullSize, ref int bufLength)
         {
+            bool needsWPARAM = false;
             switch (msg)
             {
                 case SciMsg.SCI_GETTEXT:
                 case SciMsg.SCI_GETSELTEXT:
                 case SciMsg.SCI_GETCURLINE:
+                    needsWPARAM = msg != SciMsg.SCI_GETSELTEXT;
                     if (HasV5Apis()) bufLength += nullSize;
                     break;
             }
+            return needsWPARAM;
         }
 
         /// <summary>
@@ -122,11 +136,13 @@ namespace Npp.DotNet.Plugin
         private unsafe string GetNullStrippedStringFromMessageThatReturnsLength(SciMsg msg, Encoding encoding, UIntPtr wParam = default)
         {
             int length = SendMessage(_scintilla, msg, wParam, Unused).ToInt32();
-            PadBufferForScintilla5(msg, encoding.GetByteCount("\0"), ref length);
+            bool lengthIsWPARAM = PadBufferForScintilla5(msg, encoding.GetByteCount("\0"), ref length);
             byte[] textBuffer = new byte[length];
+            if (lengthIsWPARAM) // discount NULL from length
+                length -= encoding.GetByteCount("\0");
             fixed (byte* textPtr = textBuffer)
             {
-                SendMessage(_scintilla, msg, wParam == UIntPtr.Zero ? (UIntPtr)length : wParam, (IntPtr)textPtr);
+                SendMessage(_scintilla, msg, lengthIsWPARAM ? (UIntPtr)length : wParam, (IntPtr)textPtr);
                 return NullTerminatedBufferToString(textBuffer, encoding);
             }
         }
