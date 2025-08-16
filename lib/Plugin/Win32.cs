@@ -80,6 +80,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// Possible values of <see cref="ScrollInfo.fMask"/>.
         /// </summary>
+        [Flags]
         public enum ScrollInfoMask
         {
             /// <summary>

@@ -15,7 +15,7 @@ from itertools import takewhile
 import utils as u
 from get_sci_doc import ScintillaDefinitions, get_resource
 
-TAG='v8.8.2'
+TAG='v8.8.5'
 OUTPUT=os.path.join(os.path.dirname(__file__), '..', 'lib', 'Plugin', 'NppMenuCmdIds.cs')
 MENUCMDID_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/menuCmdID.h'
 RESOURCE_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/resource.h'

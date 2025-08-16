@@ -129,10 +129,9 @@ namespace Npp.DotNet.Plugin.Winforms
 		}
 
 		/// <summary>
-		/// Possible bit flags for the return value of <see cref="GetDeviceCaps"/>
+		/// Possible return values of <see cref="GetDeviceCaps"/>
 		/// when the <c>index</c> parameter is <see cref="DeviceCapability.TECHNOLOGY"/>.
 		/// </summary>
-		[Flags]
 		public enum DeviceTechnology : uint
 		{
 			///<summary>Vector plotter</summary>
@@ -176,6 +175,7 @@ namespace Npp.DotNet.Plugin.Winforms
 		/// Possible bit flags for the return value of <see cref="GetDeviceCaps"/>
 		/// when the <c>index</c> parameter is <see cref="DeviceCapability.RASTERCAPS"/>.
 		/// </summary>
+		[Flags]
 		public enum RasterCapability : uint
 		{
 			///<summary>Can do standard BLT</summary>

@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.8.2</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -535,7 +535,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.2</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1095,7 +1095,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.2</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
