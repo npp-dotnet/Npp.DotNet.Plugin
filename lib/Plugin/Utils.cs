@@ -41,26 +41,31 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>
-        /// if a menu item (for your plugin's drop-down menu) has a checkmark, check/uncheck it, and call its associated funcId.
+        /// Sets the menu state of the plugin command associated with <paramref name="funcId"/>, if any.
         /// </summary>
-        /// <param name="funcId">the index of the menu item of interest</param>
-        /// <param name="isChecked">whether the menu item should be checked</param>
+        /// <param name="funcId">Index within <see cref="PluginData.FuncItems"/> of the menu item to check/uncheck.</param>
+        /// <param name="isChecked">Whether the menu item should be checked or not.</param>
         public static void CheckMenuItem(int funcId, bool isChecked)
         {
-            _ = Win32.CheckMenuItem(
-                Win32.GetMenu(PluginData.NppData.NppHandle),
-                (PluginData.FuncItems?.Items?[funcId].CmdID).GetValueOrDefault(),
-                Win32.MF_BYCOMMAND | (isChecked ? Win32.MF_CHECKED : Win32.MF_UNCHECKED));
+            try
+            {
+                _ = Win32.SendMessage(PluginData.NppData.NppHandle,
+                    (uint)NppMsg.NPPM_SETMENUITEMCHECK,
+                    (uint)(PluginData.FuncItems?.Items?[funcId].CmdID).GetValueOrDefault(),
+                    isChecked ? 1 : 0);
+            }
+            finally { }
         }
 
         /// <summary>
-        /// if a menu item (for your plugin's drop-down menu) has a checkmark:<br></br>
-        /// - if it's checked, uncheck it<br></br>
-        /// - if it's unchecked, check it.
-        /// Either way, call its associated funcId.
+        /// If a menu item (in your plugin's drop-down menu) has a checkmark:
+        /// <list type="bullet">
+        /// <item><description>if it's checked, uncheck it</description></item>
+        /// <item><description>if it's unchecked, check it</description></item>
+        /// </list>
         /// </summary>
-        /// <param name="funcId">the index of the menu item of interest</param>
-        /// <param name="isCurrentlyChecked">whether the menu item is currently checked</param>
+        /// <param name="funcId">Index within <see cref="PluginData.FuncItems"/> of the menu item to check/uncheck.</param>
+        /// <param name="isCurrentlyChecked">Whether the menu item should be checked or not.</param>
         public static void CheckMenuItemToggle(int funcId, ref bool isCurrentlyChecked)
         {
             // toggle value

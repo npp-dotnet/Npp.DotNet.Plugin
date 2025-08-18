@@ -10,7 +10,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
 using Npp.DotNet.Plugin.Extensions;
-using Npp.DotNet.Plugin.Winforms;
 using Npp.DotNet.Plugin.Gui.Demo.Properties;
 using static Npp.DotNet.Plugin.Win32;
 using static Npp.DotNet.Plugin.Winforms.WinUser;
@@ -123,7 +122,7 @@ namespace Kbg.Demo.Namespace
         static bool doCloseTag = false;
         static string? sessionFilePath = null;
         internal static frmGoToLine? frmGoToLine = null;
-        static internal int idFrmGotToLine = -1;
+        static internal int idFrmGotToLine = -1, idDoCloseTag = -1;
 
         // toolbar icons
         internal static Bitmap? tbBmp_tbTab = null;
@@ -144,28 +143,19 @@ namespace Kbg.Demo.Namespace
             //
             // Firstly we get the parameters from your plugin config file (if any)
             //
-
-            // get path of plugin configuration
-            StringBuilder sbIniFilePath = new StringBuilder(MAX_PATH);
-            SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString();
-
             // if config path doesn't exist, we create it
-            if (!Directory.Exists(iniFilePath))
-            {
-                Directory.CreateDirectory(iniFilePath);
-            }
+            NppUtils.CreateConfigSubDirectoryIfNotExists();
 
             // make your plugin config file full file path name
-            iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
+            iniFilePath = Path.Combine(NppUtils.ConfigDirectory, PluginName + ".ini");
 
             // get the parameter value from plugin config
             doCloseTag = (GetPrivateProfileInt(sectionName, keyName, 0, iniFilePath) != 0);
 
             // with function :
-            // SetCommand(int index,                            // zero based number to indicate the order of command
+            // int SetCommand(                                  // returns: zero based number to indicate the order of command
             //            string commandName,                   // the command name that you want to see in plugin menu
-            //            NppFuncItemDelegate functionPointer,  // the symbol of function (function pointer) associated with this command. The body should be defined below. See Step 4.
+            //            PluginFunc functionPointer,           // function (function pointer) associated with this command. The body should be defined below. See Step 4.
             //            ShortcutKey *shortcut,                // optional. Define a shortcut to trigger this command
             //            bool check0nInit                      // optional. Make this menu item be checked visually
             //            );
@@ -182,7 +172,7 @@ namespace Kbg.Demo.Namespace
             Utils.SetCommand("Current File Name", insertCurrentFileName);
             Utils.SetCommand("Current Directory", insertCurrentDirectory);
             Utils.SetCommand("Date && Time - short format", insertShortDateTime);
-            Utils.SetCommand("Date && Time - long format", insertLongDateTime);
+            idDoCloseTag = Utils.SetCommand("Date && Time - long format", insertLongDateTime); // idDoCloseTag = 9
 
             Utils.SetCommand("Close HTML/XML tag automatically", checkInsertHtmlCloseTag, new ShortcutKey(false, true, false, Keys.Q), doCloseTag);
 
@@ -192,9 +182,9 @@ namespace Kbg.Demo.Namespace
             Utils.SetCommand("Get Session File Names Demo", getSessionFileNamesDemo);
             Utils.SetCommand("Save Current Session Demo", saveCurrentSessionDemo);
 
-            Utils.MakeSeparator();
+            idFrmGotToLine = Utils.MakeSeparator(); // idFrmGotToLine = 15;
 
-            Utils.SetCommand("Dockable Dialog Demo", DockableDlgDemo); idFrmGotToLine = 15;
+            Utils.SetCommand("Dockable Dialog Demo", DockableDlgDemo);
 
             Utils.MakeSeparator();
 
@@ -244,15 +234,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                 HToolbarIconDarkMode = (tbIcoDM?.Handle).GetValueOrDefault()   // icon with light grey lines
             };
 
-            // convert to c++ pointer
-            IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-            Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-
-            // call Notepad++ api
-            SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE, (uint)PluginData.FuncItems.Items[idFrmGotToLine].CmdID, pTbIcons);
-
-            // release pointer
-            Marshal.FreeHGlobal(pTbIcons);
+            PluginData.Notepad.AddToolbarIcon(idFrmGotToLine, tbIcons);
         }
 
         static internal void PluginCleanUp()
@@ -334,28 +316,19 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static void insertCurrentFullPath()
         {
-            insertCurrentPath(NppMsg.FULL_CURRENT_PATH);
+            insertCurrentPath(NppUtils.PathType.FULL_CURRENT_PATH);
         }
         static void insertCurrentFileName()
         {
-            insertCurrentPath(NppMsg.FILE_NAME);
+            insertCurrentPath(NppUtils.PathType.FILE_NAME);
         }
         static void insertCurrentDirectory()
         {
-            insertCurrentPath(NppMsg.CURRENT_DIRECTORY);
+            insertCurrentPath(NppUtils.PathType.DIRECTORY);
         }
-        static void insertCurrentPath(NppMsg which)
+        static void insertCurrentPath(NppUtils.PathType which)
         {
-            NppMsg msg = NppMsg.NPPM_GETFULLCURRENTPATH;
-            if (which == NppMsg.FILE_NAME)
-                msg = NppMsg.NPPM_GETFILENAME;
-            else if (which == NppMsg.CURRENT_DIRECTORY)
-                msg = NppMsg.NPPM_GETCURRENTDIRECTORY;
-
-            StringBuilder path = new StringBuilder(MAX_PATH);
-            SendMessage(PluginData.NppData.NppHandle, (uint)msg, 0, path);
-
-            PluginData.Editor.ReplaceSel(path.ToString());
+            PluginData.Editor.ReplaceSel(NppUtils.GetCurrentPath(which));
         }
 
         static void insertShortDateTime()
@@ -374,7 +347,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static void checkInsertHtmlCloseTag()
         {
-            Utils.CheckMenuItemToggle(9, ref doCloseTag); // 9 = menu item index
+            Utils.CheckMenuItemToggle(idDoCloseTag, ref doCloseTag); // 9 = menu item index
         }
 
         static readonly Regex regex = new Regex(@"[\._\-:\w]", RegexOptions.Compiled);
@@ -477,37 +450,20 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             // You can create your own non dockable dialog - in this case you don't nedd this demonstration.
             if (frmGoToLine == null)
             {
-                frmGoToLine = new frmGoToLine(PluginData.Editor);
-                NppTbData _nppTbData = new()
-                {
-                    HClient = frmGoToLine.Handle,
-                    PszName = "Go To Line #",
-                    // the dlgDlg should be the index of funcItem where the current function pointer is in
-                    // this case is 15.. so the initial value of funcItem[15].CmdID - not the updated internal one !
-                    DlgID = idFrmGotToLine,
-                    // define the default docking behaviour
-                    UMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR,
-                    HIconTab = (PluginData.Notepad.IsDarkModeEnabled() ? tbIcoDM?.Handle : tbIco?.Handle).GetValueOrDefault(),
-                    PszModuleName = $"{PluginName}.dll"
-                };
-                IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
-                Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
-
-                SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
-                // Following message will toogle both menu item state and toolbar button
-                SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETMENUITEMCHECK, (uint)PluginData.FuncItems.Items[idFrmGotToLine].CmdID, 1);
+                frmGoToLine = new frmGoToLine(PluginData.Editor,
+                    idFrmGotToLine,
+                    $"{PluginName}.dll",
+                    (PluginData.Notepad.IsDarkModeEnabled() ? tbIcoDM : tbIco)!);
             }
             else
             {
                 if (!frmGoToLine.Visible)
                 {
-                    SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DMMSHOW, 0, frmGoToLine.Handle);
-                    SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETMENUITEMCHECK, (uint)PluginData.FuncItems.Items[idFrmGotToLine].CmdID, 1);
+                    frmGoToLine.ShowDockingForm();
                 }
                 else
                 {
-                    SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_DMMHIDE, 0, frmGoToLine.Handle);
-                    SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETMENUITEMCHECK, (uint)PluginData.FuncItems.Items[idFrmGotToLine].CmdID, 0);
+                    frmGoToLine.HideDockingForm();
                 }
             }
             frmGoToLine.textBox1.Focus();

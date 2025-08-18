@@ -65,6 +65,8 @@ namespace Npp.DotNet.Plugin
 		bool DefaultModificationFlagsChanged();
 		/// <inheritdoc cref="NotepadPPGateway.IsDarkModeEnabled"/>
 		bool IsDarkModeEnabled();
+		/// <inheritdoc cref="NotepadPPGateway.AllocateIndicators"/>
+		bool AllocateIndicators(int numberOfIndicators, out int[] indicators);
 	}
 
 	/// <summary>
@@ -382,6 +384,45 @@ namespace Npp.DotNet.Plugin
 		public bool IsDarkModeEnabled()
 		{
 			return Win32.TRUE == (NativeBool)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ISDARKMODEENABLED);
+		}
+
+		/// <summary>
+		/// Allocates one or more unused indicator IDs, which can then be assigned styles and used to style regions of text.
+		/// <para>
+		/// See <see href="https://www.scintilla.org/ScintillaDoc.html#Indicators"/> for more info on the indicator API.
+		/// </para>
+		/// </summary>
+		/// <param name="numberOfIndicators">The number of consecutive indicator IDs to allocate.</param>
+		/// <param name="indicators">Target buffer of the allocated indicator IDs.</param>
+		/// <returns>
+		/// On success, the return value is <see langword="true"/> and <paramref name="indicators"/> will be initialzed with the
+		/// requested range of indicators. If <paramref name="numberOfIndicators"/> is less than 1, or the requested indicators
+		/// could not be allocated, <paramref name="indicators"/> is left empty and <see langword="false"/> is returned.
+		/// </returns>
+		/// <remarks>
+		/// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/de25873">8.5.6</a>
+		/// </remarks>
+		public bool AllocateIndicators(int numberOfIndicators, out int[] indicators)
+		{
+			indicators = default;
+			return numberOfIndicators >= 1 && DoAllocateIndicators(numberOfIndicators, out indicators);
+		}
+
+		unsafe bool DoAllocateIndicators(int nbIndicators, out int[] indicRng)
+		{
+			bool success = false;
+			indicRng = new int[nbIndicators];
+			fixed (int* indicRngPtr = indicRng)
+			{
+				IntPtr hresult =
+					Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_ALLOCATEINDICATOR,
+						(uint)nbIndicators, (IntPtr)indicRngPtr);
+				success = hresult != IntPtr.Zero;
+				if (success)
+					for (int i = 1; i < nbIndicators; i++)
+						indicRng[i] = indicRng[i - 1] + 1;
+			}
+			return success;
 		}
 	}
 }

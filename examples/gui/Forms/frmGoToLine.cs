@@ -6,19 +6,18 @@
  */
 
 using Npp.DotNet.Plugin;
-using Npp.DotNet.Plugin.Winforms;
 using Npp.DotNet.Plugin.Winforms.Classes;
-using System.Runtime.InteropServices;
-using static Npp.DotNet.Plugin.Win32;
+using Npp.DotNet.Plugin.Winforms.Extensions;
 using static Npp.DotNet.Plugin.Winforms.DarkMode;
 
 namespace Kbg.Demo.Namespace
 {
-    partial class frmGoToLine : FormBase
+    partial class frmGoToLine : DockingForm
     {
         private readonly IScintillaGateway editor;
 
-        public frmGoToLine(IScintillaGateway editor) : base(false, true)
+        public frmGoToLine(IScintillaGateway editor, int dlgID, string pluginName, Icon frmIcon)
+            : base(dlgID, pluginName, "Go To Line #", null, frmIcon)
         {
             this.editor = editor;
             InitializeComponent();
@@ -44,36 +43,6 @@ namespace Kbg.Demo.Namespace
             }
         }
 
-        /// <summary>
-        /// Intercepts the default WndProc to prevent an infinite redraw loop when the form undocks.
-        /// </summary>
-        /// <param name="wmNotifyMsg">A window notification message structure.</param>
-        /// <remarks>See <see href="https://sourceforge.net/p/notepad-plus/discussion/482781/thread/ab626469/#4458"/></remarks>
-        protected override void WndProc(ref Message wmNotifyMsg)
-        {
-            switch (wmNotifyMsg.Msg)
-            {
-                case WM_NOTIFY:
-                    TagNMHDR nmdr = Marshal.PtrToStructure<TagNMHDR>(wmNotifyMsg.LParam)!;
-
-                    if (nmdr.HwndFrom == PluginData.NppData.NppHandle)
-                    {
-                        switch ((DockMgrMsg)(nmdr.Code & 0xFFFFU))
-                        {
-                            case DockMgrMsg.DMN_DOCK:
-                                break;
-                            case DockMgrMsg.DMN_FLOAT:
-                                RemoveControlParent();
-                                break;
-                            case DockMgrMsg.DMN_CLOSE:
-                                break;
-                        }
-                    }
-                    break;
-            }
-            base.WndProc(ref wmNotifyMsg);
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             int line;
@@ -86,21 +55,17 @@ namespace Kbg.Demo.Namespace
 
         private void FrmGoToLineKeyUp(object sender, KeyEventArgs e)
         {
-            Callbacks.GenericKeyUpHandler(this, sender, e, this.IsModal);
+            this.GenericKeyUpHandler(sender, e);
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Callbacks.TextBoxKeyPressHandler(sender, e);
+            this.TextBoxKeyPressHandler(sender, e);
         }
 
         void FrmGoToLineVisibleChanged(object sender, EventArgs e)
         {
-            if (!Visible)
-            {
-                Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SETMENUITEMCHECK,
-                                  (uint)PluginData.FuncItems.Items[Main.idFrmGotToLine].CmdID, 0);
-            }
+            Utils.CheckMenuItem(ToolBarData.DlgID, Visible);
         }
     }
 }

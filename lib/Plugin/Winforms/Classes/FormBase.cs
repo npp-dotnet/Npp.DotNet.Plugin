@@ -7,23 +7,36 @@
 using System;
 using System.ComponentModel; // https://learn.microsoft.com/dotnet/core/compatibility/windows-forms/9.0/security-analyzers#new-behavior
 using System.Windows.Forms;
+using Npp.DotNet.Plugin.Winforms.Extensions;
 using static Npp.DotNet.Plugin.Win32;
 
 namespace Npp.DotNet.Plugin.Winforms.Classes
 {
+    enum DialogKind
+    {
+        PopUp, Docking, Modal
+    }
+
+    /// <summary>
+    /// Encapsulates the minimum required logic to create a functioning plugin dialog.
+    /// </summary>
+    /// <remarks>
+    /// Instances of this class cannot be created directly.
+    /// Create a <see cref="DockingForm"/> or a <see cref="ModalForm"/> instead.
+    /// </remarks>
     public partial class FormBase : Form
     {
         /// <summary>
         /// <see langword="true"/> if this form blocks the Notepad++ window until closed.
         /// </summary>
         [DefaultValue(false)]
-        public bool IsModal { get; private set; }
+        protected internal bool IsModal { get => _dialogKind == DialogKind.Modal; }
 
         /// <summary>
         /// <see langword="true"/> if this form's default appearance is docked (attached) to the left, right, bottom, or top of the Notepad++ window.
         /// </summary>
         [DefaultValue(false)]
-        public bool IsDocking { get; private set; }
+        protected internal bool IsDocking { get => _dialogKind == DialogKind.Docking; }
 
         /// <summary>
         /// <see langword="true"/> if this form is being shown for the first time.
@@ -36,6 +49,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
 
         private static WindowLongGetter WndLongGetter { get; set; } = GetWindowLongPtr;
         private static WindowLongSetter WndLongSetter { get; set; } = SetWindowLongPtr;
+        private readonly DialogKind _dialogKind;
 
         /// <summary>
         /// Handles the <see cref="NppMsg.NPPN_DARKMODECHANGED"/> notification.
@@ -50,17 +64,15 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// <summary>
         /// Ancestor class of all forms created by this plugin.
         /// </summary>
-        /// <param name="isModal">See <see cref="IsModal"/>.</param>
-        /// <param name="isDocking">See <see cref="IsDocking"/>.</param>
+        /// <param name="kind">The type of dialog this form represents.</param>
         /// <remarks>
         /// Implements many useful handlers, and deals with some weird behaviors induced by interoperating with Notepad++.
         /// </remarks>
-        public FormBase(bool isModal, bool isDocking)
+        private protected FormBase(DialogKind kind = default)
         {
+            _dialogKind = kind;
             InitializeComponent();
-            IsModal = isModal;
-            IsDocking = isDocking;
-            Callbacks.RegisterFormIfModeless(this, isModal);
+            RegisterFormIfModeless();
             if (!Environment.Is64BitProcess)
             {
                 WndLongGetter = GetWindowLong;
@@ -74,7 +86,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// <remarks>
         /// This is a "one-shot" handler; it exits early on every call but the first one.
         /// </remarks>
-        public virtual void FormBase_VisibleChanged(object sender, EventArgs e)
+        protected virtual void OnVisibleChanged(object sender, EventArgs e)
         {
             if (IsLoaded || !Visible)
                 return;
@@ -83,6 +95,28 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             //     because it must be called *after* the subclass constructor adds all child controls
             //     and the base constructor must be called first (that's just how C# works)
             AddKeyUpDownPressHandlers(this);
+        }
+
+        /// <summary>
+        /// When this form is initialized, and it's a modeless dialog (i.e., <see cref="IsModal"/> is
+        /// <see langword="false"/>), sends the <see cref="NppMsg.NPPM_MODELESSDIALOG"/> message with
+        /// <see cref="NppMsg.MODELESSDIALOGADD"/> to register this form.
+        /// </summary>
+        private void RegisterFormIfModeless()
+        {
+            if (!IsModal)
+                SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_MODELESSDIALOG, (uint)NppMsg.MODELESSDIALOGADD, Handle);
+        }
+
+        /// <summary>
+        /// When disposing this form, and it's a modeless dialog (i.e., <see cref="IsModal"/> is
+        /// <see langword="false"/>), sends the <see cref="NppMsg.NPPM_MODELESSDIALOG"/> message with
+        /// <see cref="NppMsg.MODELESSDIALOGREMOVE"/> to <em>un</em>register this form.
+        /// </summary>
+        private void UnregisterFormIfModeless()
+        {
+            if (!IsDisposed && !IsModal)
+                SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_MODELESSDIALOG, (uint)NppMsg.MODELESSDIALOGREMOVE, Handle);
         }
 
         /// <summary>
@@ -96,11 +130,11 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         private void AddKeyUpDownPressHandlers(Control ctrl)
         {
             ctrl = ctrl ?? this;
-            ctrl.KeyUp += (sender, e) => Callbacks.GenericKeyUpHandler(this, sender, e, IsModal);
+            ctrl.KeyUp += this.GenericKeyUpHandler;
             if (ctrl is TextBox tb)
-                tb.KeyPress += Callbacks.TextBoxKeyPressHandler;
+                tb.KeyPress += this.TextBoxKeyPressHandler;
             else
-                ctrl.KeyDown += Callbacks.GenericKeyDownHandler;
+                ctrl.KeyDown += this.GenericKeyDownHandler;
             if (ctrl.HasChildren)
             {
                 foreach (Control child in ctrl.Controls)
@@ -110,12 +144,12 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
 
         private void FormBase_KeyUp(object sender, KeyEventArgs e)
         {
-            Callbacks.GenericKeyUpHandler(this, sender, e, IsModal);
+            this.GenericKeyUpHandler(sender, e);
         }
 
         private void FormBase_KeyDown(object sender, KeyEventArgs e)
         {
-            Callbacks.GenericKeyDownHandler(sender, e);
+            this.GenericKeyDownHandler(sender, e);
         }
 
         /// <summary>

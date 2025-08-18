@@ -10,15 +10,10 @@ using System.Windows.Forms;
 namespace Npp.DotNet.Plugin.Winforms
 {
     /// <summary>
-    /// Provides readonly access to Notepad++'s GUI connector, with some additional helper methods.
+    /// Helper methods for interacting with Notepad++'s GUI.
     /// </summary>
-    public static class DialogUtils
+    public static partial class DialogUtils
     {
-        /// <summary>
-        /// Connector to Notepad++'s GUI.
-        /// </summary>
-        public static PluginDialogBase NotepadGUI { get; } = new PluginDialogBase();
-
         /// <summary>
         /// Gets a translucent <see cref="Color"/> from the RGB values of <paramref name="rgb"/> and the given <paramref name="alpha"/> value.
         /// </summary>
@@ -43,6 +38,33 @@ namespace Npp.DotNet.Plugin.Winforms
             int GetByte(uint n, int shift = 0) => unchecked(System.Convert.ToInt32(n >> shift)) & 0xFF;
         }
 
+        /// <summary>
+        /// Calls <see cref="NppMsg.NPPM_GETEDITORDEFAULTFOREGROUNDCOLOR"/> and converts the return value to a <see cref="Color"/>.
+        /// </summary>
+        public static Color GetDefaultForegroundColor()
+        {
+            var rawColor = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETEDITORDEFAULTFOREGROUNDCOLOR);
+            return Color.FromArgb(rawColor & 0xff, (rawColor >> 8) & 0xff, (rawColor >> 16) & 0xff);
+        }
+
+        /// <summary>
+        /// Calls <see cref="NppMsg.NPPM_GETEDITORDEFAULTBACKGROUNDCOLOR"/> and converts the return value to a <see cref="Color"/>.
+        /// </summary>
+        public static Color GetDefaultBackgroundColor()
+        {
+            var rawColor = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETEDITORDEFAULTBACKGROUNDCOLOR);
+            return Color.FromArgb(rawColor & 0xff, (rawColor >> 8) & 0xff, (rawColor >> 16) & 0xff);
+        }
+    }
+}
+
+namespace Npp.DotNet.Plugin.Winforms.Extensions
+{
+    /// <summary>
+    /// Additional safety wrappers for common user interactions.
+    /// </summary>
+    public static class DialogUtils
+    {
         /// <summary>
         /// Trying to copy an empty string or null to the clipboard raises an error.<br></br>
         /// This shows a message box if the user tries to do that.

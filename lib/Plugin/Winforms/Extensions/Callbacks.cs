@@ -5,11 +5,12 @@
  */
 
 using System.Windows.Forms;
+using Npp.DotNet.Plugin.Winforms.Classes;
 
-namespace Npp.DotNet.Plugin.Winforms
+namespace Npp.DotNet.Plugin.Winforms.Extensions
 {
     /// <summary>
-    /// Various methods that every new form in this app should call.
+    /// Extension methods available to all child classes of <see cref="FormBase"/>.
     /// </summary>
     public static class Callbacks
     {
@@ -17,7 +18,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// CALL THIS IN YOUR KeyDown HANDLER FOR ALL CONTROLS *except TextBoxes*<br></br>
         /// suppress annoying ding when user hits escape, enter, tab, or space
         /// </summary>
-        public static void GenericKeyDownHandler(object sender, KeyEventArgs e)
+        public static void GenericKeyDownHandler(this FormBase form, object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape || e.KeyCode == Keys.Tab || e.KeyCode == Keys.Space)
                 e.SuppressKeyPress = true;
@@ -27,7 +28,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// CALL THIS IN YOUR KeyDown HANDLER FOR ALL TextBoxes and ComboBoxes<br></br>
         /// suppress annoying ding when user hits tab
         /// </summary>
-        public static void TextBoxKeyPressHandler(object sender, KeyPressEventArgs e)
+        public static void TextBoxKeyPressHandler(this FormBase form, object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\t')
                 e.Handled = true;
@@ -45,8 +46,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// <param name="form"></param>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// <param name="isModal">if true, this blocks the parent application until closed. THIS IS ONLY TRUE OF POP-UP DIALOGS</param>
-        public static void GenericKeyUpHandler(Form form, object sender, KeyEventArgs e, bool isModal)
+        public static void GenericKeyUpHandler(this FormBase form, object sender, KeyEventArgs e)
         {
             // enter presses button
             if (e.KeyCode == Keys.Enter)
@@ -58,20 +58,20 @@ namespace Npp.DotNet.Plugin.Winforms
                     btn.PerformClick();
                 }
                 else
-                    PressEnterInTextBoxHandler(sender, isModal);
+                    PressEnterInTextBoxHandler(form, sender);
             }
             // Escape ->
             //     * if this.IsModal (meaning this is a pop-up dialog), close this.
             //     * otherwise, focus the editor component.
             else if (e.KeyData == Keys.Escape)
             {
-                if (isModal)
+                if (form.IsModal)
                     form.Close();
                 else
                     PluginData.Editor.GrabFocus();
             }
             // Tab -> go through controls, Shift+Tab -> go through controls backward
-            else if (e.KeyCode == Keys.Tab && isModal)
+            else if (e.KeyCode == Keys.Tab && form.IsModal)
             {
                 GenericTabNavigationHandler(form, sender, e);
             }
@@ -82,10 +82,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// Tab -> go through controls, Shift+Tab -> go through controls backward.<br></br>
         /// Ignores invisible or disabled controls.
         /// </summary>
-        /// <param name="form">the parent form</param>
-        /// <param name="sender">probably a control with a tabstop</param>
-        /// <param name="e">the key event that triggered this</param>
-        public static void GenericTabNavigationHandler(Form form, object sender, KeyEventArgs e)
+        public static void GenericTabNavigationHandler(this FormBase form, object sender, KeyEventArgs e)
         {
             if (sender is TextBox tb && tb.Parent is ListBox)
                 return; // ComboBoxes are secretly two controls in one (see https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.combobox?view=windowsdesktop-8.0)
@@ -103,12 +100,12 @@ namespace Npp.DotNet.Plugin.Winforms
         /// Note that this does not fully repair the functionality of the Enter key in a multiline text box,
         /// because only one newline can be created for a single keypress of Enter, no matter how long the key is held down.
         /// </summary>
+        /// <param name="form">the parent form</param>
         /// <param name="sender">the text box that sent the message</param>
-        /// <param name="isModal">if true, this blocks the parent application until closed. THIS IS ONLY TRUE OF POP-UP DIALOGS</param>
-        public static void PressEnterInTextBoxHandler(object sender, bool isModal)
+        static void PressEnterInTextBoxHandler(this FormBase form, object sender)
         {
 
-            if (!isModal && sender is TextBox tb && tb.Multiline)
+            if (!form.IsModal && sender is TextBox tb && tb.Multiline)
             {
                 int selstart = tb.SelectionStart;
                 tb.SelectedText = "";
@@ -118,45 +115,6 @@ namespace Npp.DotNet.Plugin.Winforms
                 tb.SelectionLength = 0;
                 tb.ScrollToCaret();
             }
-        }
-
-        /// <summary>
-        /// CALL THIS IN YOUR Dispose(bool disposing) METHOD, INSIDE OF THE ".Designer.cs" FILE<br></br>
-        /// When this form is initialized, *if it is a modeless dialog* (i.e., !isModal; the form does not block the parent application until closed)<br></br>
-        /// this will call Notepad++ with the NPPM_MODELESSDIALOG message to register the form.
-        /// <strong>VERY IMPORTANT: in your Designer.cs files, in the part where it says this.Controls.Add(nameOfControl),
-        /// you need to make sure the controls are added in tabstop order.</strong><br></br>
-        /// This is because the order in which the controls are added controls tab order.<br></br>
-        /// For example, if you want to go through your controls in the order<br></br>
-        /// 1. FooButton<br></br>
-        /// 2. BarTextBox<br></br>
-        /// 3. BazCheckBox<br></br>
-        /// You must go to your Designer.cs file and make sure that the Form adds the controls in this order:<br></br>
-        /// <code>
-        /// this.Controls.Add(this.FooButton);
-        /// this.Controls.Add(this.BarTextBox);
-        /// this.Controls.Add(this.BazCheckBox);
-        /// </code>
-        /// </summary>
-        /// <param name="form"></param>
-        /// <param name="isModal">if true, this blocks the parent application until closed. THIS IS ONLY TRUE OF POP-UP DIALOGS</param>
-        public static void RegisterFormIfModeless(Form form, bool isModal)
-        {
-            if (!isModal)
-                DialogUtils.NotepadGUI.AddModelessDialog(form.Handle);
-        }
-
-        /// <summary>
-        /// CALL THIS IN YOUR Dispose(bool disposing) METHOD, INSIDE OF THE ".Designer.cs" FILE<br></br>
-        /// If this was a modeless dialog (i.e., !isModal; a dialog that does not block Notepad++ while open),<br></br>
-        /// call Notepad++ with the NPPM_MODELESSDIALOG message to unregister the form.
-        /// </summary>
-        /// <param name="form"></param>
-        /// <param name="isModal">if true, this blocks the parent application until closed. THIS IS ONLY TRUE OF POP-UP DIALOGS</param>
-        public static void UnregisterFormIfModeless(Form form, bool isModal)
-        {
-            if (!form.IsDisposed && !isModal)
-                DialogUtils.NotepadGUI.RemoveModelessDialog(form.Handle);
         }
     }
 }
