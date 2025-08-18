@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <PackageReference Include="Figgle.Generator" Version="0.6.5" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="9.0.8" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
