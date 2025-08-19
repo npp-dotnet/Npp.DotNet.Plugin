@@ -19,7 +19,7 @@ namespace Npp.DotNet.Plugin
     /// Extracted and adapted for .NET SDK from <c>NppPluginNETHelper.cs</c>, part of
     /// <a href="https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/">NotepadPlusPlusPluginPack.Net</a>.
     /// </remarks>
-    public class PluginFuncArray : IDisposable
+    public sealed class PluginFuncArray : IDisposable
     {
         [DllImport("kernel32")]
         internal static extern void RtlMoveMemory(IntPtr Destination, IntPtr Source, int Length);

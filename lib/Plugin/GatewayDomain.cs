@@ -287,7 +287,7 @@ namespace Npp.DotNet.Plugin
         public char[] Value { get { return CharactersAndStyles; } }
     }
 
-    public class TextRangeFull : IDisposable
+    public sealed class TextRangeFull : IDisposable
     {
         Sci_TextRangeFull _sciTextRange;
         IntPtr _ptrSciTextRange;
@@ -347,7 +347,7 @@ namespace Npp.DotNet.Plugin
         }
     }
 
-    public class TextToFindFull : IDisposable
+    public sealed class TextToFindFull : IDisposable
     {
         Sci_TextToFindFull _sciTextToFind;
         IntPtr _ptrSciTextToFind;

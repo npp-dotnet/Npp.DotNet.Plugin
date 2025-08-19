@@ -240,6 +240,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
         static internal void PluginCleanUp()
         {
             WritePrivateProfileString(sectionName, keyName, doCloseTag ? "1" : "0", iniFilePath);
+            frmGoToLine?.Dispose();
         }
         #endregion
 

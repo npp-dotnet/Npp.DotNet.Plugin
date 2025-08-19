@@ -19,6 +19,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
     {
         private NppTbData _toolBarData = default;
         private readonly IntPtr _toolBarDataPtr = default;
+        private int _disposed = 0;
 
         /// <summary>
         /// Gets the <see cref="NppTbData"/> instance associated with this <see cref="DockingForm"/>.
@@ -143,5 +144,23 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             }
             base.WndProc(ref wmNotifyMsg);
         }
+
+        /// <summary>
+        /// Overrides <see cref="Control.Dispose(bool)"/> to perform thread-safe deallocation of unmanaged private data.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://learn.microsoft.com/dotnet/standard/garbage-collection/implementing-dispose"/>
+        /// </remarks>
+        protected override void Dispose(bool disposing)
+        {
+            if (System.Threading.Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
+            {
+                if (_toolBarDataPtr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(_toolBarDataPtr);
+            }
+            base.Dispose(disposing);
+        }
+
+        ~DockingForm() => Dispose(false);
     }
 }

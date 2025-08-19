@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Npp.DotNet.Plugin.Extensions
 {
-    public class ClikeStringArray : IDisposable
+    public sealed class ClikeStringArray : IDisposable
     {
         internal IntPtr _nativeArray;
         internal List<IntPtr> _nativeItems;
