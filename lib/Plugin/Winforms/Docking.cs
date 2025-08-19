@@ -77,12 +77,15 @@ namespace Npp.DotNet.Plugin.Winforms
     ///        {
     ///          switch ((DockMgrMsg)nmdr.Code)
     ///          {
+    ///            // this form is being docked
     ///            case DockMgrMsg.DMN_DOCK:
     ///              // ...
     ///              break;
+    ///            // this form is being *un*docked
     ///            case DockMgrMsg.DMN_FLOAT:
     ///              // ...
     ///              break;
+    ///            // this form is about to close
     ///            case DockMgrMsg.DMN_CLOSE:
     ///              // ...
     ///              break;
@@ -150,7 +153,7 @@ namespace Npp.DotNet.Plugin.Winforms
         /// </summary>
         public string PszName;
         /// <summary>
-        /// User-provided index of the plugin command associated with this toolbar item &#2014; <em>not to be confused with <see cref="FuncItem.CmdID"/></em>
+        /// User-provided index of the plugin command associated with this toolbar item &#x2014; <em>not to be confused with <see cref="FuncItem.CmdID"/></em>
         /// </summary>
         public int DlgID;
         /// <summary>

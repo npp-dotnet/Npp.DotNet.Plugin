@@ -22,8 +22,11 @@ namespace Npp.DotNet.Plugin.Extensions
 	/// </summary>
 	public interface ISettingsManager
 	{
+		/// <inheritdoc cref="DefaultSettings.Load"/>
 		void Load(string filePath = null);
+		/// <inheritdoc cref="DefaultSettings.Save"/>
 		void Save(string filePath = null);
+		/// <inheritdoc cref="DefaultSettings.OpenFile"/>
 		void OpenFile();
 	}
 

@@ -18,12 +18,24 @@ namespace Npp.DotNet.Plugin.Extensions
     /// </summary>
     public static class NppUtils
     {
+        /// <summary>
+        /// The major, minor and patch version numbers of the currently running edition of Notepad++.
+        /// </summary>
         public static readonly (int, int, int) NppVersion = PluginData.Notepad.GetNppVersion();
 
+        /// <summary>
+        /// The full version of the currently running edition of Notepad++, as a string.
+        /// </summary>
         public static readonly string NppVersionStr = NppVersionString(true);
 
+        /// <summary>
+        /// <see langword="true"/> if the currently running edition of Notepad+ is version 8.0.0 or newer.
+        /// </summary>
         public static readonly bool NppVersionAtLeast8 = NppVersion.Item1 >= 8;
 
+        /// <summary>
+        /// The full path to the common directory where plugin configuration files are saved.
+        /// </summary>
         public static string ConfigDirectory => PluginData.Notepad.GetConfigDirectory();
 
 #pragma warning disable CS1587
@@ -82,13 +94,12 @@ namespace Npp.DotNet.Plugin.Extensions
         }
 
         /// <summary>
-        /// append text to current doc, then append newline and move cursor
+        /// Appends the given text (with a newline) to the current buffer and moves the caret.
         /// </summary>
-        /// <param name="inp"></param>
-        public static void AddLine(string inp)
+        public static void AddLine(string text)
         {
             var editor = PluginData.Editor;
-            editor.AppendText($"{inp}{editor.LineDelimiter}");
+            editor.AppendTextAndMoveCursor($"{text}{editor.LineDelimiter}");
         }
 
         public enum PathType
@@ -99,13 +110,16 @@ namespace Npp.DotNet.Plugin.Extensions
         }
 
         /// <summary>
-        /// input is one of 'p', 'd', 'f'<br></br>
-        /// if 'p', get full path to current file (default)<br></br>
-        /// if 'd', get directory of current file<br></br>
-        /// if 'f', get filename of current file
+        /// Gets one of:
+        /// <list type="bullet">
+        /// <item><description>the full path of current file (default);</description></item>
+        /// <item><description>the full path to the directory of the current file; or,</description></item>
+        /// <item><description>the name of the current file</description></item>
+        /// </list>
         /// </summary>
-        /// <param name="which"></param>
-        /// <returns></returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if <paramref name="which"/> is not a value of <see cref="PathType"/>.
+        /// </exception>
         public static string GetCurrentPath(PathType which = PathType.FULL_CURRENT_PATH)
         {
             NppMsg msg = NppMsg.NPPM_GETFULLCURRENTPATH;
@@ -124,11 +138,9 @@ namespace Npp.DotNet.Plugin.Extensions
         }
 
         /// <summary>
-        /// Get the file type for a file path (no period)<br></br>
-        /// Default path is the currently open file.
+        /// Gets the file extension (not including the period) of the file at the given <paramref name="path"/>.
+        /// The currently active file is used if no path is given.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
         public static string FileExtension(string path = null)
         {
             path = (path != null) ? path : GetCurrentPath(PathType.FILE_NAME);
@@ -143,6 +155,9 @@ namespace Npp.DotNet.Plugin.Extensions
             return string.Join("", sb.ToString().ToCharArray().Reverse());
         }
 
+        /// <summary>
+        /// Creates the common directory where plugin configuration files are saved, if it doesn't already exist.
+        /// </summary>
         public static void CreateConfigSubDirectoryIfNotExists()
         {
             var ConfigDirInfo = new DirectoryInfo(PluginData.Notepad.GetConfigDirectory());
@@ -151,15 +166,12 @@ namespace Npp.DotNet.Plugin.Extensions
         }
 
         /// <summary>
-        /// get all text starting at position start in the current document
-        /// and ending at position end in the current document
+        /// Gets the range of text between the given <paramref name="start"/> position
+        /// and the given <paramref name="end"/> position in the current document.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static string GetSlice(long start, long end)
+        public static string GetSlice(Position start, Position end)
         {
-            long len = end - start;
+            Position len = end - start;
             var editor = PluginData.Editor;
             IntPtr rangePtr = editor.GetRangePointer(start, len);
             string ansi = Marshal.PtrToStringAnsi(rangePtr, unchecked(Convert.ToInt32(len)));
@@ -181,6 +193,10 @@ namespace Npp.DotNet.Plugin.Extensions
             return newlines[eolType];
         }
 
+        /// <summary>
+        /// Gets the full version of the currently running edition of Notepad++.
+        /// </summary>
+        /// <param name="include32bitVs64bit">Whether to include the CPU bitness.</param>
         private static string NppVersionString(bool include32bitVs64bit)
         {
             (int major, int minor, int revision) = NppVersion;

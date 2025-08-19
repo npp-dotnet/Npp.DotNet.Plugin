@@ -8,6 +8,9 @@ updates:
       - "/examples/minimal"
       - "/test/Buffers"
       - "/test/Memory"
+    ignore:
+      - dependency-name: "Microsoft.DotNet.ILCompiler"
+      - dependency-name: "Microsoft.NET.ILLink.Task"
     schedule:
       interval: "weekly"
     groups:

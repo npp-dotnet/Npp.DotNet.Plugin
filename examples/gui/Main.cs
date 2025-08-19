@@ -355,8 +355,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static internal void doInsertHtmlCloseTag(char newChar)
         {
-            LangType docType = LangType.L_TEXT;
-            SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETCURRENTLANGTYPE, 0, ref docType);
+            LangType docType = PluginData.Notepad.GetCurrentLanguage();
             bool isDocTypeHTML = (docType == LangType.L_HTML || docType == LangType.L_XML || docType == LangType.L_PHP);
 
             if (!doCloseTag || !isDocTypeHTML)

@@ -15,75 +15,26 @@ using System.Text;
 
 namespace Npp.DotNet.Plugin
 {
-	public interface INotepadPPGateway
-	{
-		/// <inheritdoc cref="NotepadPPGateway.FileNew"/>
-		void FileNew();
-		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, ToolbarIconDarkMode)"/>
-		void AddToolbarIcon(int funcItemsIndex, ToolbarIconDarkMode icon);
-		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, ToolbarIcon)"/>
-		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
-		void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon);
-		/// <inheritdoc cref="NotepadPPGateway.AddToolbarIcon(int, Bitmap)"/>
-		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
-		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
-		/// <inheritdoc cref="NotepadPPGateway.GetNppPath"/>
-		string GetNppPath();
-		/// <inheritdoc cref="NotepadPPGateway.GetPluginsHomePath"/>
-		string GetPluginsHomePath();
-		/// <inheritdoc cref="NotepadPPGateway.GetPluginConfigPath"/>
-		string GetPluginConfigPath();
-		/// <inheritdoc cref="NotepadPPGateway.GetSessionFilePath"/>
-		string GetSessionFilePath();
-		/// <inheritdoc cref="NotepadPPGateway.GetCurrentWord"/>
-		string GetCurrentWord();
-		/// <inheritdoc cref="NotepadPPGateway.GetCurrentLine"/>
-		string GetCurrentLine();
-		/// <inheritdoc cref="NotepadPPGateway.GetCurrentFilePath"/>
-		string GetCurrentFilePath();
-		/// <inheritdoc cref="NotepadPPGateway.GetFilePath"/>
-		string GetFilePath(UIntPtr bufferId);
-		/// <inheritdoc cref="NotepadPPGateway.GetNativeLanguage"/>
-		string GetNativeLanguage();
-		/// <inheritdoc cref="NotepadPPGateway.SetCurrentLanguage"/>
-		void SetCurrentLanguage(LangType language);
-		/// <inheritdoc cref="NotepadPPGateway.OpenFile"/>
-		bool OpenFile(string path);
-		/// <inheritdoc cref="NotepadPPGateway.SaveCurrentFile"/>
-		bool SaveCurrentFile();
-		/// <inheritdoc cref="NotepadPPGateway.GetConfigDirectory"/>
-		string GetConfigDirectory();
-		/// <inheritdoc cref="NotepadPPGateway.GetNppVersion"/>
-		(int, int, int) GetNppVersion();
-		/// <inheritdoc cref="NotepadPPGateway.GetOpenFileNames"/>
-		string[] GetOpenFileNames();
-		/// <inheritdoc cref="NotepadPPGateway.SetStatusBarSection"/>
-		void SetStatusBarSection(string message, StatusBarSection section);
-		/// <inheritdoc cref="NotepadPPGateway.SetModificationFlags"/>
-		void SetModificationFlags(ModificationFlags flags);
-		/// <inheritdoc cref="NotepadPPGateway.DefaultModificationFlagsChanged"/>
-		bool DefaultModificationFlagsChanged();
-		/// <inheritdoc cref="NotepadPPGateway.IsDarkModeEnabled"/>
-		bool IsDarkModeEnabled();
-		/// <inheritdoc cref="NotepadPPGateway.AllocateIndicators"/>
-		bool AllocateIndicators(int numberOfIndicators, out int[] indicators);
-	}
-
 	/// <summary>
 	/// Helpers for sending messages defined in <see cref="NppMsg"/>.
 	/// </summary>
-	public class NotepadPPGateway : INotepadPPGateway
+	public class NotepadPPGateway
 	{
-		protected const int Unused = 0;
-		protected const uint UnusedW = 0U;
+		private static readonly int Unused = 0;
+		private static readonly uint UnusedW = 0U;
+
+		/// <summary>
+		/// Sends the given <see cref="MenuCmdId"/> to the Notepad++ application window.
+		/// </summary>
+		protected void ExecuteMenuCommand(MenuCmdId cmdId)
+		{
+			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_MENUCOMMAND, UnusedW, (int)cmdId);
+		}
 
 		/// <summary>
 		/// Creates a new buffer by invoking the File - New menu command.
 		/// </summary>
-		public void FileNew()
-		{
-			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_MENUCOMMAND, UnusedW, MenuCmdId.IDM_FILE_NEW);
-		}
+		public void FileNew() => ExecuteMenuCommand(MenuCmdId.IDM_FILE_NEW);
 
 		/// <summary>
 		/// Associates the plugin command identified by <paramref name="funcItemsIndex"/>
@@ -107,11 +58,11 @@ namespace Npp.DotNet.Plugin
 			}
 		}
 
-#pragma warning disable CS0618
 		/// <summary>
 		/// Associates the plugin command identified by <paramref name="funcItemsIndex"/>
 		/// with the set of icons defined by the given <see cref="ToolbarIcon"/> instance.
 		/// </summary>
+		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		public void AddToolbarIcon(int funcItemsIndex, ToolbarIcon icon)
 		{
 			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf<ToolbarIcon>());
@@ -133,6 +84,7 @@ namespace Npp.DotNet.Plugin
 		/// <summary>
 		/// Associates the given bitmap with the plugin command identified by <paramref name="funcItemsIndex"/>.
 		/// </summary>
+		[Obsolete("Use AddToolbarIcon(System.Int32, Npp.DotNet.Plugin.ToolbarIconDarkMode) instead")]
 		public void AddToolbarIcon(int funcItemsIndex, Bitmap icon)
 		{
 			// The dark mode API requires a least one ICO, otherwise nothing will display
@@ -142,7 +94,6 @@ namespace Npp.DotNet.Plugin
 			};
 			AddToolbarIcon(funcItemsIndex, tbi);
 		}
-#pragma warning restore CS0618
 
 		/// <summary>
 		/// Gets the word currently under the caret.
@@ -258,6 +209,15 @@ namespace Npp.DotNet.Plugin
 		}
 
 		/// <summary>
+		/// Gets the syntax mode of the current buffer.
+		/// </summary>
+		public LangType GetCurrentLanguage()
+		{
+			Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETCURRENTLANGTYPE, UnusedW, out int langInt);
+			return (LangType)langInt;
+		}
+
+		/// <summary>
 		/// Sets the syntax mode of the current buffer to the given programming <paramref name="language"/>.
 		/// </summary>
 		public void SetCurrentLanguage(LangType language)
@@ -308,7 +268,7 @@ namespace Npp.DotNet.Plugin
 		public string[] GetOpenFileNames()
 		{
 			var fileList = new List<string>();
-			foreach (var viewType in new NppMsg[] { NppMsg.PRIMARY_VIEW, NppMsg.SECOND_VIEW } )
+			foreach (var viewType in new NppMsg[] { NppMsg.PRIMARY_VIEW, NppMsg.SECOND_VIEW })
 			{
 				int filesInView = (int)Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETNBOPENFILES, UnusedW, (int)viewType);
 				for (int i = 0; i < filesInView; i++)

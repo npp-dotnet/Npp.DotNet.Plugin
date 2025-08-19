@@ -96,7 +96,7 @@ namespace Npp.DotNet.Plugin
 
         /// <summary>
         /// Checks if <paramref name="msg"/> names a Scintilla API that was changed in 5.1.5.
-        /// If so, adds 1 to <paramref name="bufLength"/> and, if the API specifies that
+        /// If so, adds <paramref name="nullSize"/> to <paramref name="bufLength"/> and, if the API specifies that
         /// a buffer length should be sent with the message, returns <see langword="true"/>.
         /// </summary>
         /// <param name="msg">Scintilla message to check.</param>

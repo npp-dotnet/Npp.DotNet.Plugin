@@ -17,6 +17,10 @@ namespace Npp.DotNet.Plugin
     public static class PluginData
     {
         public static NppData NppData { get; set; }
+
+        /// <summary>
+        /// Gets a managed collection of all the commands provided by the plugin.
+        /// </summary>
         public static PluginFuncArray FuncItems { get => _funcArray = _funcArray ?? new PluginFuncArray(); }
 
         /// <summary>
@@ -25,9 +29,9 @@ namespace Npp.DotNet.Plugin
         public static IScintillaGateway Editor { get => new ScintillaGateway(Utils.GetCurrentScintilla()); }
 
         /// <summary>
-        /// Gets an instance of <see cref="INotepadPPGateway"/>.
+        /// Gets an instance of <see cref="NotepadPPGateway"/>.
         /// </summary>
-        public static INotepadPPGateway Notepad { get; } = new NotepadPPGateway();
+        public static NotepadPPGateway Notepad { get; } = new NotepadPPGateway();
 
         /// <summary>
         /// Provides global access to an allocated pointer to the plugin's name string.

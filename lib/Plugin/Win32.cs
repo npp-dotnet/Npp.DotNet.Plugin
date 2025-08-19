@@ -142,12 +142,6 @@ namespace Npp.DotNet.Plugin
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, UIntPtr wParam, out IntPtr lParam);
 
         /// <inheritdoc cref="SendMessage(IntPtr, uint, UIntPtr, string)"/>
-        public static IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, MenuCmdId lParam)
-        {
-            return SendMessage(hWnd, (UInt32)Msg, new UIntPtr(wParam), new IntPtr((uint)lParam));
-        }
-
-        /// <inheritdoc cref="SendMessage(IntPtr, uint, UIntPtr, string)"/>
         public static IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, IntPtr lParam)
         {
             return SendMessage(hWnd, Msg, new UIntPtr(wParam), lParam);
@@ -219,14 +213,6 @@ namespace Npp.DotNet.Plugin
         public static IntPtr SendMessage(IntPtr hWnd, SciMsg Msg, UIntPtr wParam, IntPtr lParam)
         {
             return SendMessage(hWnd, (uint)Msg, wParam, lParam);
-        }
-
-        /// <inheritdoc cref="SendMessage(IntPtr, uint, UIntPtr, string)"/>
-        public static IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, ref LangType lParam)
-        {
-            IntPtr retval = SendMessage(hWnd, Msg, new UIntPtr(wParam), out IntPtr outVal);
-            lParam = (LangType)outVal;
-            return retval;
         }
 
         /// <inheritdoc cref="SendMessage(IntPtr, uint, UIntPtr, string)"/>
