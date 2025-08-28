@@ -137,6 +137,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
                                 RemoveControlParent();
                                 break;
                             case DockMgrMsg.DMN_CLOSE:
+                                HideDockingForm();
                                 break;
                         }
                     }

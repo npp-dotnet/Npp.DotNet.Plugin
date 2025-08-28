@@ -76,7 +76,6 @@
 			this.Controls.Add(this.label1);
 			this.Name = "frmGoToLine";
 			this.Text = "NppDockableForm";
-			this.VisibleChanged += new System.EventHandler(this.FrmGoToLineVisibleChanged);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmGoToLineKeyUp);
 			this.ResumeLayout(false);
 			this.PerformLayout();

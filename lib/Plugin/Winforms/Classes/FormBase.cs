@@ -81,12 +81,13 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         }
 
         /// <summary>
-        /// Called when this form's visibility changes.
+        /// Attaches the key event handlers provided by <see cref="Callbacks"/> to this form, and, if applicable, to
+        /// each of its child components, recursively.
         /// </summary>
         /// <remarks>
         /// This is a "one-shot" handler; it exits early on every call but the first one.
         /// </remarks>
-        protected virtual void OnVisibleChanged(object sender, EventArgs e)
+        protected virtual void AttachEventHandlers()
         {
             if (IsLoaded || !Visible)
                 return;

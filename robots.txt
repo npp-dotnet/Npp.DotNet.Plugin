@@ -44,6 +44,7 @@ User-agent: FriendlyCrawler
 User-agent: Gemini-Deep-Research
 User-agent: Google-CloudVertexBot
 User-agent: Google-Extended
+User-agent: Google-Firebase
 User-agent: GoogleAgent-Mariner
 User-agent: GoogleOther
 User-agent: GoogleOther-Image
@@ -83,6 +84,7 @@ User-agent: OAI-SearchBot
 User-agent: Offline Explorer
 User-agent: omgili
 User-agent: omgilibot
+User-agent: OpenAI
 User-agent: Operator
 User-agent: Orthogaffe
 User-agent: PanguBot
@@ -104,6 +106,7 @@ User-agent: SemrushBot-CT
 User-agent: SemrushBot-OCOB
 User-agent: SemrushBot-SI
 User-agent: SemrushBot-SWA
+User-agent: ShapBot
 User-agent: Sidetrade indexer bot
 User-agent: sitecheck.internetseer.com
 User-agent: SiteSnagger

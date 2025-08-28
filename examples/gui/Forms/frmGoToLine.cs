@@ -62,10 +62,5 @@ namespace Kbg.Demo.Namespace
         {
             this.TextBoxKeyPressHandler(sender, e);
         }
-
-        void FrmGoToLineVisibleChanged(object sender, EventArgs e)
-        {
-            Utils.CheckMenuItem(ToolBarData.DlgID, Visible);
-        }
     }
 }
