@@ -160,14 +160,14 @@ namespace Npp.DotNet.Plugin
 
 		/// <returns>The path to the Notepad++ executable.</returns>
 		public string GetNppPath()
-			=> GetString(NppMsg.NPPM_GETNPPDIRECTORY);
+			=> GetUnicodeString(NppMsg.NPPM_GETNPPDIRECTORY);
 
 		/// <returns>The path to the top directory of all installed plugins.</returns>
 		public string GetPluginsHomePath()
 			=> GetString(NppMsg.NPPM_GETPLUGINHOMEPATH);
 
 		/// <returns>The path to the Config folder for plugins.</returns>
-		public string GetPluginConfigPath()
+		public string GetConfigDirectory()
 			=> GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 
 		/// <returns>The path to <c>session.xml</c>.</returns>
@@ -233,15 +233,6 @@ namespace Npp.DotNet.Plugin
 		{
 			IntPtr result = Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_SAVECURRENTFILEAS);
 			return result.ToInt32() == 1;
-		}
-
-		/// <summary>
-		/// Figure out default N++ config file path<br></br>
-		/// Path is usually <c>%UserProfile%\AppData\Roaming\Notepad++\plugins\config</c>
-		/// </summary>
-		public string GetConfigDirectory()
-		{
-			return GetString(NppMsg.NPPM_GETPLUGINSCONFIGDIR);
 		}
 
 		/// <returns>
