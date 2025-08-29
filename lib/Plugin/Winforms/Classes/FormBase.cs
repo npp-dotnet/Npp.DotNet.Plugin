@@ -21,7 +21,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
     /// Encapsulates the minimum required logic to create a functioning plugin dialog.
     /// </summary>
     /// <remarks>
-    /// Instances of this class cannot be created directly.
+    /// Instances of this class should not be created directly.
     /// Create a <see cref="DockingForm"/> or a <see cref="ModalForm"/> instead.
     /// </remarks>
     public partial class FormBase : Form
@@ -60,6 +60,15 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         /// Deriving classes should ensure all components have been initialized before calling this method.
         /// </remarks>
         public virtual void ToggleDarkMode(bool isDark) { }
+
+        /// <summary>
+        /// Creates a new, non-modal instance of <see cref="FormBase"/> with no docking capability.
+        /// </summary>
+        /// <remarks>
+        /// This constructor is provided only to satisfy the Visual Studio Designer.
+        /// </remarks>
+        [Obsolete("Your plugin dialog should inherit from `DockingForm` or `ModalForm` instead")]
+        public FormBase() : this(DialogKind.PopUp) { }
 
         /// <summary>
         /// Ancestor class of all forms created by this plugin.

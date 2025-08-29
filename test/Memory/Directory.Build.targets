@@ -7,7 +7,13 @@
 		<BuildNeeded Condition="!Exists('$(PluginRoot)\bin\$(SharedConfiguration)\$(SharedFramework)\$(SharedRuntimeIdentifier)\native\$(NativeTarget).dll')">true</BuildNeeded>
 	</PropertyGroup>
 
-	<Target Name="GenerateNativeModule" AfterTargets="BeforeBuild">
+	<Target Name="BuildLibrary" AfterTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+		<MSBuild Projects="$(LibraryRoot)\Npp.DotNet.csproj"
+				Targets="Restore;Build"
+				Properties="Configuration=$(SharedConfiguration);RuntimeIdentifier=$(SharedRuntimeIdentifier);TargetFramework=$(SharedFramework)" />
+	</Target>
+
+	<Target Name="GenerateNativeModule" AfterTargets="BuildLibrary">
 		<MSBuild Projects="$(PluginRoot)\$(NativeTarget).csproj"
 				Targets="Restore;Rebuild"
 				Properties="Configuration=$(SharedConfiguration);RuntimeIdentifier=$(SharedRuntimeIdentifier);TargetFramework=$(SharedFramework)" />

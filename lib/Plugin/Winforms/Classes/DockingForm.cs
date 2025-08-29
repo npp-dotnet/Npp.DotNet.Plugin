@@ -27,6 +27,15 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         protected NppTbData ToolBarData { get => _toolBarData; }
 
         /// <summary>
+        /// Creates a new, uninitialized <see cref="DockingForm"/> with no toolbar data.
+        /// </summary>
+        /// <remarks>
+        /// This constructor is provided only to satisfy the Visual Studio Designer.
+        /// </remarks>
+        [Obsolete("Use DockingForm(System.Int32, System.String, [System.String], [System.String], [System.Drawing.Icon], [Npp.DotNet.Plugin.Winforms.NppTbMsg]) instead")]
+        public DockingForm() : base(DialogKind.Docking) { }
+
+        /// <summary>
         /// Creates a new <see cref="DockingForm"/>, setting the item index of the associated plugin
         /// command to <paramref name="funcIndex"/>, and the plugin DLL name to <paramref name="dllName"/>.
         /// <para>

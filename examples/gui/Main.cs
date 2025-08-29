@@ -466,7 +466,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
                     frmGoToLine.HideDockingForm();
                 }
             }
-            frmGoToLine.textBox1.Focus();
+            frmGoToLine.textBox1?.Focus();
         }
 
         static void PrintNanInf()

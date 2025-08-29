@@ -46,7 +46,10 @@
     <SelfContained>true</SelfContained>
     <StackTraceSupport>false</StackTraceSupport>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <MetricsSupport>false</MetricsSupport>
+    <DebuggerSupport>false</DebuggerSupport>
     <IlcTrimMetadata>true</IlcTrimMetadata>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
     <OptimizationPreference>Size</OptimizationPreference>

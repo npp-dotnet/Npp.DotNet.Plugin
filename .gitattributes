@@ -2,12 +2,20 @@
 # SPDX-License-Identifier: CC0-1.0
 
 * text=auto
+.[gG][iI][tT]*                  text eol=lf
+.*[cC][oO][nN][fF][iI][gG]      text eol=lf
+*.[mM]*[dD]                     text eol=lf
+*.[tT][xX][tT]                  text eol=lf
+*.[yY][mM][lL]                  text eol=lf
+*.[jJ][sS][oO][nN]              text eol=lf
+*.[tT][oO][mM][lL]              text eol=lf
 *[xX][mM][lL]                   text eol=crlf
 *.[iI][nN][iI]                  text eol=crlf
 *.[cC][sS]                      text eol=crlf
 *.[cC][xX][xX]                  text eol=crlf
 *.[sS][lL][nN]                  text eol=crlf
 *.[rR][eE][sS][xX]              text eol=crlf
+*.[uU][sS][eE][rR]              text eol=crlf
 *.[pP][rR][oO][pP][sS]          text eol=crlf
 *.[cC][sS][pP][rR][oO][jJ]      text eol=crlf
 *.[vV][cC][xX][pP][rR][oO][jJ]  text eol=crlf
