@@ -5,6 +5,7 @@
  */
 
 using Figgle;
+using Npp.DotNet.Plugin.Extensions;
 using System.Runtime.InteropServices;
 using static System.Diagnostics.FileVersionInfo;
 using static Npp.DotNet.Plugin.Win32;
@@ -122,12 +123,12 @@ namespace Npp.DotNet.Plugin.Demo
             var curfile = PluginData.Notepad.GetCurrentFilePath();
             PluginData.Notepad.FileNew();
             editor.SetText(HelloTo.Replace("\r\n", eol));
-            editor.AppendText(string.Format("{0}{1}", HelloFrom.Replace("\r\n", eol), eol));
+            NppUtils.AddLine(HelloFrom.Replace("\r\n", eol));
             // Validate bug fixes: https://github.com/npp-dotnet/Npp.DotNet.Plugin/issues/32
-            editor.AppendText(new string('=', 50) + eol);
+            NppUtils.AddLine(new string('=', 50));
             if (!string.IsNullOrEmpty(curLine))
-                editor.AppendTextAndMoveCursor(string.Format("Active line in file {0}: \"{1}\"{2}", curfile, curLine.Trim(), eol));
-            editor.AppendTextAndMoveCursor(string.Format("There are {0:N0} characters above this line{1}", editor.GetText().Length, eol));
+                NppUtils.AddLine(string.Format("Active line in file {0}: \"{1}\"", curfile, curLine.Trim()));
+            NppUtils.AddLine(string.Format("There are {0:N0} characters above this line", editor.GetText().Length));
             editor.GotoPos(editor.GetTextLength());
         }
 
@@ -164,6 +165,7 @@ namespace Npp.DotNet.Plugin.Demo
         private static readonly PluginOptions Config;
         private static readonly PluginMenuTitles MenuTitles;
 
+        /// <inheritdoc cref="NppUtils.AssemblyVersionString"/>
         private static string AssemblyVersionString
         {
             get
