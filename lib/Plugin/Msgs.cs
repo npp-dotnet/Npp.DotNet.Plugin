@@ -1256,9 +1256,9 @@ namespace Npp.DotNet.Plugin
         NPPM_GETNATIVELANGFILENAME = NPPMSG + 116,
         /// <summary>
         /// BOOL NPPM_ADDSCNMODIFIEDFLAGS(0, unsigned long scnMotifiedFlags2Add)<br/>
-        /// Add the necessary <see cref="ModificationFlags"/> so that your plugin will receive additional <see cref="SciMsg.SCN_MODIFIED"/> notifications.
+        /// Add the necessary <see cref="Scintilla.ModificationFlags"/> so that your plugin will receive additional <see cref="SciMsg.SCN_MODIFIED"/> notifications.
         /// <para>wParam (<see cref="UIntPtr"/>) [in]: 0 (not used)</para>
-        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>scnMotifiedFlags2Add</c> - <see cref="ModificationFlags"/> to add</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [in]: <c>scnMotifiedFlags2Add</c> - <see cref="Scintilla.ModificationFlags"/> to add</para>
         /// <example>
         /// Example
         /// <code>
@@ -1282,8 +1282,8 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         /// <remarks>
         /// <para>
-        /// By default, Notepad++ only forwards the 5 flags/events in <see cref="ModificationFlags.NPP_DEFAULT_SC_MOD_MASK"/>.
-        /// If your plugin needs to process other <see cref="ModificationFlags"/> events, you should add the required flags by sending this message
+        /// By default, Notepad++ only forwards the 5 flags/events in <see cref="Scintilla.ModificationFlags.NPP_DEFAULT_SC_MOD_MASK"/>.
+        /// If your plugin needs to process other <see cref="Scintilla.ModificationFlags"/> events, you should add the required flags by sending this message
         /// <em>after</em> the <see cref="NPPN_READY"/> notification has been sent, or only when your plugin needs to listen to specific events
         /// (to avoid penalizing Notepad++'s performance). Just ensure this message is sent only once.
         /// </para>

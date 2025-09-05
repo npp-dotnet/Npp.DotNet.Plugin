@@ -10,10 +10,13 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Npp.DotNet.Plugin.Scintilla;
 using static Npp.DotNet.Plugin.Win32;
 
 namespace Npp.DotNet.Plugin
 {
+    using Accessibility = Scintilla.Accessibility;
+
     /// <inheritdoc cref="IScintillaGateway"/>
     public class ScintillaGateway : IScintillaGateway
     {

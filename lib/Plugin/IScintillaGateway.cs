@@ -6,10 +6,13 @@
  */
 
 using System;
+using Npp.DotNet.Plugin.Scintilla;
 using static Npp.DotNet.Plugin.Win32;
 
 namespace Npp.DotNet.Plugin
 {
+    using Accessibility = Scintilla.Accessibility;
+
     /// <summary>
     /// Primary interface to Notepad++/Scintilla.
     ///

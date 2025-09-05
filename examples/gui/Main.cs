@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Npp.DotNet.Plugin;
+using Npp.DotNet.Plugin.Scintilla;
 using Npp.DotNet.Plugin.Extensions;
 using Npp.DotNet.Plugin.Gui.Demo.Properties;
 using static Npp.DotNet.Plugin.Win32;
