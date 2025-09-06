@@ -7,9 +7,20 @@ Npp.DotNet.Plugin
 A .NET (Core) library for developing Notepad++ plugins
 
 
-### Getting started
+### Quick start
 
-Install the [.NET SDK](https://dotnet.microsoft.com/download) and create a new library project, e.g.,
+Install the [.NET SDK](https://dotnet.microsoft.com/download), then install the [`Npp.DotNet.Templates`] package:
+
+    dotnet new install Npp.DotNet.Templates
+
+Create a new plugin project by running [`dotnet new`] `<template> --name <your_project_name>`
+
+Open `<your_project_name>/README.md` for build instructions.
+
+
+### Building a plugin from scratch
+
+First, create a new library project, e.g.,
 
     dotnet new classlib --name YourPluginProject
 
@@ -198,3 +209,5 @@ See the [COPYING] and [NOTICE] files for complete details regarding source code 
 [NOTICE]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/NOTICE.txt
 [Current Version]: https://img.shields.io/nuget/vpre/Npp.DotNet.Plugin?color=blueviolet&logo=nuget
 [nuget-org]: https://www.nuget.org/packages/Npp.DotNet.Plugin
+[`Npp.DotNet.Templates`]: https://www.nuget.org/packages/Npp.DotNet.Templates
+[`dotnet new`]: https://learn.microsoft.com/dotnet/core/tools/dotnet-new
