@@ -378,7 +378,7 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
             using (TextRangeFull tr = new(startPos, currentPos, bufCapacity))
             {
-                editor.GetTextRange(tr);
+                editor.GetTextRangeFull(tr);
                 string buf = tr.LpStrText!;
 
                 if (buf[size - 2] == '/')

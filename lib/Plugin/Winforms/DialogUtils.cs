@@ -17,9 +17,9 @@ namespace Npp.DotNet.Plugin.Winforms
         /// <summary>
         /// Gets a translucent <see cref="Color"/> from the RGB values of <paramref name="rgb"/> and the given <paramref name="alpha"/> value.
         /// </summary>
-        /// <param name="rgb">A <see cref="Scintilla.Colour"/> representing a 24-bit opaque color.</param>
+        /// <param name="rgb">A <see cref="Scintilla.ColourAlpha"/> representing a 24-bit opaque color.</param>
         /// <param name="alpha">The alpha component of the returned <see cref="Color"/>.</param>
-        public static Color GetColorAlpha(Scintilla.Colour rgb, int alpha = 0xff)
+        public static Color GetColorAlpha(Scintilla.ColourAlpha rgb, int alpha = 0xff)
         {
             return Color.FromArgb(alpha, rgb.Red, rgb.Green, rgb.Blue);
         }

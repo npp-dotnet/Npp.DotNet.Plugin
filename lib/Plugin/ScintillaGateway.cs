@@ -16,6 +16,7 @@ using static Npp.DotNet.Plugin.Win32;
 namespace Npp.DotNet.Plugin
 {
     using Accessibility = Scintilla.Accessibility;
+    using Colour = ColourAlpha;
 
     /// <inheritdoc cref="IScintillaGateway"/>
     public class ScintillaGateway : IScintillaGateway
@@ -265,9 +266,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Returns the number of bytes in the document. (Scintilla feature 2006)</summary>
-        public long GetLength()
+        public Position GetLength()
         {
-            return (long)SendMessage(_scintilla, SciMsg.SCI_GETLENGTH, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETLENGTH, UnusedW, Unused);
         }
 
         /// <summary>Returns the character byte at the position. (Scintilla feature 2007)</summary>
@@ -292,6 +293,12 @@ namespace Npp.DotNet.Plugin
         public int GetStyleAt(Position pos)
         {
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEAT, (UIntPtr)pos, Unused);
+        }
+
+        /// <summary>Returns the unsigned style byte at the position. (Scintilla feature 2038)</summary>
+        public int GetStyleIndexAt(Position pos)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEINDEXAT, (UIntPtr)pos, Unused);
         }
 
         /// <summary>Redoes the next action on the undo history. (Scintilla feature 2011)</summary>
@@ -327,13 +334,13 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>
-        /// Retrieve a buffer of cells.
+        /// Retrieve a buffer of cells that can be past 2GB.
+        /// Returns the number of bytes in the buffer not including terminating NULs.
         /// (Scintilla feature 2778)
         /// </summary>
-        /// <returns>The 64-bit number of bytes in the buffer, not including terminating NULs.</returns>
-        public long GetStyledText(TextRangeFull tr)
+        public Position GetStyledTextFull(TextRangeFull tr)
         {
-            return (long)SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXTFULL, UnusedW, tr.NativePointer);
+            return SendMessage(_scintilla, SciMsg.SCI_GETSTYLEDTEXTFULL, UnusedW, tr.NativePointer);
         }
 
         /// <summary>Are there any redoable actions in the undo history? (Scintilla feature 2016)</summary>
@@ -343,15 +350,27 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieve the line number at which a particular marker is located. (Scintilla feature 2017)</summary>
-        public int MarkerLineFromHandle(int markerHandle)
+        public Position MarkerLineFromHandle(int markerHandle)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERLINEFROMHANDLE, (UIntPtr)markerHandle, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_MARKERLINEFROMHANDLE, (UIntPtr)markerHandle, Unused);
         }
 
         /// <summary>Delete a marker. (Scintilla feature 2018)</summary>
         public void MarkerDeleteHandle(int markerHandle)
         {
             SendMessage(_scintilla, SciMsg.SCI_MARKERDELETEHANDLE, (UIntPtr)markerHandle, Unused);
+        }
+
+        /// <summary>Retrieve marker handles of a line (Scintilla feature 2732)</summary>
+        public int MarkerHandleFromLine(Position line, int which)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERHANDLEFROMLINE, (UIntPtr)line, (IntPtr)which);
+        }
+
+        /// <summary>Retrieve marker number of a marker handle (Scintilla feature 2733)</summary>
+        public int MarkerNumberFromLine(Position line, int which)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERNUMBERFROMLINE, (UIntPtr)line, (IntPtr)which);
         }
 
         /// <summary>Is undo history being collected? (Scintilla feature 2019)</summary>
@@ -393,9 +412,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Find the position from a point within the window. (Scintilla feature 2022)</summary>
-        public int PositionFromPoint(int x, int y)
+        public Position PositionFromPoint(int x, int y)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONFROMPOINT, (UIntPtr)x, (IntPtr)y);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONFROMPOINT, (UIntPtr)x, (IntPtr)y);
         }
 
         /// <summary>
@@ -403,9 +422,9 @@ namespace Npp.DotNet.Plugin
         /// INVALID_POSITION if not close to text.
         /// (Scintilla feature 2023)
         /// </summary>
-        public int PositionFromPointClose(int x, int y)
+        public Position PositionFromPointClose(int x, int y)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONFROMPOINTCLOSE, (UIntPtr)x, (IntPtr)y);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONFROMPOINTCLOSE, (UIntPtr)x, (IntPtr)y);
         }
 
         /// <summary>Set caret to start of a line and ensure it is visible. (Scintilla feature 2024)</summary>
@@ -472,7 +491,7 @@ namespace Npp.DotNet.Plugin
         /// </summary>
         public void StartStyling(Position start, int unused)
         {
-            SendMessage(_scintilla, SciMsg.SCI_STARTSTYLING, (UIntPtr)start, Unused);
+            SendMessage(_scintilla, SciMsg.SCI_STARTSTYLING, (UIntPtr)start, (IntPtr)unused);
         }
 
         /// <summary>
@@ -513,6 +532,18 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETTABWIDTH, UnusedW, Unused);
         }
 
+        /// <summary>Set the minimum visual width of a tab. (Scintilla feature 2724)</summary>
+        public void SetTabMinimumWidth(int pixels)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETTABMINIMUMWIDTH, (UIntPtr)pixels, Unused);
+        }
+
+        /// <summary>Get the minimum visual width of a tab. (Scintilla feature 2725)</summary>
+        public int GetTabMinimumWidth()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETTABMINIMUMWIDTH, UnusedW, Unused);
+        }
+
         /// <summary>Clear explicit tabstops on a line. (Scintilla feature 2675)</summary>
         public void ClearTabStops(Position line)
         {
@@ -541,13 +572,25 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_SETCODEPAGE, (UIntPtr)codePage, Unused);
         }
 
+        /// <summary>Set the locale for displaying text. (Scintilla feature 2760)</summary>
+        public void SetFontLocale(string localeName)
+        {
+            SendEncodedBytes(SciMsg.SCI_SETFONTLOCALE, localeName, UnusedW);
+        }
+
+        /// <summary>Get the locale for displaying text. (Scintilla feature 2761)</summary>
+        public string GetFontLocale()
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETFONTLOCALE, Encoding.UTF8);
+        }
+
         /// <summary>Is the IME displayed in a window or inline? (Scintilla feature 2678)</summary>
         public IMEInteraction GetIMEInteraction()
         {
             return (IMEInteraction)SendMessage(_scintilla, SciMsg.SCI_GETIMEINTERACTION, UnusedW, Unused);
         }
 
-        /// <summary>Choose to display the the IME in a winow or inline. (Scintilla feature 2679)</summary>
+        /// <summary>Choose to display the IME in a window or inline. (Scintilla feature 2679)</summary>
         public void SetIMEInteraction(IMEInteraction imeInteraction)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETIMEINTERACTION, (UIntPtr)imeInteraction, Unused);
@@ -562,22 +605,46 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set the foreground colour used for a particular marker number. (Scintilla feature 2041)</summary>
         public void MarkerSetFore(int markerNumber, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_MARKERSETFORE, (UIntPtr)markerNumber, fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETFORE, (UIntPtr)markerNumber, (IntPtr)fore.Value);
         }
 
         /// <summary>Set the background colour used for a particular marker number. (Scintilla feature 2042)</summary>
         public void MarkerSetBack(int markerNumber, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACK, (UIntPtr)markerNumber, back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACK, (UIntPtr)markerNumber, (IntPtr)back.Value);
         }
 
         /// <summary>Set the background colour used for a particular marker number when its folding block is selected. (Scintilla feature 2292)</summary>
         public void MarkerSetBackSelected(int markerNumber, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACKSELECTED, (UIntPtr)markerNumber, back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACKSELECTED, (UIntPtr)markerNumber, (IntPtr)back.Value);
         }
 
-        /// <summary>Enable/disable highlight for current folding bloc (smallest one that contains the caret) (Scintilla feature 2293)</summary>
+        /// <summary>Set the foreground colour used for a particular marker number. (Scintilla feature 2294)</summary>
+        public void MarkerSetForeTranslucent(int markerNumber, ColourAlpha fore)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETFORETRANSLUCENT, (UIntPtr)markerNumber, (IntPtr)fore.Value);
+        }
+
+        /// <summary>Set the background colour used for a particular marker number. (Scintilla feature 2295)</summary>
+        public void MarkerSetBackTranslucent(int markerNumber, ColourAlpha back)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACKTRANSLUCENT, (UIntPtr)markerNumber, (IntPtr)back.Value);
+        }
+
+        /// <summary>Set the background colour used for a particular marker number when its folding block is selected. (Scintilla feature 2296)</summary>
+        public void MarkerSetBackSelectedTranslucent(int markerNumber, ColourAlpha back)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETBACKSELECTEDTRANSLUCENT, (UIntPtr)markerNumber, (IntPtr)back.Value);
+        }
+
+        /// <summary>Set the width of strokes used in .01 pixels so 50 = 1/2 pixel width. (Scintilla feature 2297)</summary>
+        public void MarkerSetStrokeWidth(int markerNumber, int hundredths)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETSTROKEWIDTH, (UIntPtr)markerNumber, (IntPtr)hundredths);
+        }
+
+        /// <summary>Enable/disable highlight for current folding block (smallest one that contains the caret) (Scintilla feature 2293)</summary>
         public void MarkerEnableHighlight(bool enabled)
         {
             SendMessage(_scintilla, SciMsg.SCI_MARKERENABLEHIGHLIGHT, new UIntPtr(enabled ? 1U : 0U), Unused);
@@ -612,15 +679,15 @@ namespace Npp.DotNet.Plugin
         /// Return -1 when no more lines.
         /// (Scintilla feature 2047)
         /// </summary>
-        public int MarkerNext(int lineStart, int markerMask)
+        public Position MarkerNext(Position lineStart, int markerMask)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERNEXT, (UIntPtr)lineStart, (IntPtr)markerMask);
+            return SendMessage(_scintilla, SciMsg.SCI_MARKERNEXT, (UIntPtr)lineStart, (IntPtr)markerMask);
         }
 
         /// <summary>Find the previous line before lineStart that includes a marker in mask. (Scintilla feature 2048)</summary>
-        public int MarkerPrevious(int lineStart, int markerMask)
+        public Position MarkerPrevious(Position lineStart, int markerMask)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERPREVIOUS, (UIntPtr)lineStart, (IntPtr)markerMask);
+            return SendMessage(_scintilla, SciMsg.SCI_MARKERPREVIOUS, (UIntPtr)lineStart, (IntPtr)markerMask);
         }
 
         /// <summary>Define a marker from a pixmap. (Scintilla feature 2049)</summary>
@@ -639,6 +706,18 @@ namespace Npp.DotNet.Plugin
         public void MarkerSetAlpha(int markerNumber, Alpha alpha)
         {
             SendMessage(_scintilla, SciMsg.SCI_MARKERSETALPHA, (UIntPtr)markerNumber, (IntPtr)alpha);
+        }
+
+        /// <summary>Get the layer used for a marker that is drawn in the text area, not the margin. (Scintilla feature 2734)</summary>
+        public Layer MarkerGetLayer(int markerNumber)
+        {
+            return (Layer)SendMessage(_scintilla, SciMsg.SCI_MARKERGETLAYER, (UIntPtr)markerNumber, Unused);
+        }
+
+        /// <summary>Set the layer used for a marker that is drawn in the text area, not the margin. (Scintilla feature 2735)</summary>
+        public void MarkerSetLayer(int markerNumber, Layer layer)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_MARKERSETLAYER, (UIntPtr)markerNumber, (IntPtr)layer);
         }
 
         /// <summary>Set a margin to be either numeric or symbolic. (Scintilla feature 2240)</summary>
@@ -704,7 +783,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set the background colour of a margin. Only visible for SC_MARGIN_COLOUR. (Scintilla feature 2250)</summary>
         public void SetMarginBackN(int margin, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETMARGINBACKN, (UIntPtr)margin, back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_SETMARGINBACKN, (UIntPtr)margin, (IntPtr)back.Value);
         }
 
         /// <summary>Retrieve the background colour of a margin (Scintilla feature 2251)</summary>
@@ -734,13 +813,13 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set the foreground colour of a style. (Scintilla feature 2051)</summary>
         public void StyleSetFore(int style, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_STYLESETFORE, (UIntPtr)style, fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_STYLESETFORE, (UIntPtr)style, (IntPtr)fore.Value);
         }
 
         /// <summary>Set the background colour of a style. (Scintilla feature 2052)</summary>
         public void StyleSetBack(int style, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_STYLESETBACK, (UIntPtr)style, back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_STYLESETBACK, (UIntPtr)style, (IntPtr)back.Value);
         }
 
         /// <summary>Set a style to be bold or not. (Scintilla feature 2053)</summary>
@@ -914,27 +993,101 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_STYLESETHOTSPOT, (UIntPtr)style, new IntPtr(hotspot ? 1 : 0));
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_SETSELFORE"/>
-        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetSelFore(bool useSetting, Colour fore)
+        /// <summary>Indicate that a style may be monospaced over ASCII graphics characters which enables optimizations. (Scintilla feature 2254)</summary>
+        public void StyleSetCheckMonospaced(int style, bool checkMonospaced)
         {
+            SendMessage(_scintilla, SciMsg.SCI_STYLESETCHECKMONOSPACED, (UIntPtr)style, new IntPtr(checkMonospaced ? 1 : 0));
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_SETSELBACK"/>
-        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetSelBack(bool useSetting, Colour back)
+        /// <summary>Get whether a style may be monospaced. (Scintilla feature 2255)</summary>
+        public bool StyleGetCheckMonospaced(int style)
         {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_STYLEGETCHECKMONOSPACED, (UIntPtr)style, Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETSELALPHA"/>
+        /// <summary>Set the stretch of characters of a style. (Scintilla feature 2258)</summary>
+        public void StyleSetStretch(int style, FontStretch stretch)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_STYLESETSTRETCH, (UIntPtr)style, (IntPtr)stretch);
+        }
+
+        /// <summary>Get the stretch of characters of a style. (Scintilla feature 2259)</summary>
+        public FontStretch StyleGetStretch(int style)
+        {
+            return (FontStretch)SendMessage(_scintilla, SciMsg.SCI_STYLEGETSTRETCH, (UIntPtr)style, Unused);
+        }
+
+        /// <summary>Set the invisible representation for a style. (Scintilla feature 2256)</summary>
+        public void StyleSetInvisibleRepresentation(int style, string representation)
+        {
+            SendEncodedBytes(SciMsg.SCI_STYLESETINVISIBLEREPRESENTATION, representation, (UIntPtr)style);
+        }
+
+        /// <summary>Get the invisible representation for a style. (Scintilla feature 2257)</summary>
+        public string StyleGetInvisibleRepresentation(int style)
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_STYLEGETINVISIBLEREPRESENTATION, CodePage, (UIntPtr)style);
+        }
+
+        /// <summary>
+        /// Set the colour of an element. Translucency (alpha) may or may not be significant
+        /// and this may depend on the platform. The alpha byte should commonly be 0xff for opaque.
+        /// (Scintilla feature 2753)
+        /// </summary>
+        public void SetElementColour(Element element, ColourAlpha colourElement)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETELEMENTCOLOUR, (UIntPtr)element, (IntPtr)colourElement.Value);
+        }
+
+        /// <summary>Get the colour of an element. (Scintilla feature 2754)</summary>
+        public ColourAlpha GetElementColour(Element element)
+        {
+            return new ColourAlpha((int)SendMessage(_scintilla, SciMsg.SCI_GETELEMENTCOLOUR, (UIntPtr)element, Unused));
+        }
+
+        /// <summary>Use the default or platform-defined colour for an element. (Scintilla feature 2755)</summary>
+        public void ResetElementColour(Element element)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_RESETELEMENTCOLOUR, (UIntPtr)element, Unused);
+        }
+
+        /// <summary>
+        /// Get whether an element has been set by SetElementColour.
+        /// When false, a platform-defined or default colour is used.
+        /// (Scintilla feature 2756)
+        /// </summary>
+        public bool GetElementIsSet(Element element)
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETELEMENTISSET, (UIntPtr)element, Unused);
+        }
+
+        /// <summary>Get whether an element supports translucency. (Scintilla feature 2757)</summary>
+        public bool GetElementAllowsTranslucent(Element element)
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETELEMENTALLOWSTRANSLUCENT, (UIntPtr)element, Unused);
+        }
+
+        /// <summary>Get the colour of an element. (Scintilla feature 2758)</summary>
+        public ColourAlpha GetElementBaseColour(Element element)
+        {
+            return new ColourAlpha((int)SendMessage(_scintilla, SciMsg.SCI_GETELEMENTBASECOLOUR, (UIntPtr)element, Unused));
+        }
+
+        /// <summary>Set the foreground colour of the main and additional selections and whether to use this setting. (Scintilla feature 2067)</summary>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public void SetSelFore(bool useSetting, Colour fore) { }
+
+        /// <summary>Set the background colour of the main and additional selections and whether to use this setting. (Scintilla feature 2068)</summary>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public void SetSelBack(bool useSetting, Colour back) { }
+
+        /// <summary>Get the alpha of the selection. (Scintilla feature 2477)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Alpha GetSelAlpha() => default;
 
-        /// <inheritdoc cref="SciMsg.SCI_SETSELALPHA"/>
+        /// <summary>Set the alpha of the selection. (Scintilla feature 2478)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetSelAlpha(Alpha alpha)
-        {
-        }
+        public void SetSelAlpha(Alpha alpha) { }
 
         /// <summary>Is the selection end of line filled? (Scintilla feature 2479)</summary>
         public bool GetSelEOLFilled()
@@ -948,11 +1101,45 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_SETSELEOLFILLED, new UIntPtr(filled ? 1U : 0U), Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_SETCARETFORE"/>
-        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetCaretFore(Colour fore)
+        /// <summary>Get the layer for drawing selections (Scintilla feature 2762)</summary>
+        public Layer GetSelectionLayer()
         {
+            return (Layer)SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONLAYER, UnusedW, Unused);
         }
+
+        /// <summary>Set the layer for drawing selections: either opaquely on base layer or translucently over text (Scintilla feature 2763)</summary>
+        public void SetSelectionLayer(Layer layer)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETSELECTIONLAYER, (UIntPtr)layer, Unused);
+        }
+
+        /// <summary>Get the layer of the background of the line containing the caret. (Scintilla feature 2764)</summary>
+        public Layer GetCaretLineLayer()
+        {
+            return (Layer)SendMessage(_scintilla, SciMsg.SCI_GETCARETLINELAYER, UnusedW, Unused);
+        }
+
+        /// <summary>Set the layer of the background of the line containing the caret. (Scintilla feature 2765)</summary>
+        public void SetCaretLineLayer(Layer layer)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETCARETLINELAYER, (UIntPtr)layer, Unused);
+        }
+
+        /// <summary>Get only highlighting subline instead of whole line. (Scintilla feature 2773)</summary>
+        public bool GetCaretLineHighlightSubLine()
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETCARETLINEHIGHLIGHTSUBLINE, UnusedW, Unused);
+        }
+
+        /// <summary>Set only highlighting subline instead of whole line. (Scintilla feature 2774)</summary>
+        public void SetCaretLineHighlightSubLine(bool subLine)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETCARETLINEHIGHLIGHTSUBLINE, new UIntPtr(subLine ? 1U : 0U), Unused);
+        }
+
+        /// <summary>Set the foreground colour of the caret. (Scintilla feature 2069)</summary>
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
+        public void SetCaretFore(Colour fore) { }
 
         /// <summary>When key+modifier combination keyDefinition is pressed perform sciCommand. (Scintilla feature 2070)</summary>
         public void AssignCmdKey(KeyModifier keyDefinition, int sciCommand)
@@ -1044,6 +1231,96 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_ENDUNDOACTION, UnusedW, Unused);
         }
 
+        /// <summary>Is an undo sequence active? (Scintilla feature 2799)</summary>
+        public int GetUndoSequence()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOSEQUENCE, UnusedW, Unused);
+        }
+
+        /// <summary>How many undo actions are in the history? (Scintilla feature 2790)</summary>
+        public int GetUndoActions()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOACTIONS, UnusedW, Unused);
+        }
+
+        /// <summary>Set action as the save point (Scintilla feature 2791)</summary>
+        public void SetUndoSavePoint(int action)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETUNDOSAVEPOINT, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>Which action is the save point? (Scintilla feature 2792)</summary>
+        public int GetUndoSavePoint()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOSAVEPOINT, UnusedW, Unused);
+        }
+
+        /// <summary>Set action as the detach point (Scintilla feature 2793)</summary>
+        public void SetUndoDetach(int action)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETUNDODETACH, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>Which action is the detach point? (Scintilla feature 2794)</summary>
+        public int GetUndoDetach()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDODETACH, UnusedW, Unused);
+        }
+
+        /// <summary>Set action as the tentative point (Scintilla feature 2795)</summary>
+        public void SetUndoTentative(int action)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETUNDOTENTATIVE, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>Which action is the tentative point? (Scintilla feature 2796)</summary>
+        public int GetUndoTentative()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOTENTATIVE, UnusedW, Unused);
+        }
+
+        /// <summary>Set action as the current point (Scintilla feature 2797)</summary>
+        public void SetUndoCurrent(int action)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETUNDOCURRENT, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>Which action is the current point? (Scintilla feature 2798)</summary>
+        public int GetUndoCurrent()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOCURRENT, UnusedW, Unused);
+        }
+
+        /// <summary>Push one action onto undo history with no text (Scintilla feature 2800)</summary>
+        public void PushUndoActionType(int type, Position pos)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_PUSHUNDOACTIONTYPE, (UIntPtr)type, (IntPtr)pos);
+        }
+
+        /// <summary>Set the text and length of the most recently pushed action (Scintilla feature 2801)</summary>
+        public void ChangeLastUndoActionText(string text)
+        {
+            SendEncodedBytes(SciMsg.SCI_CHANGELASTUNDOACTIONTEXT, text);
+        }
+
+        /// <summary>What is the type of an action? (Scintilla feature 2802)</summary>
+        public int GetUndoActionType(int action)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETUNDOACTIONTYPE, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>What is the position of an action? (Scintilla feature 2803)</summary>
+        public Position GetUndoActionPosition(int action)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETUNDOACTIONPOSITION, (UIntPtr)action, Unused);
+        }
+
+        /// <summary>What is the text of an action? (Scintilla feature 2804)</summary>
+        public string GetUndoActionText(int action)
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETUNDOACTIONTEXT, CodePage, (UIntPtr)action);
+        }
+
         /// <summary>Set an indicator to plain, squiggle or TT. (Scintilla feature 2080)</summary>
         public void IndicSetStyle(int indicator, IndicatorStyle indicatorStyle)
         {
@@ -1059,7 +1336,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set the foreground colour of an indicator. (Scintilla feature 2082)</summary>
         public void IndicSetFore(int indicator, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_INDICSETFORE, (UIntPtr)indicator, fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_INDICSETFORE, (UIntPtr)indicator, (IntPtr)fore.Value);
         }
 
         /// <summary>Retrieve the foreground colour of an indicator. (Scintilla feature 2083)</summary>
@@ -1095,7 +1372,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set the foreground hover colour of an indicator. (Scintilla feature 2682)</summary>
         public void IndicSetHoverFore(int indicator, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_INDICSETHOVERFORE, (UIntPtr)indicator, fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_INDICSETHOVERFORE, (UIntPtr)indicator, (IntPtr)fore.Value);
         }
 
         /// <summary>Retrieve the foreground hover colour of an indicator. (Scintilla feature 2683)</summary>
@@ -1116,16 +1393,28 @@ namespace Npp.DotNet.Plugin
             return (IndicFlag)SendMessage(_scintilla, SciMsg.SCI_INDICGETFLAGS, (UIntPtr)indicator, Unused);
         }
 
+        /// <summary>Set the stroke width of an indicator in hundredths of a pixel. (Scintilla feature 2751)</summary>
+        public void IndicSetStrokeWidth(int indicator, int hundredths)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_INDICSETSTROKEWIDTH, (UIntPtr)indicator, (IntPtr)hundredths);
+        }
+
+        /// <summary>Retrieve the stroke width of an indicator. (Scintilla feature 2752)</summary>
+        public int IndicGetStrokeWidth(int indicator)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_INDICGETSTROKEWIDTH, (UIntPtr)indicator, Unused);
+        }
+
         /// <summary>Set the foreground colour of all whitespace and whether to use this setting. (Scintilla feature 2084)</summary>
         public void SetWhitespaceFore(bool useSetting, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETWHITESPACEFORE, new UIntPtr(useSetting ? 1U : 0U), fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_SETWHITESPACEFORE, new UIntPtr(useSetting ? 1U : 0U), (IntPtr)fore.Value);
         }
 
         /// <summary>Set the background colour of all whitespace and whether to use this setting. (Scintilla feature 2085)</summary>
         public void SetWhitespaceBack(bool useSetting, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETWHITESPACEBACK, new UIntPtr(useSetting ? 1U : 0U), back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_SETWHITESPACEBACK, new UIntPtr(useSetting ? 1U : 0U), (IntPtr)back.Value);
         }
 
         /// <summary>Set the size of the dots used to mark space characters. (Scintilla feature 2086)</summary>
@@ -1158,26 +1447,21 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETMAXLINESTATE, UnusedW, Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEVISIBLE"/>
-        /// <returns><see langword="true"/></returns>
+        /// <summary>Is the background of the line containing the caret in a different colour? (Scintilla feature 2095)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public bool GetCaretLineVisible() => true;
 
-        /// <inheritdoc cref="SciMsg.SCI_SETCARETLINEVISIBLE"/>
+        /// <summary>Display the background of the line containing the caret in a different colour. (Scintilla feature 2096)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetCaretLineVisible(bool show)
-        {
-        }
+        public void SetCaretLineVisible(bool show) { }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACK"/>
+        /// <summary>Get the colour of the background of the line containing the caret. (Scintilla feature 2097)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Colour GetCaretLineBack() => new Colour(0xffffff);
 
-        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACK"/>
+        /// <summary>Set the colour of the background of the line containing the caret. (Scintilla feature 2098)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetCaretLineBack(Colour back)
-        {
-        }
+        public void SetCaretLineBack(Colour back) { }
 
         /// <summary>
         /// Retrieve the caret line frame width.
@@ -1340,6 +1624,18 @@ namespace Npp.DotNet.Plugin
             return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_AUTOCGETAUTOHIDE, UnusedW, Unused);
         }
 
+        /// <summary>Set autocompletion options. (Scintilla feature 2638)</summary>
+        public void AutoCSetOptions(AutoCompleteOption options)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_AUTOCSETOPTIONS, (UIntPtr)options, Unused);
+        }
+
+        /// <summary>Retrieve autocompletion options. (Scintilla feature 2639)</summary>
+        public AutoCompleteOption AutoCGetOptions()
+        {
+            return (AutoCompleteOption)SendMessage(_scintilla, SciMsg.SCI_AUTOCGETOPTIONS, UnusedW, Unused);
+        }
+
         /// <summary>
         /// Set whether or not autocompletion deletes any word characters
         /// after the inserted text upon completion.
@@ -1420,6 +1716,30 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_AUTOCGETMAXHEIGHT, UnusedW, Unused);
         }
 
+        /// <summary>Set the style number used for auto-completion and user lists fonts. (Scintilla feature 2109)</summary>
+        public void AutoCSetStyle(int style)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_AUTOCSETSTYLE, (UIntPtr)style, Unused);
+        }
+
+        /// <summary>Get the style number used for auto-completion and user lists fonts. (Scintilla feature 2120)</summary>
+        public int AutoCGetStyle()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_AUTOCGETSTYLE, UnusedW, Unused);
+        }
+
+        /// <summary>Set the scale factor in percent for auto-completion list images. (Scintilla feature 2815)</summary>
+        public void AutoCSetImageScale(int scalePercent)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_AUTOCSETIMAGESCALE, (UIntPtr)scalePercent, Unused);
+        }
+
+        /// <summary>Get the scale factor in percent for auto-completion list images. (Scintilla feature 2816)</summary>
+        public int AutoCGetImageScale()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_AUTOCGETIMAGESCALE, UnusedW, Unused);
+        }
+
         /// <summary>Set the number of spaces used for one level of indentation. (Scintilla feature 2122)</summary>
         public void SetIndent(int indentSize)
         {
@@ -1467,21 +1787,21 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieve the column number of a position, taking tab width into account. (Scintilla feature 2129)</summary>
-        public int GetColumn(Position pos)
+        public Position GetColumn(Position pos)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETCOLUMN, (UIntPtr)pos, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETCOLUMN, (UIntPtr)pos, Unused);
         }
 
         /// <summary>Count characters between two positions. (Scintilla feature 2633)</summary>
-        public int CountCharacters(Position start, Position end)
+        public Position CountCharacters(Position start, Position end)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_COUNTCHARACTERS, (UIntPtr)start, (IntPtr)end);
+            return SendMessage(_scintilla, SciMsg.SCI_COUNTCHARACTERS, (UIntPtr)start, (IntPtr)end);
         }
 
         /// <summary>Count code units between two positions. (Scintilla feature 2715)</summary>
-        public int CountCodeUnits(Position start, Position end)
+        public Position CountCodeUnits(Position start, Position end)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_COUNTCODEUNITS, (UIntPtr)start, (IntPtr)end);
+            return SendMessage(_scintilla, SciMsg.SCI_COUNTCODEUNITS, (UIntPtr)start, (IntPtr)end);
         }
 
         /// <summary>Show or hide the horizontal scroll bar. (Scintilla feature 2130)</summary>
@@ -1513,15 +1833,15 @@ namespace Npp.DotNet.Plugin
         /// 0 = no highlighted guide.
         /// (Scintilla feature 2134)
         /// </summary>
-        public void SetHighlightGuide(int column)
+        public void SetHighlightGuide(Position column)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETHIGHLIGHTGUIDE, (UIntPtr)column, Unused);
         }
 
         /// <summary>Get the highlighted indentation guide column. (Scintilla feature 2135)</summary>
-        public int GetHighlightGuide()
+        public Position GetHighlightGuide()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETHIGHLIGHTGUIDE, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETHIGHLIGHTGUIDE, UnusedW, Unused);
         }
 
         /// <summary>Get the position after the last visible characters on a line. (Scintilla feature 2136)</summary>
@@ -1536,7 +1856,7 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETCODEPAGE, UnusedW, Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETCARETFORE"/>
+        /// <summary>Get the foreground colour of the caret. (Scintilla feature 2138)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Colour GetCaretFore() => new Colour(0);
 
@@ -1607,9 +1927,45 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Find some text in the document. (Scintilla feature 2196)</summary>
-        public long FindText(FindOption searchFlags, TextToFindFull ft)
+        public Position FindTextFull(FindOption searchFlags, TextToFindFull ft)
         {
-            return (long)SendMessage(_scintilla, SciMsg.SCI_FINDTEXTFULL, (UIntPtr)searchFlags, ft.NativePointer);
+            return SendMessage(_scintilla, SciMsg.SCI_FINDTEXTFULL, (UIntPtr)searchFlags, ft.NativePointer);
+        }
+
+        /// <summary>Enable or disable change history. (Scintilla feature 2780)</summary>
+        public void SetChangeHistory(ChangeHistoryOption changeHistory)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETCHANGEHISTORY, (UIntPtr)changeHistory, Unused);
+        }
+
+        /// <summary>Report change history status. (Scintilla feature 2781)</summary>
+        public ChangeHistoryOption GetChangeHistory()
+        {
+            return (ChangeHistoryOption)SendMessage(_scintilla, SciMsg.SCI_GETCHANGEHISTORY, UnusedW, Unused);
+        }
+
+        /// <summary>Enable or disable undo selection history. (Scintilla feature 2782)</summary>
+        public void SetUndoSelectionHistory(UndoSelectionHistoryOption undoSelectionHistory)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETUNDOSELECTIONHISTORY, (UIntPtr)undoSelectionHistory, Unused);
+        }
+
+        /// <summary>Report undo selection history status. (Scintilla feature 2783)</summary>
+        public UndoSelectionHistoryOption GetUndoSelectionHistory()
+        {
+            return (UndoSelectionHistoryOption)SendMessage(_scintilla, SciMsg.SCI_GETUNDOSELECTIONHISTORY, UnusedW, Unused);
+        }
+
+        /// <summary>Set selection from serialized form. (Scintilla feature 2784)</summary>
+        public void SetSelectionSerialized(string selectionString)
+        {
+            SendEncodedBytes(SciMsg.SCI_SETSELECTIONSERIALIZED, selectionString, UnusedW);
+        }
+
+        /// <summary>Retrieve serialized form of selection. (Scintilla feature 2785)</summary>
+        public string GetSelectionSerialized()
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETSELECTIONSERIALIZED, CodePage);
         }
 
         /// <summary>Retrieve the display line at the top of the display. (Scintilla feature 2152)</summary>
@@ -1629,9 +1985,15 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Returns the number of lines in the document. There is always at least one. (Scintilla feature 2154)</summary>
-        public int GetLineCount()
+        public Position GetLineCount()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETLINECOUNT, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETLINECOUNT, UnusedW, Unused);
+        }
+
+        /// <summary>Enlarge the number of lines allocated. (Scintilla feature 2089)</summary>
+        public void AllocateLines(Position lines)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_ALLOCATELINES, (UIntPtr)lines, Unused);
         }
 
         /// <summary>Sets the size in pixels of the left margin. (Scintilla feature 2155)</summary>
@@ -1682,19 +2044,27 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>
-        /// Retrieve a range of text.
+        /// Retrieve a range of text that can be past 2GB.
+        /// Return the length of the text.
         /// (Scintilla feature 2039)
         /// </summary>
-        /// <returns>The 64-bit length of the text.</returns>
-        public long GetTextRange(TextRangeFull tr)
+        public Position GetTextRangeFull(TextRangeFull tr)
         {
-            return (long)SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGEFULL, UnusedW, tr.NativePointer);
+            return SendMessage(_scintilla, SciMsg.SCI_GETTEXTRANGEFULL, UnusedW, tr.NativePointer);
         }
 
         /// <summary>Draw the selection either highlighted or in normal (non-highlighted) style. (Scintilla feature 2163)</summary>
         public void HideSelection(bool hide)
         {
             SendMessage(_scintilla, SciMsg.SCI_HIDESELECTION, new UIntPtr(hide ? 1U : 0U), Unused);
+        }
+
+        /// <summary>
+        /// (Scintilla feature 2088)
+        /// </summary>
+        public bool GetSelectionHidden()
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONHIDDEN, UnusedW, Unused);
         }
 
         /// <summary>Retrieve the x value of the point in the window where a position is displayed. (Scintilla feature 2164)</summary>
@@ -1722,9 +2092,15 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Scroll horizontally and vertically. (Scintilla feature 2168)</summary>
-        public void LineScroll(int columns, int lines)
+        public void LineScroll(Position columns, Position lines)
         {
             SendMessage(_scintilla, SciMsg.SCI_LINESCROLL, (UIntPtr)columns, (IntPtr)lines);
+        }
+
+        /// <summary>Scroll vertically with allowance for wrapping. (Scintilla feature 2817)</summary>
+        public void ScrollVertical(Position docLine, Position subLine)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SCROLLVERTICAL, (UIntPtr)docLine, (IntPtr)subLine);
         }
 
         /// <summary>Ensure the caret is visible. (Scintilla feature 2169)</summary>
@@ -1739,7 +2115,7 @@ namespace Npp.DotNet.Plugin
         /// This may be used to make a search match visible.
         /// (Scintilla feature 2569)
         /// </summary>
-        public void ScrollRange(int secondary, int primary)
+        public void ScrollRange(Position secondary, Position primary)
         {
             SendMessage(_scintilla, SciMsg.SCI_SCROLLRANGE, (UIntPtr)secondary, (IntPtr)primary);
         }
@@ -1828,15 +2204,21 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieve the number of characters in the document. (Scintilla feature 2183)</summary>
-        public long GetTextLength()
+        public Position GetTextLength()
         {
-            return (long)SendMessage(_scintilla, SciMsg.SCI_GETTEXTLENGTH, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETTEXTLENGTH, UnusedW, Unused);
         }
 
         /// <summary>Retrieve a pointer to a function that processes messages for this Scintilla. (Scintilla feature 2184)</summary>
         public IntPtr GetDirectFunction()
         {
             return SendMessage(_scintilla, SciMsg.SCI_GETDIRECTFUNCTION, UnusedW, Unused);
+        }
+
+        /// <summary>Retrieve a pointer to a function that processes messages for this Scintilla and returns status. (Scintilla feature 2772)</summary>
+        public IntPtr GetDirectStatusFunction()
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETDIRECTSTATUSFUNCTION, UnusedW, Unused);
         }
 
         /// <summary>
@@ -1889,6 +2271,18 @@ namespace Npp.DotNet.Plugin
             return SendMessage(_scintilla, SciMsg.SCI_GETTARGETSTART, UnusedW, Unused);
         }
 
+        /// <summary>Sets the virtual space of the target start (Scintilla feature 2728)</summary>
+        public void SetTargetStartVirtualSpace(Position space)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETTARGETSTARTVIRTUALSPACE, (UIntPtr)space, Unused);
+        }
+
+        /// <summary>Get the virtual space of the target start (Scintilla feature 2729)</summary>
+        public Position GetTargetStartVirtualSpace()
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETTARGETSTARTVIRTUALSPACE, UnusedW, Unused);
+        }
+
         /// <summary>
         /// Sets the position that ends the target which is used for updating the
         /// document without affecting the scroll position.
@@ -1903,6 +2297,18 @@ namespace Npp.DotNet.Plugin
         public Position GetTargetEnd()
         {
             return SendMessage(_scintilla, SciMsg.SCI_GETTARGETEND, UnusedW, Unused);
+        }
+
+        /// <summary>Sets the virtual space of the target end (Scintilla feature 2730)</summary>
+        public void SetTargetEndVirtualSpace(Position space)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETTARGETENDVIRTUALSPACE, (UIntPtr)space, Unused);
+        }
+
+        /// <summary>Get the virtual space of the target end (Scintilla feature 2731)</summary>
+        public Position GetTargetEndVirtualSpace()
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETTARGETENDVIRTUALSPACE, UnusedW, Unused);
         }
 
         /// <summary>Sets both the start and end of the target in one call. (Scintilla feature 2686)</summary>
@@ -1935,15 +2341,9 @@ namespace Npp.DotNet.Plugin
         /// Returns the length of the replacement text.
         /// (Scintilla feature 2194)
         /// </summary>
-        public int ReplaceTarget(string text)
+        public Position ReplaceTarget(string text)
         {
-            return (int)SendEncodedBytes(SciMsg.SCI_REPLACETARGET, text);
-        }
-
-        /// <inheritdoc cref="IScintillaGateway.ReplaceTargetMinimal"/>
-        public int ReplaceTargetMinimal(string text)
-        {
-            return (int)SendEncodedBytes(SciMsg.SCI_REPLACETARGETMINIMAL, text);
+            return SendEncodedBytes(SciMsg.SCI_REPLACETARGET, text);
         }
 
         /// <summary>
@@ -1955,9 +2355,19 @@ namespace Npp.DotNet.Plugin
         /// caused by processing the \d patterns.
         /// (Scintilla feature 2195)
         /// </summary>
-        public int ReplaceTargetRE(string text)
+        public Position ReplaceTargetRE(string text)
         {
-            return (int)SendEncodedBytes(SciMsg.SCI_REPLACETARGETRE, text);
+            return SendEncodedBytes(SciMsg.SCI_REPLACETARGETRE, text);
+        }
+
+        /// <summary>
+        /// Replace the target text with the argument text but ignore prefix and suffix that
+        /// are the same as current.
+        /// (Scintilla feature 2779)
+        /// </summary>
+        public Position ReplaceTargetMinimal(string text)
+        {
+            return SendEncodedBytes(SciMsg.SCI_REPLACETARGETMINIMAL, text);
         }
 
         /// <summary>
@@ -2002,19 +2412,19 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieve the position where the caret was before displaying the call tip. (Scintilla feature 2203)</summary>
-        public int CallTipPosStart()
+        public Position CallTipPosStart()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_CALLTIPPOSSTART, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_CALLTIPPOSSTART, UnusedW, Unused);
         }
 
         /// <summary>Set the start position in order to change when backspacing removes the calltip. (Scintilla feature 2214)</summary>
-        public void CallTipSetPosStart(int posStart)
+        public void CallTipSetPosStart(Position posStart)
         {
             SendMessage(_scintilla, SciMsg.SCI_CALLTIPSETPOSSTART, (UIntPtr)posStart, Unused);
         }
 
         /// <summary>Highlight a segment of the definition. (Scintilla feature 2204)</summary>
-        public void CallTipSetHlt(int highlightStart, int highlightEnd)
+        public void CallTipSetHlt(Position highlightStart, Position highlightEnd)
         {
             SendMessage(_scintilla, SciMsg.SCI_CALLTIPSETHLT, (UIntPtr)highlightStart, (IntPtr)highlightEnd);
         }
@@ -2050,21 +2460,21 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Find the display line of a document line taking hidden lines into account. (Scintilla feature 2220)</summary>
-        public int VisibleFromDocLine(int docLine)
+        public Position VisibleFromDocLine(Position docLine)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_VISIBLEFROMDOCLINE, (UIntPtr)docLine, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_VISIBLEFROMDOCLINE, (UIntPtr)docLine, Unused);
         }
 
         /// <summary>Find the document line of a display line taking hidden lines into account. (Scintilla feature 2221)</summary>
-        public int DocLineFromVisible(int displayLine)
+        public Position DocLineFromVisible(Position displayLine)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_DOCLINEFROMVISIBLE, (UIntPtr)displayLine, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_DOCLINEFROMVISIBLE, (UIntPtr)displayLine, Unused);
         }
 
         /// <summary>The number of display lines needed to wrap a document line (Scintilla feature 2235)</summary>
-        public int WrapCount(int docLine)
+        public Position WrapCount(Position docLine)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_WRAPCOUNT, (UIntPtr)docLine, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_WRAPCOUNT, (UIntPtr)docLine, Unused);
         }
 
         /// <summary>
@@ -2263,15 +2673,15 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Get position of start of word. (Scintilla feature 2266)</summary>
-        public int WordStartPosition(Position pos, bool onlyWordCharacters)
+        public Position WordStartPosition(Position pos, bool onlyWordCharacters)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_WORDSTARTPOSITION, (UIntPtr)pos, new IntPtr(onlyWordCharacters ? 1 : 0));
+            return SendMessage(_scintilla, SciMsg.SCI_WORDSTARTPOSITION, (UIntPtr)pos, new IntPtr(onlyWordCharacters ? 1 : 0));
         }
 
         /// <summary>Get position of end of word. (Scintilla feature 2267)</summary>
-        public int WordEndPosition(Position pos, bool onlyWordCharacters)
+        public Position WordEndPosition(Position pos, bool onlyWordCharacters)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_WORDENDPOSITION, (UIntPtr)pos, new IntPtr(onlyWordCharacters ? 1 : 0));
+            return SendMessage(_scintilla, SciMsg.SCI_WORDENDPOSITION, (UIntPtr)pos, new IntPtr(onlyWordCharacters ? 1 : 0));
         }
 
         /// <summary>Is the range start..end considered a word? (Scintilla feature 2691)</summary>
@@ -2475,7 +2885,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Scroll so that a display line is at the top of the display. (Scintilla feature 2613)</summary>
-        public void SetFirstVisibleLine(int displayLine)
+        public void SetFirstVisibleLine(Position displayLine)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETFIRSTVISIBLELINE, (UIntPtr)displayLine, Unused);
         }
@@ -2526,13 +2936,13 @@ namespace Npp.DotNet.Plugin
         /// <summary>Set one of the colours used as a chequerboard pattern in the fold margin (Scintilla feature 2290)</summary>
         public void SetFoldMarginColour(bool useSetting, Colour back)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETFOLDMARGINCOLOUR, new UIntPtr(useSetting ? 1U : 0U), back.Value);
+            SendMessage(_scintilla, SciMsg.SCI_SETFOLDMARGINCOLOUR, new UIntPtr(useSetting ? 1U : 0U), (IntPtr)back.Value);
         }
 
         /// <summary>Set the other colour used as a chequerboard pattern in the fold margin (Scintilla feature 2291)</summary>
         public void SetFoldMarginHiColour(bool useSetting, Colour fore)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETFOLDMARGINHICOLOUR, new UIntPtr(useSetting ? 1U : 0U), fore.Value);
+            SendMessage(_scintilla, SciMsg.SCI_SETFOLDMARGINHICOLOUR, new UIntPtr(useSetting ? 1U : 0U), (IntPtr)fore.Value);
         }
 
         /// <summary>Enable or disable accessibility. (Scintilla feature 2702)</summary>
@@ -2719,10 +3129,26 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_TAB, UnusedW, Unused);
         }
 
-        /// <summary>Dedent the selected lines. (Scintilla feature 2328)</summary>
+        /// <summary>Indent the current and selected lines. (Scintilla feature 2813)</summary>
+        public void LineIndent()
+        {
+            SendMessage(_scintilla, SciMsg.SCI_LINEINDENT, UnusedW, Unused);
+        }
+
+        /// <summary>
+        /// If selection is empty or all on one line dedent the line if caret is at start, else move caret.
+        /// If more than one line selected, dedent the lines.
+        /// (Scintilla feature 2328)
+        /// </summary>
         public void BackTab()
         {
             SendMessage(_scintilla, SciMsg.SCI_BACKTAB, UnusedW, Unused);
+        }
+
+        /// <summary>Dedent the current and selected lines. (Scintilla feature 2814)</summary>
+        public void LineDedent()
+        {
+            SendMessage(_scintilla, SciMsg.SCI_LINEDEDENT, UnusedW, Unused);
         }
 
         /// <summary>Insert a new line, may use a CRLF, CR or LF depending on EOL mode. (Scintilla feature 2329)</summary>
@@ -2952,13 +3378,13 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>How many characters are on a line, including end of line characters? (Scintilla feature 2350)</summary>
-        public int LineLength(Position line)
+        public Position LineLength(Position line)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_LINELENGTH, (UIntPtr)line, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_LINELENGTH, (UIntPtr)line, Unused);
         }
 
         /// <summary>Highlight the characters at two positions. (Scintilla feature 2351)</summary>
-        public void BraceHighlight(int posA, int posB)
+        public void BraceHighlight(Position posA, Position posB)
         {
             SendMessage(_scintilla, SciMsg.SCI_BRACEHIGHLIGHT, (UIntPtr)posA, (IntPtr)posB);
         }
@@ -2986,9 +3412,15 @@ namespace Npp.DotNet.Plugin
         /// The maxReStyle must be 0 for now. It may be defined in a future release.
         /// (Scintilla feature 2353)
         /// </summary>
-        public int BraceMatch(Position pos, int maxReStyle)
+        public Position BraceMatch(Position pos, int maxReStyle)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_BRACEMATCH, (UIntPtr)pos, (IntPtr)maxReStyle);
+            return SendMessage(_scintilla, SciMsg.SCI_BRACEMATCH, (UIntPtr)pos, (IntPtr)maxReStyle);
+        }
+
+        /// <summary>Similar to BraceMatch, but matching starts at the explicit start position. (Scintilla feature 2369)</summary>
+        public Position BraceMatchNext(Position pos, Position startPos)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_BRACEMATCHNEXT, (UIntPtr)pos, (IntPtr)startPos);
         }
 
         /// <summary>Are the end of line characters visible? (Scintilla feature 2355)</summary>
@@ -3012,7 +3444,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>Change the document object used. (Scintilla feature 2358)</summary>
         public void SetDocPointer(IntPtr doc)
         {
-            SendMessage(_scintilla, SciMsg.SCI_SETDOCPOINTER, UnusedW, doc);
+            SendMessage(_scintilla, SciMsg.SCI_SETDOCPOINTER, UnusedW, (IntPtr)doc);
         }
 
         /// <summary>Set which document modification events are sent to the container. (Scintilla feature 2359)</summary>
@@ -3022,9 +3454,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieve the column number which text should be kept within. (Scintilla feature 2360)</summary>
-        public int GetEdgeColumn()
+        public Position GetEdgeColumn()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETEDGECOLUMN, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETEDGECOLUMN, UnusedW, Unused);
         }
 
         /// <summary>
@@ -3032,7 +3464,7 @@ namespace Npp.DotNet.Plugin
         /// If text goes past the edge then it is highlighted.
         /// (Scintilla feature 2361)
         /// </summary>
-        public void SetEdgeColumn(int column)
+        public void SetEdgeColumn(Position column)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETEDGECOLUMN, (UIntPtr)column, Unused);
         }
@@ -3066,15 +3498,21 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Add a new vertical edge to the view. (Scintilla feature 2694)</summary>
-        public void MultiEdgeAddLine(int column, Colour edgeColour)
+        public void MultiEdgeAddLine(Position column, Colour edgeColour)
         {
-            SendMessage(_scintilla, SciMsg.SCI_MULTIEDGEADDLINE, (UIntPtr)column, edgeColour.Value);
+            SendMessage(_scintilla, SciMsg.SCI_MULTIEDGEADDLINE, (UIntPtr)column, (IntPtr)edgeColour.Value);
         }
 
         /// <summary>Clear all vertical edges. (Scintilla feature 2695)</summary>
         public void MultiEdgeClearAll()
         {
             SendMessage(_scintilla, SciMsg.SCI_MULTIEDGECLEARALL, UnusedW, Unused);
+        }
+
+        /// <summary>Get multi edge positions. (Scintilla feature 2749)</summary>
+        public Position GetMultiEdgeColumn(int which)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETMULTIEDGECOLUMN, (UIntPtr)which, Unused);
         }
 
         /// <summary>Sets the current caret position to be the search anchor. (Scintilla feature 2366)</summary>
@@ -3104,9 +3542,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Retrieves the number of lines completely visible. (Scintilla feature 2370)</summary>
-        public int LinesOnScreen()
+        public Position LinesOnScreen()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_LINESONSCREEN, UnusedW, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_LINESONSCREEN, UnusedW, Unused);
         }
 
         /// <summary>
@@ -3146,7 +3584,7 @@ namespace Npp.DotNet.Plugin
         /// Starts with reference count of 1 and not selected into editor.
         /// (Scintilla feature 2375)
         /// </summary>
-        public IntPtr CreateDocument(int bytes, DocumentOption documentOptions)
+        public IntPtr CreateDocument(Position bytes, DocumentOption documentOptions)
         {
             return SendMessage(_scintilla, SciMsg.SCI_CREATEDOCUMENT, (UIntPtr)bytes, (IntPtr)documentOptions);
         }
@@ -3154,13 +3592,13 @@ namespace Npp.DotNet.Plugin
         /// <summary>Extend life of document. (Scintilla feature 2376)</summary>
         public void AddRefDocument(IntPtr doc)
         {
-            SendMessage(_scintilla, SciMsg.SCI_ADDREFDOCUMENT, UnusedW, doc);
+            SendMessage(_scintilla, SciMsg.SCI_ADDREFDOCUMENT, UnusedW, (IntPtr)doc);
         }
 
         /// <summary>Release a reference to the document, deleting document if it fades to black. (Scintilla feature 2377)</summary>
         public void ReleaseDocument(IntPtr doc)
         {
-            SendMessage(_scintilla, SciMsg.SCI_RELEASEDOCUMENT, UnusedW, doc);
+            SendMessage(_scintilla, SciMsg.SCI_RELEASEDOCUMENT, UnusedW, (IntPtr)doc);
         }
 
         /// <summary>Get which document options are set. (Scintilla feature 2379)</summary>
@@ -3373,23 +3811,19 @@ namespace Npp.DotNet.Plugin
             return (Wrap)SendMessage(_scintilla, SciMsg.SCI_GETPRINTWRAPMODE, UnusedW, Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_SETHOTSPOTACTIVEFORE"/>
+        /// <summary>Set a fore colour for active hotspots. (Scintilla feature 2410)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetHotspotActiveFore(bool useSetting, Colour fore)
-        {
-        }
+        public void SetHotspotActiveFore(bool useSetting, Colour fore) { }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETHOTSPOTACTIVEFORE"/>
+        /// <summary>Get the fore colour for active hotspots. (Scintilla feature 2494)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Colour GetHotspotActiveFore() => new Colour(0);
 
-        /// <inheritdoc cref="SciMsg.SCI_SETHOTSPOTACTIVEBACK"/>
+        /// <summary>Set a back colour for active hotspots. (Scintilla feature 2411)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetHotspotActiveBack(bool useSetting, Colour back)
-        {
-        }
+        public void SetHotspotActiveBack(bool useSetting, Colour back) { }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETHOTSPOTACTIVEBACK"/>
+        /// <summary>Get the back colour for active hotspots. (Scintilla feature 2495)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Colour GetHotspotActiveBack() => new Colour(0xffffff);
 
@@ -3446,9 +3880,9 @@ namespace Npp.DotNet.Plugin
         /// page into account. Returns 0 if passed 0.
         /// (Scintilla feature 2417)
         /// </summary>
-        public int PositionBefore(Position pos)
+        public Position PositionBefore(Position pos)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONBEFORE, (UIntPtr)pos, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONBEFORE, (UIntPtr)pos, Unused);
         }
 
         /// <summary>
@@ -3456,9 +3890,9 @@ namespace Npp.DotNet.Plugin
         /// page into account. Maximum value returned is the last position in the document.
         /// (Scintilla feature 2418)
         /// </summary>
-        public int PositionAfter(Position pos)
+        public Position PositionAfter(Position pos)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONAFTER, (UIntPtr)pos, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONAFTER, (UIntPtr)pos, Unused);
         }
 
         /// <summary>
@@ -3466,9 +3900,9 @@ namespace Npp.DotNet.Plugin
         /// of characters. Returned value is always between 0 and last position in document.
         /// (Scintilla feature 2670)
         /// </summary>
-        public int PositionRelative(Position pos, Position relative)
+        public Position PositionRelative(Position pos, Position relative)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONRELATIVE, (UIntPtr)pos, (IntPtr)relative);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONRELATIVE, (UIntPtr)pos, (IntPtr)relative);
         }
 
         /// <summary>
@@ -3477,9 +3911,9 @@ namespace Npp.DotNet.Plugin
         /// The result may point half way (2 bytes) inside a non-BMP character.
         /// (Scintilla feature 2716)
         /// </summary>
-        public int PositionRelativeCodeUnits(Position pos, Position relative)
+        public Position PositionRelativeCodeUnits(Position pos, Position relative)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_POSITIONRELATIVECODEUNITS, (UIntPtr)pos, (IntPtr)relative);
+            return SendMessage(_scintilla, SciMsg.SCI_POSITIONRELATIVECODEUNITS, (UIntPtr)pos, (IntPtr)relative);
         }
 
         /// <summary>Copy a range of text to the clipboard. Positions are clipped into the document. (Scintilla feature 2419)</summary>
@@ -3504,10 +3938,26 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_SETSELECTIONMODE, (UIntPtr)selectionMode, Unused);
         }
 
+        /// <summary>
+        /// Set the selection mode to stream (SC_SEL_STREAM) or rectangular (SC_SEL_RECTANGLE/SC_SEL_THIN) or
+        /// by lines (SC_SEL_LINES) without changing MoveExtendsSelection.
+        /// (Scintilla feature 2659)
+        /// </summary>
+        public void ChangeSelectionMode(SelectionMode selectionMode)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_CHANGESELECTIONMODE, (UIntPtr)selectionMode, Unused);
+        }
+
         /// <summary>Get the mode of the current selection. (Scintilla feature 2423)</summary>
         public SelectionMode GetSelectionMode()
         {
             return (SelectionMode)SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONMODE, UnusedW, Unused);
+        }
+
+        /// <summary>Set whether or not regular caret moves will extend or reduce the selection. (Scintilla feature 2719)</summary>
+        public void SetMoveExtendsSelection(bool moveExtendsSelection)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETMOVEEXTENDSSELECTION, new UIntPtr(moveExtendsSelection ? 1U : 0U), Unused);
         }
 
         /// <summary>Get whether or not regular caret moves will extend or reduce the selection. (Scintilla feature 2706)</summary>
@@ -3727,7 +4177,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Enlarge the document to a particular size of text bytes. (Scintilla feature 2446)</summary>
-        public void Allocate(int bytes)
+        public void Allocate(Position bytes)
         {
             SendMessage(_scintilla, SciMsg.SCI_ALLOCATE, (UIntPtr)bytes, Unused);
         }
@@ -3747,7 +4197,7 @@ namespace Npp.DotNet.Plugin
         /// Set to -1 and the string will be measured to the first nul.
         /// (Scintilla feature 2448)
         /// </summary>
-        public void SetLengthForEncode(int bytes)
+        public void SetLengthForEncode(Position bytes)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETLENGTHFORENCODE, (UIntPtr)bytes, Unused);
         }
@@ -3771,9 +4221,9 @@ namespace Npp.DotNet.Plugin
         /// multi-byte characters. If beyond end of line, return line end position.
         /// (Scintilla feature 2456)
         /// </summary>
-        public int FindColumn(Position line, int column)
+        public Position FindColumn(Position line, Position column)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_FINDCOLUMN, (UIntPtr)line, (IntPtr)column);
+            return SendMessage(_scintilla, SciMsg.SCI_FINDCOLUMN, (UIntPtr)line, (IntPtr)column);
         }
 
         /// <summary>Can the caret preferred x position only be changed by explicit movement commands? (Scintilla feature 2457)</summary>
@@ -3806,19 +4256,23 @@ namespace Npp.DotNet.Plugin
             return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETPASTECONVERTENDINGS, UnusedW, Unused);
         }
 
+        /// <summary>Replace the selection with text like a rectangular paste. (Scintilla feature 2771)</summary>
+        public void ReplaceRectangular(string text)
+        {
+            SendEncodedBytes(SciMsg.SCI_REPLACERECTANGULAR, text);
+        }
+
         /// <summary>Duplicate the selection. If selection empty duplicate the line containing the caret. (Scintilla feature 2469)</summary>
         public void SelectionDuplicate()
         {
             SendMessage(_scintilla, SciMsg.SCI_SELECTIONDUPLICATE, UnusedW, Unused);
         }
 
-        /// <inheritdoc cref="SciMsg.SCI_SETCARETLINEBACKALPHA"/>
+        /// <summary>Set background alpha of the caret line. (Scintilla feature 2470)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
-        public void SetCaretLineBackAlpha(Alpha alpha)
-        {
-        }
+        public void SetCaretLineBackAlpha(Alpha alpha) { }
 
-        /// <inheritdoc cref="SciMsg.SCI_GETCARETLINEBACKALPHA"/>
+        /// <summary>Get the background alpha of the caret line. (Scintilla feature 2471)</summary>
         [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Alpha GetCaretLineBackAlpha() => default;
 
@@ -3883,15 +4337,15 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Where does a particular indicator start? (Scintilla feature 2508)</summary>
-        public int IndicatorStart(int indicator, Position pos)
+        public Position IndicatorStart(int indicator, Position pos)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_INDICATORSTART, (UIntPtr)indicator, (IntPtr)pos);
+            return SendMessage(_scintilla, SciMsg.SCI_INDICATORSTART, (UIntPtr)indicator, (IntPtr)pos);
         }
 
         /// <summary>Where does a particular indicator end? (Scintilla feature 2509)</summary>
-        public int IndicatorEnd(int indicator, Position pos)
+        public Position IndicatorEnd(int indicator, Position pos)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_INDICATOREND, (UIntPtr)indicator, (IntPtr)pos);
+            return SendMessage(_scintilla, SciMsg.SCI_INDICATOREND, (UIntPtr)indicator, (IntPtr)pos);
         }
 
         /// <summary>Set number of entries in position cache (Scintilla feature 2514)</summary>
@@ -3906,10 +4360,40 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_GETPOSITIONCACHE, UnusedW, Unused);
         }
 
+        /// <summary>Set maximum number of threads used for layout (Scintilla feature 2775)</summary>
+        public void SetLayoutThreads(int threads)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETLAYOUTTHREADS, (UIntPtr)threads, Unused);
+        }
+
+        /// <summary>Get maximum number of threads used for layout (Scintilla feature 2776)</summary>
+        public int GetLayoutThreads()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_GETLAYOUTTHREADS, UnusedW, Unused);
+        }
+
         /// <summary>Copy the selection, if selection empty copy the line with the caret (Scintilla feature 2519)</summary>
         public void CopyAllowLine()
         {
             SendMessage(_scintilla, SciMsg.SCI_COPYALLOWLINE, UnusedW, Unused);
+        }
+
+        /// <summary>Cut the selection, if selection empty cut the line with the caret (Scintilla feature 2810)</summary>
+        public void CutAllowLine()
+        {
+            SendMessage(_scintilla, SciMsg.SCI_CUTALLOWLINE, UnusedW, Unused);
+        }
+
+        /// <summary>Set the string to separate parts when copying a multiple selection. (Scintilla feature 2811)</summary>
+        public void SetCopySeparator(string separator)
+        {
+            SendEncodedBytes(SciMsg.SCI_SETCOPYSEPARATOR, separator, UnusedW);
+        }
+
+        /// <summary>Get the string to separate parts when copying a multiple selection. (Scintilla feature 2812)</summary>
+        public string GetCopySeparator()
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_GETCOPYSEPARATOR, Encoding.UTF8);
         }
 
         /// <summary>
@@ -3992,9 +4476,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Which symbol was defined for markerNumber with MarkerDefine (Scintilla feature 2529)</summary>
-        public int MarkerSymbolDefined(int markerNumber)
+        public MarkerSymbol MarkerSymbolDefined(int markerNumber)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_MARKERSYMBOLDEFINED, (UIntPtr)markerNumber, Unused);
+            return (MarkerSymbol)SendMessage(_scintilla, SciMsg.SCI_MARKERSYMBOLDEFINED, (UIntPtr)markerNumber, Unused);
         }
 
         /// <summary>Set the text in the text margin for a line (Scintilla feature 2530)</summary>
@@ -4135,13 +4619,13 @@ namespace Npp.DotNet.Plugin
             return (int)SendMessage(_scintilla, SciMsg.SCI_ANNOTATIONGETSTYLEOFFSET, UnusedW, Unused);
         }
 
-        /// <summary>Release all extended (>255) style numbers (Scintilla feature 2552)</summary>
+        /// <summary>Release all extended (&gt;255) style numbers (Scintilla feature 2552)</summary>
         public void ReleaseAllExtendedStyles()
         {
             SendMessage(_scintilla, SciMsg.SCI_RELEASEALLEXTENDEDSTYLES, UnusedW, Unused);
         }
 
-        /// <summary>Allocate some extended (>255) style numbers and return the start of the range (Scintilla feature 2553)</summary>
+        /// <summary>Allocate some extended (&gt;255) style numbers and return the start of the range (Scintilla feature 2553)</summary>
         public int AllocateExtendedStyles(int numberStyles)
         {
             return (int)SendMessage(_scintilla, SciMsg.SCI_ALLOCATEEXTENDEDSTYLES, (UIntPtr)numberStyles, Unused);
@@ -4154,9 +4638,9 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Find the position of a character from a point within the window. (Scintilla feature 2561)</summary>
-        public int CharPositionFromPoint(int x, int y)
+        public Position CharPositionFromPoint(int x, int y)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_CHARPOSITIONFROMPOINT, (UIntPtr)x, (IntPtr)y);
+            return SendMessage(_scintilla, SciMsg.SCI_CHARPOSITIONFROMPOINT, (UIntPtr)x, (IntPtr)y);
         }
 
         /// <summary>
@@ -4164,9 +4648,9 @@ namespace Npp.DotNet.Plugin
         /// Return INVALID_POSITION if not close to text.
         /// (Scintilla feature 2562)
         /// </summary>
-        public int CharPositionFromPointClose(int x, int y)
+        public Position CharPositionFromPointClose(int x, int y)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_CHARPOSITIONFROMPOINTCLOSE, (UIntPtr)x, (IntPtr)y);
+            return SendMessage(_scintilla, SciMsg.SCI_CHARPOSITIONFROMPOINTCLOSE, (UIntPtr)x, (IntPtr)y);
         }
 
         /// <summary>Set whether switching to rectangular mode while selecting with the mouse is allowed. (Scintilla feature 2668)</summary>
@@ -4259,6 +4743,12 @@ namespace Npp.DotNet.Plugin
             SendMessage(_scintilla, SciMsg.SCI_ADDSELECTION, (UIntPtr)caret, (IntPtr)anchor);
         }
 
+        /// <summary>Find the selection index for a point. -1 when not at a selection. (Scintilla feature 2474)</summary>
+        public int SelectionFromPoint(int x, int y)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_SELECTIONFROMPOINT, (UIntPtr)x, (IntPtr)y);
+        }
+
         /// <summary>Drop one selection (Scintilla feature 2671)</summary>
         public void DropSelectionN(int selection)
         {
@@ -4302,7 +4792,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Set the virtual space of the caret of the nth selection. (Scintilla feature 2580)</summary>
-        public void SetSelectionNCaretVirtualSpace(int selection, int space)
+        public void SetSelectionNCaretVirtualSpace(int selection, Position space)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETSELECTIONNCARETVIRTUALSPACE, (UIntPtr)selection, (IntPtr)space);
         }
@@ -4310,11 +4800,11 @@ namespace Npp.DotNet.Plugin
         /// <summary>Return the virtual space of the caret of the nth selection. (Scintilla feature 2581)</summary>
         public Position GetSelectionNCaretVirtualSpace(int selection)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNCARETVIRTUALSPACE, (UIntPtr)selection, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNCARETVIRTUALSPACE, (UIntPtr)selection, Unused);
         }
 
         /// <summary>Set the virtual space of the anchor of the nth selection. (Scintilla feature 2582)</summary>
-        public void SetSelectionNAnchorVirtualSpace(int selection, int space)
+        public void SetSelectionNAnchorVirtualSpace(int selection, Position space)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETSELECTIONNANCHORVIRTUALSPACE, (UIntPtr)selection, (IntPtr)space);
         }
@@ -4322,7 +4812,7 @@ namespace Npp.DotNet.Plugin
         /// <summary>Return the virtual space of the anchor of the nth selection. (Scintilla feature 2583)</summary>
         public Position GetSelectionNAnchorVirtualSpace(int selection)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNANCHORVIRTUALSPACE, (UIntPtr)selection, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNANCHORVIRTUALSPACE, (UIntPtr)selection, Unused);
         }
 
         /// <summary>Sets the position that starts the selection - this becomes the anchor. (Scintilla feature 2584)</summary>
@@ -4337,10 +4827,22 @@ namespace Npp.DotNet.Plugin
             return SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNSTART, (UIntPtr)selection, Unused);
         }
 
+        /// <summary>Returns the virtual space at the start of the selection. (Scintilla feature 2726)</summary>
+        public Position GetSelectionNStartVirtualSpace(int selection)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNSTARTVIRTUALSPACE, (UIntPtr)selection, Unused);
+        }
+
         /// <summary>Sets the position that ends the selection - this becomes the currentPosition. (Scintilla feature 2586)</summary>
         public void SetSelectionNEnd(int selection, Position caret)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETSELECTIONNEND, (UIntPtr)selection, (IntPtr)caret);
+        }
+
+        /// <summary>Returns the virtual space at the end of the selection. (Scintilla feature 2727)</summary>
+        public Position GetSelectionNEndVirtualSpace(int selection)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_GETSELECTIONNENDVIRTUALSPACE, (UIntPtr)selection, Unused);
         }
 
         /// <summary>Returns the position at the end of the selection. (Scintilla feature 2587)</summary>
@@ -4374,7 +4876,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Set the virtual space of the caret of the rectangular selection. (Scintilla feature 2592)</summary>
-        public void SetRectangularSelectionCaretVirtualSpace(int space)
+        public void SetRectangularSelectionCaretVirtualSpace(Position space)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, (UIntPtr)space, Unused);
         }
@@ -4386,7 +4888,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Set the virtual space of the anchor of the rectangular selection. (Scintilla feature 2594)</summary>
-        public void SetRectangularSelectionAnchorVirtualSpace(int space)
+        public void SetRectangularSelectionAnchorVirtualSpace(Position space)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, (UIntPtr)space, Unused);
         }
@@ -4432,7 +4934,7 @@ namespace Npp.DotNet.Plugin
         /// Must have previously called SetSelFore with non-zero first argument for this to have an effect.
         /// (Scintilla feature 2600)
         /// </summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_SETELEMENTCOLOUR(SC_ELEMENT_SELECTION_ADDITIONAL_TEXT, colourAlpha)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetAdditionalSelFore(Colour fore)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETADDITIONALSELFORE, (UIntPtr)fore.Value, Unused);
@@ -4443,35 +4945,35 @@ namespace Npp.DotNet.Plugin
         /// Must have previously called SetSelBack with non-zero first argument for this to have an effect.
         /// (Scintilla feature 2601)
         /// </summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_SETELEMENTCOLOUR(SC_ELEMENT_SELECTION_ADDITIONAL_BACK, colourAlpha)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetAdditionalSelBack(Colour back)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETADDITIONALSELBACK, (UIntPtr)back.Value, Unused);
         }
 
         /// <summary>Set the alpha of the selection. (Scintilla feature 2602)</summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_SETELEMENTCOLOUR(SC_ELEMENT_SELECTION_ADDITIONAL_TEXT, colouralpha)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetAdditionalSelAlpha(Alpha alpha)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETADDITIONALSELALPHA, (UIntPtr)alpha, Unused);
         }
 
         /// <summary>Get the alpha of the selection. (Scintilla feature 2603)</summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_GETELEMENTCOLOUR(SC_ELEMENT_SELECTION_ADDITIONAL_TEXT)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Alpha GetAdditionalSelAlpha()
         {
             return (Alpha)SendMessage(_scintilla, SciMsg.SCI_GETADDITIONALSELALPHA, UnusedW, Unused);
         }
 
         /// <summary>Set the foreground colour of additional carets. (Scintilla feature 2604)</summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_SETELEMENTCOLOUR(SC_ELEMENT_CARET, colouralpha)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public void SetAdditionalCaretFore(Colour fore)
         {
             SendMessage(_scintilla, SciMsg.SCI_SETADDITIONALCARETFORE, (UIntPtr)fore.Value, Unused);
         }
 
         /// <summary>Get the foreground colour of additional carets. (Scintilla feature 2605)</summary>
-        [Obsolete("Replaced in Scintilla v5 by SCI_GETELEMENTCOLOUR(SC_ELEMENT_CARET)")]
+        [Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]
         public Colour GetAdditionalCaretFore()
         {
             return new Colour((int)SendMessage(_scintilla, SciMsg.SCI_GETADDITIONALCARETFORE, UnusedW, Unused));
@@ -4524,9 +5026,9 @@ namespace Npp.DotNet.Plugin
         /// Return -1 when no more lines.
         /// (Scintilla feature 2618)
         /// </summary>
-        public int ContractedFoldNext(int lineStart)
+        public Position ContractedFoldNext(Position lineStart)
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_CONTRACTEDFOLDNEXT, (UIntPtr)lineStart, Unused);
+            return SendMessage(_scintilla, SciMsg.SCI_CONTRACTEDFOLDNEXT, (UIntPtr)lineStart, Unused);
         }
 
         /// <summary>Centre current line in window. (Scintilla feature 2619)</summary>
@@ -4622,24 +5124,24 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Create an ILoader*. (Scintilla feature 2632)</summary>
-        public IntPtr CreateLoader(int bytes, DocumentOption documentOptions)
+        public IntPtr CreateLoader(Position bytes, DocumentOption documentOptions)
         {
             return SendMessage(_scintilla, SciMsg.SCI_CREATELOADER, (UIntPtr)bytes, (IntPtr)documentOptions);
         }
 
-        /// <summary>On OS X, show a find indicator. (Scintilla feature 2640)</summary>
+        /// <summary>On macOS, show a find indicator. (Scintilla feature 2640)</summary>
         public void FindIndicatorShow(Position start, Position end)
         {
             SendMessage(_scintilla, SciMsg.SCI_FINDINDICATORSHOW, (UIntPtr)start, (IntPtr)end);
         }
 
-        /// <summary>On OS X, flash a find indicator, then fade out. (Scintilla feature 2641)</summary>
+        /// <summary>On macOS, flash a find indicator, then fade out. (Scintilla feature 2641)</summary>
         public void FindIndicatorFlash(Position start, Position end)
         {
             SendMessage(_scintilla, SciMsg.SCI_FINDINDICATORFLASH, (UIntPtr)start, (IntPtr)end);
         }
 
-        /// <summary>On OS X, hide the find indicator. (Scintilla feature 2642)</summary>
+        /// <summary>On macOS, hide the find indicator. (Scintilla feature 2642)</summary>
         public void FindIndicatorHide()
         {
             SendMessage(_scintilla, SciMsg.SCI_FINDINDICATORHIDE, UnusedW, Unused);
@@ -4691,34 +5193,11 @@ namespace Npp.DotNet.Plugin
             return (LineEndType)SendMessage(_scintilla, SciMsg.SCI_GETLINEENDTYPESACTIVE, UnusedW, Unused);
         }
 
-        /// <summary>Set the way a character is drawn. (Scintilla feature 2665)</summary>
-        /// <param name="encodedCharacter">NUL-terminated string of the bytes for one character in the current encoding.
-        /// This cannot be used to set a representation for multiple-character strings.</param>
-        /// <param name="representation">NUL-terminated UTF-8 string with a maximum length of 200 bytes.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="representation"/> encodes to more than 200 bytes.</exception>
-        public unsafe void SetRepresentation(string encodedCharacter, string representation)
-        {
-            if (Encoding.UTF8.GetByteCount($"{representation}\0") > 200)
-            {
-                throw new ArgumentException($"The maximum length of {nameof(representation)} is 200 bytes. " +
-                    "See https://www.scintilla.org/ScintillaDoc.html#SCI_SETREPRESENTATION",
-                    nameof(representation));
-            }
-            fixed (byte* encodedCharacterPtr = CodePage.GetBytes($"{encodedCharacter}\0"))
-            {
-                fixed (byte* representationPtr = Encoding.UTF8.GetBytes($"{representation}\0"))
-                {
-                    SendMessage(_scintilla, SciMsg.SCI_SETREPRESENTATION, (UIntPtr)encodedCharacterPtr, (IntPtr)representationPtr);
-                }
-            }
-        }
-
         /// <summary>
-        /// Set the way a character is drawn.
+        /// Get the way a character is drawn.
         /// Result is NUL-terminated.
         /// (Scintilla feature 2666)
         /// </summary>
-        /// <remarks>See <see cref="ScintillaGateway.SetRepresentation"/></remarks>
         public unsafe string GetRepresentation(string encodedCharacter)
         {
             fixed (byte* encodedCharacterPtr = CodePage.GetBytes($"{encodedCharacter}\0"))
@@ -4728,10 +5207,129 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>Remove a character representation. (Scintilla feature 2667)</summary>
-        /// <remarks>See <see cref="ScintillaGateway.SetRepresentation"/></remarks>
         public void ClearRepresentation(string encodedCharacter)
         {
             SendEncodedBytes(SciMsg.SCI_CLEARREPRESENTATION, encodedCharacter, Unused);
+        }
+
+        /// <summary>Clear representations to default. (Scintilla feature 2770)</summary>
+        public void ClearAllRepresentations()
+        {
+            SendMessage(_scintilla, SciMsg.SCI_CLEARALLREPRESENTATIONS, UnusedW, Unused);
+        }
+
+        /// <summary>Set the appearance of a representation. (Scintilla feature 2766)</summary>
+        public void SetRepresentationAppearance(string encodedCharacter, RepresentationAppearance appearance)
+        {
+            SendEncodedBytes(SciMsg.SCI_SETREPRESENTATIONAPPEARANCE, encodedCharacter, (IntPtr)appearance);
+        }
+
+        /// <summary>Get the appearance of a representation. (Scintilla feature 2767)</summary>
+        public RepresentationAppearance GetRepresentationAppearance(string encodedCharacter)
+        {
+            return (RepresentationAppearance)SendEncodedBytes(SciMsg.SCI_GETREPRESENTATIONAPPEARANCE, encodedCharacter, Unused);
+        }
+
+        /// <summary>Set the colour of a representation. (Scintilla feature 2768)</summary>
+        public void SetRepresentationColour(string encodedCharacter, ColourAlpha colour)
+        {
+            SendEncodedBytes(SciMsg.SCI_SETREPRESENTATIONCOLOUR, encodedCharacter, (IntPtr)colour.Value);
+        }
+
+        /// <summary>Get the colour of a representation. (Scintilla feature 2769)</summary>
+        public ColourAlpha GetRepresentationColour(string encodedCharacter)
+        {
+            return new ColourAlpha((int)SendEncodedBytes(SciMsg.SCI_GETREPRESENTATIONCOLOUR, encodedCharacter, Unused));
+        }
+
+        /// <summary>Set the end of line annotation text for a line (Scintilla feature 2740)</summary>
+        public void EOLAnnotationSetText(Position line, string text)
+        {
+            SendEncodedBytes(SciMsg.SCI_EOLANNOTATIONSETTEXT, text, (UIntPtr)line);
+        }
+
+        /// <summary>Get the end of line annotation text for a line (Scintilla feature 2741)</summary>
+        public string EOLAnnotationGetText(Position line)
+        {
+            return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_EOLANNOTATIONGETTEXT, Encoding.UTF8, (UIntPtr)line);
+        }
+
+        /// <summary>Set the style number for the end of line annotations for a line (Scintilla feature 2742)</summary>
+        public void EOLAnnotationSetStyle(Position line, int style)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONSETSTYLE, (UIntPtr)line, (IntPtr)style);
+        }
+
+        /// <summary>Get the style number for the end of line annotations for a line (Scintilla feature 2743)</summary>
+        public int EOLAnnotationGetStyle(Position line)
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONGETSTYLE, (UIntPtr)line, Unused);
+        }
+
+        /// <summary>Clear the end of annotations from all lines (Scintilla feature 2744)</summary>
+        public void EOLAnnotationClearAll()
+        {
+            SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONCLEARALL, UnusedW, Unused);
+        }
+
+        /// <summary>Set the visibility for the end of line annotations for a view (Scintilla feature 2745)</summary>
+        public void EOLAnnotationSetVisible(EOLAnnotationVisible visible)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONSETVISIBLE, (UIntPtr)visible, Unused);
+        }
+
+        /// <summary>Get the visibility for the end of line annotations for a view (Scintilla feature 2746)</summary>
+        public EOLAnnotationVisible EOLAnnotationGetVisible()
+        {
+            return (EOLAnnotationVisible)SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONGETVISIBLE, UnusedW, Unused);
+        }
+
+        /// <summary>Get the start of the range of style numbers used for end of line annotations (Scintilla feature 2747)</summary>
+        public void EOLAnnotationSetStyleOffset(int style)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONSETSTYLEOFFSET, (UIntPtr)style, Unused);
+        }
+
+        /// <summary>Get the start of the range of style numbers used for end of line annotations (Scintilla feature 2748)</summary>
+        public int EOLAnnotationGetStyleOffset()
+        {
+            return (int)SendMessage(_scintilla, SciMsg.SCI_EOLANNOTATIONGETSTYLEOFFSET, UnusedW, Unused);
+        }
+
+        /// <summary>Get whether a feature is supported (Scintilla feature 2750)</summary>
+        public bool SupportsFeature(Supports feature)
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_SUPPORTSFEATURE, (UIntPtr)feature, Unused);
+        }
+
+        /// <summary>Retrieve line character index state. (Scintilla feature 2710)</summary>
+        public LineCharacterIndexType GetLineCharacterIndex()
+        {
+            return (LineCharacterIndexType)SendMessage(_scintilla, SciMsg.SCI_GETLINECHARACTERINDEX, UnusedW, Unused);
+        }
+
+        /// <summary>Request line character index be created or its use count increased. (Scintilla feature 2711)</summary>
+        public void AllocateLineCharacterIndex(LineCharacterIndexType lineCharacterIndex)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_ALLOCATELINECHARACTERINDEX, (UIntPtr)lineCharacterIndex, Unused);
+        }
+
+        /// <summary>Decrease use count of line character index and remove if 0. (Scintilla feature 2712)</summary>
+        public void ReleaseLineCharacterIndex(LineCharacterIndexType lineCharacterIndex)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_RELEASELINECHARACTERINDEX, (UIntPtr)lineCharacterIndex, Unused);
+        }
+
+        /// <summary>Retrieve the document line containing a position measured in index units. (Scintilla feature 2713)</summary>
+        public Position LineFromIndexPosition(Position pos, LineCharacterIndexType lineCharacterIndex)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_LINEFROMINDEXPOSITION, (UIntPtr)pos, (IntPtr)lineCharacterIndex);
+        }
+
+        /// <summary>Retrieve the position measured in index units at the start of a document line. (Scintilla feature 2714)</summary>
+        public Position IndexPositionFromLine(Position line, LineCharacterIndexType lineCharacterIndex)
+        {
+            return SendMessage(_scintilla, SciMsg.SCI_INDEXPOSITIONFROMLINE, (UIntPtr)line, (IntPtr)lineCharacterIndex);
         }
 
         /// <summary>Start notifying the container of all key presses and commands. (Scintilla feature 3001)</summary>
@@ -4745,10 +5343,6 @@ namespace Npp.DotNet.Plugin
         {
             SendMessage(_scintilla, SciMsg.SCI_STOPRECORD, UnusedW, Unused);
         }
-
-        /// <inheritdoc cref="IScintillaGateway.SetLexer" />
-        [Obsolete("Use SCI_SETILEXER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETILEXER", true)]
-        public void SetLexer(int lexer) { }
 
         /// <summary>Retrieve the lexing language of the document. (Scintilla feature 4002)</summary>
         public int GetLexer()
@@ -4772,18 +5366,6 @@ namespace Npp.DotNet.Plugin
         public void SetKeyWords(int keyWordSet, string keyWords)
         {
             SendUTF8Bytes(SciMsg.SCI_SETKEYWORDS, keyWords, (UIntPtr)keyWordSet);
-        }
-
-        /// <summary>Set the lexing language of the document based on string name. (Scintilla feature 4006)</summary>
-        [Obsolete("Use SCI_SETILEXER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETILEXER", true)]
-        public void SetLexerLanguage(string language)
-        {
-        }
-
-        /// <summary>Load a lexer library (dll / so). (Scintilla feature 4007)</summary>
-        [Obsolete("SCI_LOADLEXERLIBRARY was removed in Scintilla 5.0: https://www.scintilla.org/ScintillaDoc.html#SCI_CREATELOADER", true)]
-        public void LoadLexerLibrary(string path)
-        {
         }
 
         /// <summary>
@@ -4885,9 +5467,9 @@ namespace Npp.DotNet.Plugin
         /// LF, CR, and CRLF are supported by the lexer.
         /// (Scintilla feature 4018)
         /// </summary>
-        public int GetLineEndTypesSupported()
+        public LineEndType GetLineEndTypesSupported()
         {
-            return (int)SendMessage(_scintilla, SciMsg.SCI_GETLINEENDTYPESSUPPORTED, UnusedW, Unused);
+            return (LineEndType)SendMessage(_scintilla, SciMsg.SCI_GETLINEENDTYPESSUPPORTED, UnusedW, Unused);
         }
 
         /// <summary>Allocate a set of sub styles for a particular base style, returning start of range (Scintilla feature 4020)</summary>
@@ -4988,13 +5570,21 @@ namespace Npp.DotNet.Plugin
             return GetNullStrippedStringFromMessageThatReturnsLength(SciMsg.SCI_DESCRIPTIONOFSTYLE, Encoding.UTF8, (UIntPtr)style);
         }
 
+        /// <summary>Set the lexer from an ILexer*. (Scintilla feature 4033)</summary>
+        public void SetILexer(IntPtr ilexer)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETILEXER, UnusedW, (IntPtr)ilexer);
+        }
+
 #if !SCI_DISABLE_PROVISIONAL
         /// <summary>Retrieve bidirectional text display state. (Scintilla feature 2708)</summary>
         public Bidirectional GetBidirectional()
         {
             return (Bidirectional)SendMessage(_scintilla, SciMsg.SCI_GETBIDIRECTIONAL, UnusedW, Unused);
         }
+#endif
 
+#if !SCI_DISABLE_PROVISIONAL
         /// <summary>Set bidirectional text display state. (Scintilla feature 2709)</summary>
         public void SetBidirectional(Bidirectional bidirectional)
         {
@@ -5002,78 +5592,71 @@ namespace Npp.DotNet.Plugin
         }
 #endif
 
-        /// <summary>Retrieve line character index state. (Scintilla feature 2710)</summary>
-        public LineCharacterIndexType GetLineCharacterIndex()
-        {
-            return (LineCharacterIndexType)SendMessage(_scintilla, SciMsg.SCI_GETLINECHARACTERINDEX, UnusedW, Unused);
-        }
-
-        /// <summary>Request line character index be created or its use count increased. (Scintilla feature 2711)</summary>
-        public void AllocateLineCharacterIndex(LineCharacterIndexType lineCharacterIndex)
-        {
-            SendMessage(_scintilla, SciMsg.SCI_ALLOCATELINECHARACTERINDEX, (UIntPtr)lineCharacterIndex, Unused);
-        }
-
-        /// <summary>Decrease use count of line character index and remove if 0. (Scintilla feature 2712)</summary>
-        public void ReleaseLineCharacterIndex(LineCharacterIndexType lineCharacterIndex)
-        {
-            SendMessage(_scintilla, SciMsg.SCI_RELEASELINECHARACTERINDEX, (UIntPtr)lineCharacterIndex, Unused);
-        }
-
-        /// <summary>Retrieve the document line containing a position measured in index units. (Scintilla feature 2713)</summary>
-        public Position LineFromIndexPosition(Position pos, LineCharacterIndexType lineCharacterIndex)
-        {
-            return SendMessage(_scintilla, SciMsg.SCI_LINEFROMINDEXPOSITION, (UIntPtr)pos, (IntPtr)lineCharacterIndex);
-        }
-
-        /// <summary>Retrieve the position measured in index units at the start of a document line. (Scintilla feature 2714)</summary>
-        public Position IndexPositionFromLine(Position line, LineCharacterIndexType lineCharacterIndex)
-        {
-            return SendMessage(_scintilla, SciMsg.SCI_INDEXPOSITIONFROMLINE, (UIntPtr)line, (IntPtr)lineCharacterIndex);
-        }
-
         /// <summary>
-        /// Scintilla no longer supports style byte indicators. The last version to support style byte indicators was 3.4.2.
-        /// Any use of these symbols should be removed and replaced with <a href="https://www.scintilla.org/ScintillaDoc.html#Indicators">standard indicators</a>.
+        /// Divide each styling byte into lexical class bits (default: 5) and indicator
+        /// bits (default: 3). If a lexer requires more than 32 lexical states, then this
+        /// is used to expand the possible states.
+        /// (Scintilla feature 2090)
         /// </summary>
-        [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_SETSTYLEBITS")]
-        public void SetStyleBits(int _) { }
+        [Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators")]
+        public void SetStyleBits(int bits) { }
 
-        /// <summary>Always returns <c>8</c>, indicating that 8 bits are used for styling and there are 256 styles.</summary>
-        [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETSTYLEBITS")]
+        /// <summary>Retrieve number of bits in style bytes used to hold the lexical state. (Scintilla feature 2091)</summary>
+        [Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators")]
         public int GetStyleBits() => 8;
 
-        /// <inheritdoc cref="GetStyleBits" />
-        [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETSTYLEBITSNEEDED")]
+        /// <summary>Retrieve the number of bits the current lexer needs for styling. (Scintilla feature 4011)</summary>
+        [Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators")]
         public int GetStyleBitsNeeded() => GetStyleBits();
 
         /// <summary>
-        /// On Windows, Scintilla no longer supports narrow character windows so input is always treated as Unicode.
+        /// Deprecated in 3.5.5
+        /// Always interpret keyboard input as Unicode
+        /// (Scintilla feature 2521)
         /// </summary>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_SETKEYSUNICODE")]
-        public void SetKeysUnicode(bool keysUnicode)
-        {
-        }
+        public void SetKeysUnicode(bool keysUnicode) { }
 
-        /// <inheritdoc cref="SetKeysUnicode" />
-        /// <returns><see langword="true"/></returns>
+        /// <summary>Are keys always interpreted as Unicode? (Scintilla feature 2522)</summary>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETKEYSUNICODE")]
         public bool GetKeysUnicode() => true;
 
-        /// <summary>
-        /// This has been replaced with <see cref="GetPhasesDraw"/> which is more general, allowing multiple phase drawing as well as one and two phase drawing.
-        /// </summary>
-        /// <returns><see langword="true"/></returns>
+        /// <summary>Is drawing done in two phases with backgrounds drawn before foregrounds? (Scintilla feature 2283)</summary>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]
         public bool GetTwoPhaseDraw() => true;
 
-        /// <inheritdoc cref="GetTwoPhaseDraw" />
+        /// <summary>
+        /// In twoPhaseDraw mode, drawing is performed in two phases, first the background
+        /// and then the foreground. This avoids chopping off characters that overlap the next run.
+        /// (Scintilla feature 2284)
+        /// </summary>
         [Obsolete("See https://www.scintilla.org/ScintillaDoc.html#SCI_SETTWOPHASEDRAW")]
-        public void SetTwoPhaseDraw(bool twoPhase)
-        {
-        }
+        public void SetTwoPhaseDraw(bool twoPhase) { }
 
         /* --Autogenerated -- end of section automatically generated from Scintilla.iface */
+
+
+        /// <summary>Set the way a character is drawn. (Scintilla feature 2665)</summary>
+        /// <param name="encodedCharacter">NUL-terminated string of the bytes for one character in the current encoding.
+        /// This cannot be used to set a representation for multiple-character strings.</param>
+        /// <param name="representation">NUL-terminated UTF-8 string with a maximum length of 200 bytes.</param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="representation"/> encodes to more than 200 bytes.</exception>
+        public unsafe void SetRepresentation(string encodedCharacter, string representation)
+        {
+            if (Encoding.UTF8.GetByteCount($"{representation}\0") > 200)
+            {
+                throw new ArgumentException($"The maximum length of {nameof(representation)} is 200 bytes. " +
+                    "See https://www.scintilla.org/ScintillaDoc.html#SCI_SETREPRESENTATION",
+                    nameof(representation));
+            }
+            fixed (byte* encodedCharacterPtr = CodePage.GetBytes($"{encodedCharacter}\0"))
+            {
+                fixed (byte* representationPtr = Encoding.UTF8.GetBytes($"{representation}\0"))
+                {
+                    SendMessage(_scintilla, SciMsg.SCI_SETREPRESENTATION, (UIntPtr)encodedCharacterPtr, (IntPtr)representationPtr);
+                }
+            }
+        }
 
         /// <summary>
         /// Encodes a .NET string in the document's code page and sends a fixed pointer to the resulting buffer as a WPARAM.

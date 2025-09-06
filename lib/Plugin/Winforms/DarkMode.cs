@@ -10,6 +10,8 @@ using Npp.DotNet.Plugin.Scintilla;
 
 namespace Npp.DotNet.Plugin.Winforms
 {
+	using Colour = ColourAlpha;
+
 	/// <summary>
 	/// Types and methods that interface with the Notepad++ dark mode API.
 	/// </summary>
