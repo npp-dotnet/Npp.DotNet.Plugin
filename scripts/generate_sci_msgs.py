@@ -13,12 +13,10 @@ from io import StringIO
 
 import deprecated
 import utils as u
+from sources import SCINTILLA_H, VERSION_TXT
 from get_sci_doc import ScintillaDefinitions, get_resource
 
-TAG='v8.8.5'
 OUTPUT=os.path.join(os.path.dirname(__file__), '..', 'lib', 'Plugin', 'SciMsgs.cs')
-SCINTILLA_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/scintilla/include/Scintilla.h'
-VERSION_TXT=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/scintilla/version.txt'
 
 CS_FILE_START=f"""/*
  * SPDX-FileCopyrightText: {datetime.today().year} {

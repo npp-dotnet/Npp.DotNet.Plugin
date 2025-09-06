@@ -13,13 +13,10 @@ from io import StringIO
 from itertools import takewhile
 
 import utils as u
-from get_sci_doc import ScintillaDefinitions, get_resource
+from sources import MENUCMDID_H, RESOURCE_H, PREFERNECE_RC_H, TAG
+from get_sci_doc import CommentLineStyle, get_resource
 
-TAG='v8.8.5'
 OUTPUT=os.path.join(os.path.dirname(__file__), '..', 'lib', 'Plugin', 'NppMenuCmdIds.cs')
-MENUCMDID_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/menuCmdID.h'
-RESOURCE_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/resource.h'
-PREFERNECE_RC_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/WinControls/Preference/preference_rc.h'
 
 CS_FILE_START=f"""/*
  * SPDX-FileCopyrightText: {datetime.today().year} {
@@ -39,7 +36,7 @@ def generate(out: StringIO):
     Extract definitions from a C++ header and write them to a new C# source file.
     """
     try:
-        docs = ScintillaDefinitions()
+        style = CommentLineStyle()
         for key, val in \
             ({
                 ('menuCmdID.h', 'MenuCmdId'): MENUCMDID_H,
@@ -56,7 +53,7 @@ def generate(out: StringIO):
                 re.search(r'(?i)(?:^.*NOTEPAD_PLUS_VERSION L"Notepad\+\+ )?(?P<version>.*)"\s*$',
                          get_resource(RESOURCE_H)[:1024], re.MULTILINE)
 
-            version = version.groupdict()['version'] if version is not None else ''
+            version = version.groupdict()['version'] if version is not None else TAG
             print(f"\n    /// <remarks>Definitions for Notepad++ {version}</remarks>", file=out)
             print(f"    public enum {key[1]} : uint\n    {{", file=out)
 
@@ -70,7 +67,7 @@ def generate(out: StringIO):
                             decl = re.sub(r'\-1$', '0xFFFFFFFF', line).split()
                             if len(decl) >= 3:
                                 val = ' '.join(takewhile(lambda s: not s.startswith('/'), decl[2:]))
-                                print(f"{docs.style.indent}{decl[1].upper()} = {val},", file=out)
+                                print(f"{style.indent}{decl[1].upper()} = {val},", file=out)
 
                     except (IndexError, AttributeError):
                         pass

@@ -19,8 +19,8 @@ class CommentLineStyle():
     """
     A documentation comment line style.
     """
-    def __init__(self, tokens=r'///', indent_with=8):
-        self.indent = ' ' * indent_with
+    def __init__(self, tokens=r'///', indent_width=8):
+        self.indent = ' ' * indent_width
         self.prefix = f"{self.indent}{tokens}"
 
     def __str__(self):
@@ -92,10 +92,6 @@ class ScintillaDefinitions(HTMLParser):
         Return a formatted XML comment for the given symbol, if found.
         """
         doc_lines = []
-
-        def xmlify(s: str) -> str:
-            _s = html_escape(s, quote=False).replace('\u2192', '-&gt;')
-            return re.sub(r'\s{2,}', ' ', re.sub(r'\*\b', '\uff0a', _s))
 
         if sym in self.defs:
             doc = str(self.defs.get(sym))
@@ -171,6 +167,13 @@ def get_resource(resource: str) -> str:
         print(repr(err), file=sys.stderr)
 
     return response
+
+def xmlify(s: str) -> str:
+    """
+    Render text as valid XML.
+    """
+    _s = html_escape(s, quote=False).replace('\u2192', '-&gt;')
+    return re.sub(r'\s{2,}', ' ', re.sub(r'\*\b', '\uff0a', _s))
 
 # -------------------------------------------------------------------
 if __name__ == '__main__':

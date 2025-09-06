@@ -34,3 +34,8 @@ path = ["examples/gui/Properties/**", "examples/gui/Forms/**.resx", "examples/gu
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2016 Kasper B. Graversen, 2023 Mark Johnston Olson, 2024 Robert Di Pardo"
 SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["scripts/scintilla/**"]
+SPDX-FileCopyrightText = "2000, 2013 Neil Hodgson <neilh@scintilla.org>"
+SPDX-License-Identifier = "LicenseRef-Scintilla"

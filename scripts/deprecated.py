@@ -2,14 +2,17 @@
  SPDX-FileCopyrightText: (c) 2024 Robert Di Pardo
  SPDX-License-Identifier: 0BSD
 """
-__all__ = ['MESSAGES']
+__all__ = ['MESSAGES', 'STUBS']
 
-_NO_STYLE_BITS = '[Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators", true)]'
+_NO_STYLE_BITS = '[Obsolete("Scintilla no longer supports style byte indicators: https://www.scintilla.org/ScintillaDoc.html#Indicators")]'
 _NO_SINGE_PHASE_DRAW = '[Obsolete("Use SC_PHASES_TWO or SC_PHASES_MULTIPLE instead: https://www.scintilla.org/ScintillaDoc.html#SCI_GETTWOPHASEDRAW")]'
 _USE_ELEMENT_APIS = '[Obsolete("Use the element colours APIs instead: https://www.scintilla.org/ScintillaDoc.html#ElementColours")]'
 _USE_LAYER_APIS = '[Obsolete("Use SCI_SETSELECTIONLAYER instead: https://www.scintilla.org/ScintillaDoc.html#SCI_SETSELECTIONLAYER")]'
 _USE_NEW_INDICATORS = '[Obsolete("Use the INDICATOR_* range numbers instead: https://www.scintilla.org/ScintillaDoc.html#Indicators")]'
 _USE_NEW_CHRNG_APIS = '[Obsolete("Use the 64-bit character range APIs instead: https://groups.google.com/g/scintilla-interest/c/mPLwYdC0-FE")]'
+_USE_GETPROPERTY = \
+    '[Obsolete("This is now the same as SCI_GETPROPERTY - no expansion is performed. ' + \
+    'See https://www.scintilla.org/ScintillaDoc.html#SCI_GETPROPERTYEXPANDED")]'
 
 MESSAGES = {
     'SCI_SETSTYLEBITS': _NO_STYLE_BITS,
@@ -47,4 +50,32 @@ MESSAGES = {
     'SCI_FORMATRANGE': _USE_NEW_CHRNG_APIS,
     'SCI_GETTEXTRANGE': _USE_NEW_CHRNG_APIS,
     'SCI_GETSTYLEDTEXT': _USE_NEW_CHRNG_APIS,
+    'SCI_GETPROPERTYEXPANDED': _USE_GETPROPERTY,
+}
+
+# Dummy implementations of deprecated or obsolete APIs
+STUBS = {
+    'GetCaretFore': '=> new Colour(0);',
+    'GetCaretLineBack': '=> new Colour(0xffffff);',
+    'GetCaretLineBackAlpha': '=> default;',
+    'GetCaretLineVisible': '=> true;',
+    'GetHotspotActiveBack': '=> new Colour(0xffffff);',
+    'GetHotspotActiveFore': '=> new Colour(0);',
+    'GetKeysUnicode': '=> true;',
+    'GetSelAlpha': '=> default;',
+    'GetStyleBits': '=> 8;',
+    'GetStyleBitsNeeded': '=> GetStyleBits();',
+    'GetTwoPhaseDraw': '=> true;',
+    'SetCaretFore': '{ }',
+    'SetCaretLineBack': '{ }',
+    'SetCaretLineBackAlpha': '{ }',
+    'SetCaretLineVisible': '{ }',
+    'SetHotspotActiveBack': '{ }',
+    'SetHotspotActiveFore': '{ }',
+    'SetKeysUnicode': '{ }',
+    'SetSelAlpha': '{ }',
+    'SetSelBack': '{ }',
+    'SetSelFore': '{ }',
+    'SetStyleBits': '{ }',
+    'SetTwoPhaseDraw': '{ }',
 }
