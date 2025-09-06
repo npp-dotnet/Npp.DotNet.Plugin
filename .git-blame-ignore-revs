@@ -1,6 +1,12 @@
 # SPDX-FileCopyrightText: Public Domain
 # SPDX-License-Identifier: CC0-1.0
 
+# Synchronize gateway with upstream Scintilla
+f1cd013c850dd5668e7da42575ace103e2e9e039
+
+# Move gateway types into their own namespace
+7d3469ffa0eb9970aa177195a35f30a38dcfa211
+
 # Reorder file tree to silence IDE0130 diagnostic
 466230fb54d5f5114e38289353b198fd5cf1cea3
 
