@@ -184,10 +184,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             if (this.HasChildren)
             {
                 long extAttrs = (long)WndLongGetter(this.Handle, GWL_EXSTYLE);
-                if (WS_EX_CONTROLPARENT != (extAttrs & WS_EX_CONTROLPARENT))
-                {
-                    SetControlParent(this, extAttrs | WS_EX_CONTROLPARENT);
-                }
+                SetControlParent(this, extAttrs | WS_EX_CONTROLPARENT);
             }
         }
 
@@ -203,10 +200,7 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             if (this.HasChildren)
             {
                 long extAttrs = (long)WndLongGetter(this.Handle, GWL_EXSTYLE);
-                if (WS_EX_CONTROLPARENT == (extAttrs & WS_EX_CONTROLPARENT))
-                {
-                    SetControlParent(this, extAttrs & ~WS_EX_CONTROLPARENT);
-                }
+                SetControlParent(this, extAttrs & ~WS_EX_CONTROLPARENT);
             }
         }
 
