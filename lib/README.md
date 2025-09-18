@@ -180,7 +180,8 @@ See [these examples](https://github.com/npp-dotnet/Npp.DotNet.Plugin/tree/main/e
 
 ### Projects using `Npp.DotNet.Plugin`
 
-* [WebEdit](https://github.com/npp-dotnet/WebEdit): a plugin for quickly inserting configurable HTML tag pairs
+* [Redis](https://github.com/bakingam1983/Notepad.plus.plus-RedisPlugin): a plugin for viewing Redis keys and values
+* [WebEdit](https://github.com/Krazal/WebEdit): a plugin for quickly inserting configurable HTML tag pairs
 
 
 ### License

@@ -1,5 +1,13 @@
 # SPDX-FileCopyrightText: Public Domain
 # SPDX-License-Identifier: CC0-1.0
+
+# NOTICE: all crawlers and bots are strictly prohibited from using this
+# content for AI training without complying with the terms of the below
+# RSL license. Any use of this content without complying with the terms
+# of this license is a violation of our intellectual property rights.
+
+License: https://rdipardo.bitbucket.io/license.xml
+
 User-agent: AddSearchBot
 User-agent: AI2Bot
 User-agent: Ai2Bot-Dolma
@@ -71,6 +79,7 @@ User-agent: meta-externalagent
 User-agent: Meta-ExternalAgent
 User-agent: meta-externalfetcher
 User-agent: Meta-ExternalFetcher
+User-agent: meta-webindexer
 User-agent: Microsoft.URL.Control
 User-agent: MistralAI-User
 User-agent: MistralAI-User/1.0
@@ -113,6 +122,7 @@ User-agent: SiteSnagger
 User-agent: SummalyBot
 User-agent: Teleport
 User-agent: TeleportPro
+User-agent: TerraCotta
 User-agent: Thinkbot
 User-agent: TikTokSpider
 User-agent: Timpibot
