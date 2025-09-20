@@ -451,10 +451,12 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
             // You can create your own non dockable dialog - in this case you don't nedd this demonstration.
             if (frmGoToLine == null)
             {
+                var tabIcon = PluginData.Notepad.IsDarkModeEnabled() ? Resources.star_white : Resources.star_black;
+                using MemoryStream tabIconStream = new(tabIcon);
                 frmGoToLine = new frmGoToLine(PluginData.Editor,
                     idFrmGotToLine,
                     $"{PluginName}.dll",
-                    (PluginData.Notepad.IsDarkModeEnabled() ? tbIcoDM : tbIco)!);
+                    new Icon(tabIconStream));
             }
             else
             {
