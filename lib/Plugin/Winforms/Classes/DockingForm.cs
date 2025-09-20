@@ -143,7 +143,10 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
                             case DockMgrMsg.DMN_DOCK:
                                 break;
                             case DockMgrMsg.DMN_FLOAT:
-                                RemoveControlParent();
+                                if (!HasChildren)
+                                    _postInit = () => RemoveControlParent();
+                                else
+                                    RemoveControlParent();
                                 break;
                             case DockMgrMsg.DMN_CLOSE:
                                 HideDockingForm();

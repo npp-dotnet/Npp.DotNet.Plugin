@@ -52,6 +52,11 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
         private readonly DialogKind _dialogKind;
 
         /// <summary>
+        /// Performs late-phase initialization that should be deferred until after a derived class has been constructed.
+        /// </summary>
+        private protected Action _postInit;
+
+        /// <summary>
         /// Handles the <see cref="NppMsg.NPPN_DARKMODECHANGED"/> notification.
         /// </summary>
         /// <param name="isDark">Set this to <see langword="true"/> if dark mode has changed from disabled to enabled,
@@ -101,10 +106,8 @@ namespace Npp.DotNet.Plugin.Winforms.Classes
             if (IsLoaded || !Visible)
                 return;
             IsLoaded = true;
-            // we can't put this in the base constructor
-            //     because it must be called *after* the subclass constructor adds all child controls
-            //     and the base constructor must be called first (that's just how C# works)
             AddKeyUpDownPressHandlers(this);
+            _postInit?.Invoke();
         }
 
         /// <summary>
