@@ -3,8 +3,8 @@
 
 version = 1
 SPDX-PackageName = "Npp.DotNet.Plugin"
-SPDX-PackageSupplier = "Robert Di Pardo <https://github.com/rdipardo>"
-SPDX-PackageDownloadLocation = "https://github.com/npp-dotnet/npp.dotnet.plugin.git"
+SPDX-PackageSupplier = "Npp.NET Team <https://github.com/npp-dotnet>"
+SPDX-PackageDownloadLocation = "https://www.nuget.org/packages/npp.dotnet.plugin"
 
 [[annotations]]
 path = ["COPYING"]

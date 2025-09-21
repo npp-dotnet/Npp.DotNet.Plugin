@@ -1,6 +1,4 @@
 ---
 uid: Npp.DotNet.Plugin.Winforms
-summary: *content
+summary: Data types, definitions and utilities for creating plugin dialogs using Windows Forms.
 ---
-
-Types and methods extracted from <https://github.com/molsonkiko/NppCSharpPluginPack>.
