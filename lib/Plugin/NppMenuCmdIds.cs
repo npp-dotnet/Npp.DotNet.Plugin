@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.6</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -144,6 +144,8 @@ namespace Npp.DotNet.Plugin
         IDM_EDIT_MULTISELECTSSKIP = (IDM_EDIT + 99),
         IDM_EDIT_SORTLINES_LOCALE_ASCENDING = (IDM_EDIT + 100),
         IDM_EDIT_SORTLINES_LOCALE_DESCENDING = (IDM_EDIT + 101),
+        IDM_EDIT_SETREADONLYFORALLDOCS = (IDM_EDIT + 102),
+        IDM_EDIT_CLEARREADONLYFORALLDOCS = (IDM_EDIT + 103),
         IDM_EDIT_AUTOCOMPLETE = (50000 + 0),
         IDM_EDIT_AUTOCOMPLETE_CURRENTFILE = (50000 + 1),
         IDM_EDIT_FUNCCALLTIP = (50000 + 2),
@@ -526,6 +528,8 @@ namespace Npp.DotNet.Plugin
         IDM_WINDOW_SORT_FT_DSC = (IDR_WINDOWS_MENU + 7),
         IDM_WINDOW_SORT_FS_ASC = (IDR_WINDOWS_MENU + 8),
         IDM_WINDOW_SORT_FS_DSC = (IDR_WINDOWS_MENU + 9),
+        IDM_WINDOW_SORT_FD_ASC = (IDR_WINDOWS_MENU + 10),
+        IDM_WINDOW_SORT_FD_DSC = (IDR_WINDOWS_MENU + 11),
         IDM_WINDOW_MRU_FIRST = (IDR_WINDOWS_MENU + 20),
         IDM_WINDOW_MRU_LIMIT = (IDR_WINDOWS_MENU + 59),
         IDM_WINDOW_COPY_NAME = (IDM_WINDOW_MRU_LIMIT + 1),
@@ -535,7 +539,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.6</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -946,6 +950,8 @@ namespace Npp.DotNet.Plugin
         IDD_DEBUGINFOBOX = 1750,
         IDC_DEBUGINFO_EDIT = 1751,
         IDC_DEBUGINFO_COPYLINK = 1752,
+        IDD_COMMANDLINEARGSBOX = 1755,
+        IDC_COMMANDLINEARGS_EDIT = 1756,
         IDD_DOSAVEORNOTBOX = 1760,
         IDC_DOSAVEORNOTTEXT = 1761,
         IDD_DOSAVEALLBOX = 1765,
@@ -1095,7 +1101,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.6</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
@@ -1500,6 +1506,9 @@ namespace Npp.DotNet.Plugin
         IDC_INSELECTION_THRESHOLD_EDIT = 6911,
         IDC_INSELECTION_THRESH_QUESTION_BUTTON = 6912,
         IDC_CHECK_FILL_DIR_FIELD_FROM_ACTIVE_DOC = 6913,
+        IDC_FILLFINDWHAT_THRESH_QUESTION_BUTTON = 6914,
+        IDC_FILLFINDWHAT_THRESHOLD_EDIT = 6915,
+        IDC_FILLFINDWHAT_THRESHOLD_STATIC = 6916,
         IDD_PREFERENCE_SUB_DARKMODE = 7100,
         IDC_RADIO_DARKMODE_BLACK = 7102,
         IDC_RADIO_DARKMODE_RED = 7103,

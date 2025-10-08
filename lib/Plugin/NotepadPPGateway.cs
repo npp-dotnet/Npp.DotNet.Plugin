@@ -174,6 +174,10 @@ namespace Npp.DotNet.Plugin
 		/// <returns>The path to <c>session.xml</c>.</returns>
 		public string GetSessionFilePath()
 		{
+			(int major, int minor, int patch) = GetNppVersion();
+			if (major > 8 || (major == 8 && minor > 8) || (major == 8 && minor == 8 && patch >= 6))
+				return Path.Combine(GetSettingsDirectory(), "session.xml");
+
 			// portable installation ?
 			var sessionPath = Directory.GetParent(GetPluginsHomePath());
 			var sessionFile = Path.Combine(sessionPath?.FullName, "session.xml");
@@ -185,6 +189,13 @@ namespace Npp.DotNet.Plugin
 			}
 			return sessionFile;
 		}
+
+		/// <returns>The path to the Notepad++ application settings directory.</returns>
+		/// <remarks>
+		/// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/b3884c1">8.8.6</a>
+		/// </remarks>
+		public string GetSettingsDirectory()
+			=> GetString(NppMsg.NPPM_GETNPPSETTINGSDIRPATH);
 
 		/// <summary>
 		/// Open a file for editing in Notepad++, pretty much like using the app's

@@ -1301,6 +1301,37 @@ namespace Npp.DotNet.Plugin
         /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/5406b82">8.8.2</a>
         /// </remarks>
         NPPM_GETTOOLBARICONSETCHOICE = NPPMSG + 118,
+        /// <summary>
+        /// int NPPM_GETNPPSETTINGSDIRPATH(size_t strLen, wchar_t *settingsDirPath)<br/>
+        /// Get the Notepad++ application settings directory path.
+        /// <para>wParam (<see cref="UIntPtr"/>) [in]: <c>strLen</c> - size of the allocated path buffer</para>
+        /// <para>lParam (<see cref="IntPtr"/>) [out]: <c>settingsDirPath</c> - allocated buffer for the settings directory path</para>
+        /// <para>
+        /// Returns the number of UTF-16 characters copied/to copy. A return value of 0 may indicate that <c>strLen</c>
+        /// was less than the path's full length, or the settings path could not be determined.
+        /// </para>
+        /// <para>
+        /// Users should first call this API with <c>settingsDirPath</c> set to <see cref="Win32.NULL"/> to get the required number of UTF-16 characters
+        /// (not including the terminating <see cref="Win32.NULL"/> character), allocate the <c>settingsDirPath</c> buffer with the return value + 1, then
+        /// call it again to get the path.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This API locates the Notepad++ <em>application</em> settings path. For the plugin settings path (i.e., <c>...\Plugins\Config</c>),
+        /// use <see cref="NPPM_GETPLUGINSCONFIGDIR"/> instead.
+        /// </para>
+        /// <para>
+        /// The output buffer will be filled with the same path that was given to the <c>-settingsDir</c> start parameter, if any;
+        /// otherwise, it will be the same path as the <see cref="NPPM_GETSETTINGSONCLOUDPATH">cloud settings directory</see>, if any.
+        /// </para>
+        /// <para>
+        /// If neither a <c>-settingsDir</c> parameter nor a cloud settings directory is defined, the return value is the <c>%AppData%</c>
+        /// settings directory (for fully installed Notepad++ versions), or the portable installation path (for portable versions).
+        /// </para>
+        /// Added in <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/b3884c1">8.8.6</a>
+        /// </remarks>
+        NPPM_GETNPPSETTINGSDIRPATH = (NPPMSG + 119),
 
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         /// <summary>

@@ -237,7 +237,7 @@ namespace Npp.DotNet.Plugin
         }
 
         /// <summary>
-        /// Class containing key and modifiers.
+        /// Encapsulates a key code and modifiers.
         /// </summary>
         /// <remarks>
         /// See <see href="https://www.scintilla.org/ScintillaDoc.html#keyDefinition"/>
