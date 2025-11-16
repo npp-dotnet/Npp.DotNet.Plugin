@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
     - name: REUSE Compliance Check
-      uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542 # v5.0.0
+      uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
 
   publish_aot:
     strategy:
@@ -41,6 +41,7 @@ jobs:
           dotnet-version: >
             8.0.x
             9.0.x
+            10.0.x
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
@@ -54,50 +55,50 @@ jobs:
         if: matrix.build_config == 'Debug' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
-          dotnet msbuild /t:Build /p:TargetFramework=net9.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
-          dotnet test -f net9.0-windows --no-build .\Memory
+          dotnet msbuild /t:Build /p:TargetFramework=net10.0-windows /p:SharedRuntimeIdentifier=win-${{ matrix.target_runtime }}
+          dotnet test -f net10.0-windows --no-build .\Memory
 
       - name: Test unmanaged string buffer allocation
         if: matrix.target_runtime == 'x64' && matrix.plugin_demo == 'minimal'
         working-directory: ./test
         run: |
-          dotnet test -f net9.0-windows -c ${{ matrix.build_config }} .\Buffers
+          dotnet test -f net10.0-windows -c ${{ matrix.build_config }} .\Buffers
 
       - name: Build demo plugins
         run: |
-          dotnet build examples\${{ matrix.plugin_demo }} -f net9.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
-          dotnet publish examples\${{ matrix.plugin_demo }} -f net9.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet build examples\${{ matrix.plugin_demo }} -f net10.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
+          dotnet publish examples\${{ matrix.plugin_demo }} -f net10.0-windows -r win-${{ matrix.target_runtime }} -c ${{ matrix.build_config }}
 
       - name: Pack localized plugin assets
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
-        working-directory: examples/minimal/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native
+        working-directory: examples/minimal/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native
         run: |
           7z a -tzip ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip ${{ env.PLUGIN_NAME }}.dll ${{ github.workspace }}\examples\minimal\localizations -y
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
-          path: examples/minimal/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
+          path: examples/minimal/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'gui'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
-          path: examples/gui/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.dll
+          path: examples/gui/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
-          path: examples/vbnet/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
+          path: examples/vbnet/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'fsharp'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
-          path: examples/fsharp/bin/Release/net9.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll
+          path: examples/fsharp/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll

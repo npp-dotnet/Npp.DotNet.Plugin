@@ -30,8 +30,8 @@ Also make sure to set the `<PublishAot>` and `<AllowUnsafeBlocks>` properties, e
 
 ```diff
   <PropertyGroup>
--   <TargetFramework>net9.0</TargetFramework>
-+   <TargetFramework>net9.0-windows</TargetFramework>
+-   <TargetFramework>net10.0</TargetFramework>
++   <TargetFramework>net10.0-windows</TargetFramework>
 +   <RuntimeIdentifiers>win-arm64;win-x64</RuntimeIdentifiers>
 +   <PublishAot>true</PublishAot>
 +   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

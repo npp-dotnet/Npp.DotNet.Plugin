@@ -50,10 +50,10 @@ namespace Npp.DotNet.Plugin.Tests.Buffers
             using ClikeStringArray cStrArray = new(nbFiles, int.MaxValue - 1);
 
             GetFileNames(nbFiles, cStrArray.NativePointer);
-            Assert.AreEqual(nbFiles, cStrArray.ManagedStringsUnicode.Count);
+            Assert.HasCount(nbFiles, cStrArray.ManagedStringsUnicode);
 
             foreach (string path in cStrArray.ManagedStringsUnicode)
-                Assert.IsTrue(path.Length <= MaxBufferLength, $"{path.Length} > {MaxBufferLength} wide chars");
+                Assert.IsLessThanOrEqualTo(MaxBufferLength, path.Length, $"{path.Length} > {MaxBufferLength} wide chars");
         }
 
         private void AllocateWithAnInitializedList()
@@ -66,10 +66,10 @@ namespace Npp.DotNet.Plugin.Tests.Buffers
             using ClikeStringArray cStrArray = new(stringList);
 
             GetFileNames(nbFiles, cStrArray.NativePointer);
-            Assert.AreEqual(nbFiles, cStrArray.ManagedStringsUnicode.Count);
+            Assert.HasCount(nbFiles, cStrArray.ManagedStringsUnicode);
 
             foreach (string path in cStrArray.ManagedStringsUnicode)
-                Assert.IsTrue(path.Length <= MaxBufferLength, $"{path.Length} > {MaxBufferLength} wide chars");
+                Assert.IsLessThanOrEqualTo(MaxBufferLength, path.Length, $"{path.Length} > {MaxBufferLength} wide chars");
         }
     }
 }
