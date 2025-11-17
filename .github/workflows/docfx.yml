@@ -9,8 +9,8 @@ on:
       - 'lib/**/*.cs'
       - 'docfx.json'
       - '.github/workflows/docfx.yml'
-    branches-ignore:
-      - 'dependabot/**'
+    branches:
+      - main
 
 permissions:
   contents: read
