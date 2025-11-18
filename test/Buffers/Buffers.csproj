@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildUnmanagedLibrary">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows</TargetFramework>
@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-    <PackageReference Include="MSTest" Version="3.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="MSTest" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +36,10 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="BuildUnmanagedLibrary">
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\Unmanaged" Command="msbuild /v:q /nr:false /t:Build /p:Configuration=$(SharedConfiguration);Platform=$(TargetPlatform)" />
+  <Target Name="BuildUnmanagedLibrary"
+          BeforeTargets="CoreCompile"
+          Condition="!Exists('$(MSBuildProjectDirectory)\Unmanaged\bin\$(TargetPlatform)\$(Configuration)\Unmanaged.dll')">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\Unmanaged" 
+          Command="msbuild /v:q /nr:false /t:Build /p:Configuration=$(SharedConfiguration);Platform=$(TargetPlatform)" />
   </Target>
 </Project>

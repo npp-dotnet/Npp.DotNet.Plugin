@@ -101,11 +101,12 @@ namespace Npp.DotNet.Plugin.Tests.Memory
         // --------------------------------------------------------------------------------------------------
         // Test method wrappers
         // --------------------------------------------------------------------------------------------------
+#pragma warning disable MSTEST0017
         private void TestExports()
         {
             Assert.IsNotNull(_dll?.Exports, $"{ModuleName} has no export table");
             int exports = (_dll?.Exports?.Entries?.Count).GetValueOrDefault();
-            Assert.IsTrue(exports >= 6, $"{ModuleName} exports only {exports} function(s)");
+            Assert.IsGreaterThanOrEqualTo(6, exports, $"{ModuleName} exports only {exports} function(s)");
         }
 
         private void TestLayoutOfNotificationStruct()
@@ -148,6 +149,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
                 throw new AssertFailedException($"{ModuleName} does not define the 'ShortcutKey' type");
             }
         }
+#pragma warning restore MSTEST0017
 
         private static int GetMetdataTokenForType(string typeName)
         {
