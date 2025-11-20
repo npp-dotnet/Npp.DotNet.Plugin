@@ -6,14 +6,14 @@
 This project is a tentative demonstration of the .NET SDK as a potential toolchain for Notepad++ plugin development.
 More concretely, it's a Windows-focused experiment with the [Native AOT] publish-time option introduced in .NET 7.
 
-Since Native AOT [does not support][rts] 32-bit runtimes, only 64-bit targets will be supported.
+Only 64-bit targets will be supported.
 
 
 ## Requirements
 
-- Visual Studio, 2022 edition or later. If you are not going to use the IDE, installing the [Visual Studio Build Tools][vstools] can save disk space
+- Visual Studio, 2026 edition or later. If you are not going to use the IDE, installing the [Visual Studio Build Tools][vstools] can save disk space
 
-- the .NET SDK, version 8.0.100 or later, installed by selecting the [.NET Desktop Development][0] workload from the [Visual Studio Installer][1]
+- the .NET SDK, version 10.0.100 or later, installed by selecting the [.NET Desktop Development][0] workload from the [Visual Studio Installer][1]
 
 - the Visual C++ build tools and development libraries, installed by selecting the [Desktop Development with C++][3] workload from the [Visual Studio Installer][1]. Make sure to install the SDKs for both x86_64 and ARM64 targets
 
@@ -99,7 +99,7 @@ This README and all other documentation, including images, are distributed under
 [1]: https://learn.microsoft.com/visualstudio/install/modify-visual-studio/#launch-the-installer-to-modify-your-installation
 [2]: https://dotnet.microsoft.com/download/dotnet/
 [3]: https://learn.microsoft.com/cpp/build/vscpp-step-0-installation
-[vstools]: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
+[vstools]: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2026
 [K. B. Graversen]: https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
 [Mark Olson]: https://github.com/molsonkiko/NppCSharpPluginPack
 

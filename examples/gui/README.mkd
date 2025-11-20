@@ -14,7 +14,7 @@ Launch the Visual Studio [Developer Command Prompt or PowerShell] from the Windo
 
 Change into the same directory as this README and run:
 
-    dotnet publish -f net9.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
+    dotnet publish -f net10.0-windows -c $(BUILD_CONFIGURATION) -r $(TARGET_RUNTIME) -o $(PLUGIN_FOLDER_PATH)
 
 The command line arguments are the following:
 

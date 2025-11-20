@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-arm64;win-x64</RuntimeIdentifiers>
     <PublishAot>true</PublishAot>
     <PublishRelease>false</PublishRelease>
@@ -61,6 +61,11 @@
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
     <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net10.0'))">
+    <Http3Support>false</Http3Support>
+    <UseSizeOptimizedLinq>true</UseSizeOptimizedLinq>
   </PropertyGroup>
 
 </Project>
