@@ -9,6 +9,7 @@ on:
 
 permissions:  # added using https://github.com/step-security/secure-repo
   contents: read
+  id-token: write
 
 jobs:
   package:
@@ -33,7 +34,13 @@ jobs:
           dotnet restore
           .\scripts\pack.ps1
 
+      - name: Obtain NuGet API key
+        uses: NuGet/login@d22cc5f58ff5b88bf9bd452535b4335137e24544 # v1.1.0
+        id: login
+        with:
+          user: ${{ github.actor }}
+
       - name: Publish release
         working-directory: ./lib/bin/Release
         run: |
-          dotnet nuget push Npp.DotNet.Plugin.${{ env.RELEASE_VERSION }}.nupkg -k ${{ secrets.NPP_NET_NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push Npp.DotNet.Plugin.${{ env.RELEASE_VERSION }}.nupkg -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
