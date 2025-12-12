@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.8.8</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.9</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -146,6 +146,8 @@ namespace Npp.DotNet.Plugin
         IDM_EDIT_SORTLINES_LOCALE_DESCENDING = (IDM_EDIT + 101),
         IDM_EDIT_SETREADONLYFORALLDOCS = (IDM_EDIT + 102),
         IDM_EDIT_CLEARREADONLYFORALLDOCS = (IDM_EDIT + 103),
+        IDM_EDIT_SORTLINES_LENGTH_ASCENDING = (IDM_EDIT + 104),
+        IDM_EDIT_SORTLINES_LENGTH_DESCENDING = (IDM_EDIT + 105),
         IDM_EDIT_AUTOCOMPLETE = (50000 + 0),
         IDM_EDIT_AUTOCOMPLETE_CURRENTFILE = (50000 + 1),
         IDM_EDIT_FUNCCALLTIP = (50000 + 2),
@@ -539,7 +541,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.8</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.9</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -947,6 +949,7 @@ namespace Npp.DotNet.Plugin
         IDC_ONLINEHELP_ADDR = 1704,
         IDC_AUTHOR_NAME = 1705,
         IDC_BUILD_DATETIME = 1706,
+        IDC_VERSION_BIT = 1707,
         IDD_DEBUGINFOBOX = 1750,
         IDC_DEBUGINFO_EDIT = 1751,
         IDC_DEBUGINFO_COPYLINK = 1752,
@@ -1078,6 +1081,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_CHANGETOOLBARCOLORABLESTATE = (NOTEPADPLUS_USER_INTERNAL + 108),
         NPPM_INTERNAL_SQLBACKSLASHESCAPE = (NOTEPADPLUS_USER_INTERNAL + 109),
         NPPM_INTERNAL_TOOLBARICONSCHANGED = (NOTEPADPLUS_USER_INTERNAL + 110),
+        NPPM_INTERNAL_SETTING_TABCOMPACTLABELLEN = (NOTEPADPLUS_USER_INTERNAL + 111),
         SCINTILLA_USER = (WM_USER + 2000),
         MACRO_USER = (WM_USER + 4000),
         WM_MACRODLGRUNMACRO = (MACRO_USER + 02),
@@ -1101,7 +1105,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.8.8</remarks>
+    /// <remarks>Definitions for Notepad++ v8.8.9</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
@@ -1157,6 +1161,9 @@ namespace Npp.DotNet.Plugin
         IDC_STATUSBAR_GB_STATIC = 6133,
         IDC_CHECK_HIDESTATUSBAR = 6134,
         IDC_CHECK_SHOWONLYPINNEDBUTTON = 6135,
+        IDC_TABCOMPACTLABELLEN_STATIC = 6136,
+        IDC_EDIT_TABCOMPACTLABELLEN = 6137,
+        IDC_TABCOMPACTLABELLEN_TIP_STATIC = 6138,
         IDD_PREFERENCE_SUB_MULTIINSTANCE = 6150,
         IDC_MULTIINST_GB_STATIC = 6151,
         IDC_SESSIONININST_RADIO = 6152,
@@ -1341,7 +1348,7 @@ namespace Npp.DotNet.Plugin
         IDC_RADIO_F_MAC = 6404,
         IDC_ENCODING_STATIC = 6405,
         IDC_RADIO_ANSI = 6406,
-        IDC_RADIO_UTF8SANSBOM = 6407,
+        IDC_RADIO_UTF8_NO_BOM = 6407,
         IDC_RADIO_UTF8 = 6408,
         IDC_RADIO_UTF16BIG = 6409,
         IDC_RADIO_UTF16SMALL = 6410,

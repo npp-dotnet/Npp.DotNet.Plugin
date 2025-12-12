@@ -63,7 +63,7 @@ def generate(out: StringIO):
                         macro = re.match(r'^#(if|end)(n?def|if)', line)
                         if macro is not None:
                             print(u.c_preproc_to_csharp(line, macro), file=out)
-                        elif re.search(r'^\s*(?!\/\/\s*)#define(?!.*_?(VERSION)_?)', line):
+                        elif re.search(r'^\s*(?!\/\/\s*)#define(?!.*\s+(L?"|_?(VERSION)_?))', line):
                             decl = re.sub(r'\-1$', '0xFFFFFFFF', line).split()
                             if len(decl) >= 3:
                                 val = ' '.join(takewhile(lambda s: not s.startswith('/'), decl[2:]))
