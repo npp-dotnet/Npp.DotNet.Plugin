@@ -74,28 +74,28 @@ jobs:
 
       - name: Upload ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'minimal'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}
           path: examples/minimal/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NAME }}.${{ matrix.target_runtime }}.zip
 
       - name: Upload ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'gui'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.Gui.Demo.${{ matrix.target_runtime }}
           path: examples/gui/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.Gui.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'vbnet'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.VBNet.Demo.${{ matrix.target_runtime }}
           path: examples/vbnet/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.VBNet.Demo.dll
 
       - name: Upload ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
         if: matrix.build_config == 'Release' && matrix.plugin_demo == 'fsharp'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ env.PLUGIN_NS }}.FSharp.Demo.${{ matrix.target_runtime }}
           path: examples/fsharp/bin/Release/net10.0-windows/win-${{ matrix.target_runtime }}/native/${{ env.PLUGIN_NS }}.FSharp.Demo.dll
