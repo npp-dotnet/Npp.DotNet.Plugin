@@ -3,7 +3,7 @@
  SPDX-License-Identifier: 0BSD
 """
 # Current Notepad++ version
-TAG='v8.8.9'
+TAG='v8.9'
 
 # Upstream Notepad++ sources
 MENUCMDID_H=f'https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/refs/tags/{TAG}/PowerEditor/src/menuCmdID.h'

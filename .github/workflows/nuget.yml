@@ -9,18 +9,24 @@ on:
 
 permissions:  # added using https://github.com/step-security/secure-repo
   contents: read
-  id-token: write
 
 jobs:
   package:
     runs-on: windows-latest
+    concurrency:
+      group: rel-${{ github.ref_name }}
+      cancel-in-progress: true
+    permissions:
+      id-token: write # required by NuGet/login
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
 
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602 # v5.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309 # v5.1.0
         with:
           global-json-file: ./global.json
 
@@ -29,8 +35,6 @@ jobs:
 
       - name: Build package
         run: |
-          $REL=${env:GITHUB_REF}.Split('/')[2]
-          echo "RELEASE_VERSION=$REL" >> $env:GITHUB_ENV
           dotnet restore
           .\scripts\pack.ps1
 
@@ -43,4 +47,7 @@ jobs:
       - name: Publish release
         working-directory: ./lib/bin/Release
         run: |
-          dotnet nuget push Npp.DotNet.Plugin.${{ env.RELEASE_VERSION }}.nupkg -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push Npp.DotNet.Plugin.${env:RELEASE}.nupkg -k ${env:API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          RELEASE: ${{ github.ref_name }}
+          API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}

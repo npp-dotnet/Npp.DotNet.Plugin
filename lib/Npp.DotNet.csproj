@@ -3,9 +3,9 @@
   <PropertyGroup>
     <AssemblyName>Npp.DotNet.Plugin</AssemblyName>
     <VersionPrefix>1.0.0.0</VersionPrefix>
-    <VersionSuffix>alpha.8</VersionSuffix>
+    <VersionSuffix>alpha.9</VersionSuffix>
     <Authors>Kasper B. Graversen, Mark Johnston Olson, Robert Di Pardo</Authors>
-    <Copyright>(c) 2016-2025 Kasper B. Graversen and Contributors</Copyright>
+    <Copyright>(c) 2016-2026 Kasper B. Graversen and Contributors</Copyright>
     <Description>AOT-compatible port of the .NET Framework plugin template for Notepad++</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>brand.png</PackageIcon>

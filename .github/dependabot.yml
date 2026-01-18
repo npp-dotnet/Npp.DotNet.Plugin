@@ -13,6 +13,8 @@ updates:
       - dependency-name: "Microsoft.NET.ILLink.Task"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       dev-dependencies:
         patterns:
@@ -22,6 +24,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 10
     groups:
       gh-actions:
         patterns:
