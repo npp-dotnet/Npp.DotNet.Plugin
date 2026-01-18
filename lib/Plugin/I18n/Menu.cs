@@ -32,7 +32,7 @@ namespace Npp.DotNet.Plugin.I18n
 
             if (GetMenuItemInfo(hMenu, menuItemID, false, ref mii))
             {
-                mii.cch = (mii.cch + 1) * Marshal.SizeOf<char>();
+                mii.cch = (mii.cch + 1) * Marshal.SystemDefaultCharSize;
                 mii.dwTypeData = Marshal.AllocHGlobal(mii.cch);
                 GetMenuItemInfo(hMenu, menuItemID, false, ref mii);
                 string currentTitle = Marshal.PtrToStringUni(mii.dwTypeData) ?? string.Empty;
@@ -40,7 +40,7 @@ namespace Npp.DotNet.Plugin.I18n
                 string shortcut = (sKeyPos > -1) ? currentTitle.Substring(sKeyPos) : string.Empty;
                 Marshal.FreeHGlobal(mii.dwTypeData);
                 mii.dwTypeData = IntPtr.Zero;
-                mii.cch = (text.Length + 1) * Marshal.SizeOf<char>();
+                mii.cch = (text.Length + 1) * Marshal.SystemDefaultCharSize;
                 mii.dwTypeData = Marshal.StringToHGlobalUni(text + shortcut);
                 result = SetMenuItemInfo(hMenu, menuItemID, false, mii);
                 Marshal.FreeHGlobal(mii.dwTypeData);
@@ -63,7 +63,7 @@ namespace Npp.DotNet.Plugin.I18n
 
             for (int menuPos = 0; GetMenuItemInfo(hMenu, menuPos, true, ref mii); menuPos++)
             {
-                mii.cch = (mii.cch + 1) * Marshal.SizeOf<char>();
+                mii.cch = (mii.cch + 1) * Marshal.SystemDefaultCharSize;
                 mii.dwTypeData = Marshal.AllocHGlobal(mii.cch);
                 _ = GetMenuItemInfo(hMenu, menuPos, true, ref mii);
 
@@ -79,7 +79,7 @@ namespace Npp.DotNet.Plugin.I18n
                     {
                         if (mii.wID != 0)
                         {
-                            mii.cch = (mii.cch + 1) * Marshal.SizeOf<char>();
+                            mii.cch = (mii.cch + 1) * Marshal.SystemDefaultCharSize;
                             mii.dwTypeData = Marshal.AllocHGlobal(mii.cch);
                             _ = GetMenuItemInfo(hMenu, itemPos, true, ref mii);
 
@@ -88,7 +88,7 @@ namespace Npp.DotNet.Plugin.I18n
                             string shortcut = (sKeyPos > -1) ? currentTitle.Substring(sKeyPos) : string.Empty;
                             Marshal.FreeHGlobal(mii.dwTypeData);
 
-                            mii.cch = (menuTitles[itemPos].Length + 1) * Marshal.SizeOf<char>();
+                            mii.cch = (menuTitles[itemPos].Length + 1) * Marshal.SystemDefaultCharSize;
                             mii.dwTypeData = Marshal.StringToHGlobalUni(menuTitles[itemPos] + shortcut);
                             _ = SetMenuItemInfo(hMenu, itemPos, true, mii);
 
