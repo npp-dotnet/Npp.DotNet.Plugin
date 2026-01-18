@@ -69,7 +69,7 @@ namespace Npp.DotNet.Plugin
         public IntPtr NppHandle, ScintillaMainHandle, ScintillaSecondHandle;
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct ShortcutKey
     {
         public ShortcutKey(NativeBool ctrl, NativeBool alt, NativeBool shift, byte ch)
@@ -86,10 +86,10 @@ namespace Npp.DotNet.Plugin
             if (!Enum.TryParse($"{shift}", true, out IsShift)) IsShift = NativeBool.False;
             Key = (byte)ch;
         }
-        [FieldOffset(0)] public NativeBool IsCtrl;
-        [FieldOffset(1)] public NativeBool IsAlt;
-        [FieldOffset(2)] public NativeBool IsShift;
-        [FieldOffset(3)] public byte Key;
+        [MarshalAs(UnmanagedType.Bool)] public NativeBool IsCtrl;
+        [MarshalAs(UnmanagedType.Bool)] public NativeBool IsAlt;
+        [MarshalAs(UnmanagedType.Bool)] public NativeBool IsShift;
+        public byte Key;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -99,7 +99,7 @@ namespace Npp.DotNet.Plugin
         public string ItemName;
         public PluginFunc PFunc;
         public int CmdID;
-        [MarshalAs(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.Bool)]
         public NativeBool Init2Check;
         public ShortcutKey PShKey;
     }

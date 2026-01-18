@@ -26,7 +26,7 @@ namespace Npp.DotNet.Plugin
 
         private static readonly int CbFuncItem = Marshal.SizeOf<FuncItem>();
         private static readonly int CbSKey = Marshal.SizeOf<ShortcutKey>();
-        private static readonly int CbFuncName = Constants.MENU_TITLE_LENGTH * Marshal.SizeOf<char>();
+        private static readonly int CbFuncName = Constants.MENU_TITLE_LENGTH * Marshal.SystemDefaultCharSize;
         private static readonly int CbPtr = IntPtr.Size;
         private static readonly int CbInt32 = Marshal.SizeOf<int>();
         private readonly List<FuncItem> _funcItems = new List<FuncItem>();
