@@ -107,8 +107,8 @@ namespace Npp.DotNet.Plugin
         /// </returns>
         public static IntPtr GetCurrentScintilla()
         {
-            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETCURRENTSCINTILLA, 0U, out int curScintilla);
-            return (curScintilla == 0) ? PluginData.NppData.ScintillaMainHandle : PluginData.NppData.ScintillaSecondHandle;
+            Win32.SendMessage(PluginData.NppData.NppHandle, (uint)NppMsg.NPPM_GETCURRENTSCINTILLA, UIntPtr.Zero, out IntPtr curScintilla);
+            return (curScintilla == IntPtr.Zero) ? PluginData.NppData.ScintillaMainHandle : PluginData.NppData.ScintillaSecondHandle;
         }
 
         static readonly Func<IScintillaGateway> GatewayFactory = () => new ScintillaGateway(GetCurrentScintilla());
