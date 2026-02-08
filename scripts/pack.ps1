@@ -3,6 +3,11 @@
 # SPDX-License-Identifier: 0BSD
 #
 try {
+    $HEAD=$(git describe --always)
+    $PREV_REF=$(git describe --always "${HEAD}^")
+    $PREV=$(git describe --always --abbrev=0 "${PREV_REF}")
+    $CHANGELOG=$(& git log --pretty='format:%x2d%x20%s' --no-merges -P -i --invert-grep --grep='(?|action|dependabot|release)' "$PREV..$HEAD")
+    $env:PackageReleaseNotes=$(@($CHANGELOG) -join "`r`n")
     pushd $PSScriptRoot\..\lib
     [xml]$proj = Get-Content .\Npp.DotNet.csproj
     $tfms = Select-Xml -Xml $proj -XPath '/Project/PropertyGroup/TargetFrameworks' | `

@@ -205,9 +205,11 @@ See [these examples](https://github.com/npp-dotnet/Npp.DotNet.Plugin/tree/main/e
 
 See the [COPYING] and [NOTICE] files for complete details regarding source code attribution and permitted usage.
 
+This README and all other documentation, including images, are distributed under a [CC0 v1.0 Public Domain Dedication].
 
 [COPYING]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/COPYING
 [NOTICE]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/NOTICE.txt
+[CC0 v1.0 Public Domain Dedication]: https://raw.githubusercontent.com/npp-dotnet/npp.dotnet.plugin/main/LICENSES/CC0-1.0.txt
 [Current Version]: https://img.shields.io/nuget/vpre/Npp.DotNet.Plugin?color=blueviolet&logo=nuget
 [nuget-org]: https://www.nuget.org/packages/Npp.DotNet.Plugin
 [`Npp.DotNet.Templates`]: https://www.nuget.org/packages/Npp.DotNet.Templates
