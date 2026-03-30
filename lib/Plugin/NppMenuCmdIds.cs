@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -148,6 +148,7 @@ namespace Npp.DotNet.Plugin
         IDM_EDIT_CLEARREADONLYFORALLDOCS = (IDM_EDIT + 103),
         IDM_EDIT_SORTLINES_LENGTH_ASCENDING = (IDM_EDIT + 104),
         IDM_EDIT_SORTLINES_LENGTH_DESCENDING = (IDM_EDIT + 105),
+        IDM_EDIT_REDACT_SELECTION = (IDM_EDIT + 106),
         IDM_EDIT_AUTOCOMPLETE = (50000 + 0),
         IDM_EDIT_AUTOCOMPLETE_CURRENTFILE = (50000 + 1),
         IDM_EDIT_FUNCCALLTIP = (50000 + 2),
@@ -541,7 +542,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1083,6 +1084,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_TOOLBARICONSCHANGED = (NOTEPADPLUS_USER_INTERNAL + 110),
         NPPM_INTERNAL_SETTING_TABCOMPACTLABELLEN = (NOTEPADPLUS_USER_INTERNAL + 111),
         NPPM_INTERNAL_INVISIBLECHARSINFINDWHAT = (NOTEPADPLUS_USER_INTERNAL + 112),
+        NPPM_INTERNAL_DISABLESELECTEDTEXTDRAGDROP = (NOTEPADPLUS_USER_INTERNAL + 113),
         SCINTILLA_USER = (WM_USER + 2000),
         MACRO_USER = (WM_USER + 4000),
         WM_MACRODLGRUNMACRO = (MACRO_USER + 02),
@@ -1106,7 +1108,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
@@ -1268,6 +1270,7 @@ namespace Npp.DotNet.Plugin
         IDC_NOCLOUD_RADIO = 6263,
         IDC_URISCHEMES_STATIC = 6264,
         IDC_URISCHEMES_EDIT = 6265,
+        IDC_CHECK_DISABLESELECTEDTEXTDRAGDROP = 6266,
         IDC_WITHCLOUD_RADIO = 6267,
         IDC_CLOUDPATH_EDIT = 6268,
         IDD_CLOUDPATH_BROWSE_BUTTON = 6269,
@@ -1517,6 +1520,7 @@ namespace Npp.DotNet.Plugin
         IDC_FILLFINDWHAT_THRESH_QUESTION_BUTTON = 6914,
         IDC_FILLFINDWHAT_THRESHOLD_EDIT = 6915,
         IDC_FILLFINDWHAT_THRESHOLD_STATIC = 6916,
+        IDC_CHECK_FIF_IGNOREOPENEDFILES = 6917,
         IDD_PREFERENCE_SUB_DARKMODE = 7100,
         IDC_RADIO_DARKMODE_BLACK = 7102,
         IDC_RADIO_DARKMODE_RED = 7103,

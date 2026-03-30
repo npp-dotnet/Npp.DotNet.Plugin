@@ -5332,6 +5332,18 @@ namespace Npp.DotNet.Plugin
             return SendMessage(_scintilla, SciMsg.SCI_INDEXPOSITIONFROMLINE, (UIntPtr)line, (IntPtr)lineCharacterIndex);
         }
 
+        /// <summary>Get whether drag-and-drop is enabled or disabled (Scintilla feature 2818)</summary>
+        public bool GetDragDropEnabled()
+        {
+            return 1 == (int)SendMessage(_scintilla, SciMsg.SCI_GETDRAGDROPENABLED, UnusedW, Unused);
+        }
+
+        /// <summary>Enable or disable drag-and-drop (Scintilla feature 2819)</summary>
+        public void SetDragDropEnabled(bool dragDropEnabled)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETDRAGDROPENABLED, new UIntPtr(dragDropEnabled ? 1U : 0U), Unused);
+        }
+
         /// <summary>Start notifying the container of all key presses and commands. (Scintilla feature 3001)</summary>
         public void StartRecord()
         {

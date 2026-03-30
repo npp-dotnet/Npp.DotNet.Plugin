@@ -117,7 +117,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
             if (_module!.TryLookupMember(token, out IMetadataMember? member))
             {
                 var typedef = (TypeDefinition)member!;
-                var layout = typedef.GetImpliedMemoryLayout(!_is64bit);
+                var layout = typedef.GetImpliedMemoryLayout(_context, !_is64bit);
                 var updated = typedef.Fields.FirstOrDefault(f => $"{f.Name}".Equals("Updated", StringComparison.OrdinalIgnoreCase));
                 Assert.IsNotNull(updated, "The 'ScNotification' type does not declare the 'Updated' field");
                 uint actual = layout[updated].Offset;
@@ -135,7 +135,7 @@ namespace Npp.DotNet.Plugin.Tests.Memory
             if (_module!.TryLookupMember(token, out IMetadataMember? member))
             {
                 var typedef = (TypeDefinition)member;
-                var layout = typedef.GetImpliedMemoryLayout(!_is64bit);
+                var layout = typedef.GetImpliedMemoryLayout(_context, !_is64bit);
                 for (int i = 0; i < typedef.Fields.Count; i++)
                 {
                     var field = typedef.Fields[i];

@@ -2400,6 +2400,12 @@ namespace Npp.DotNet.Plugin
         /// <inheritdoc cref="ScintillaGateway.IndexPositionFromLine"/>
         Position IndexPositionFromLine(Position line, LineCharacterIndexType lineCharacterIndex);
 
+        /// <inheritdoc cref="ScintillaGateway.GetDragDropEnabled"/>
+        bool GetDragDropEnabled();
+
+        /// <inheritdoc cref="ScintillaGateway.SetDragDropEnabled"/>
+        void SetDragDropEnabled(bool dragDropEnabled);
+
         /// <inheritdoc cref="ScintillaGateway.StartRecord"/>
         void StartRecord();
 

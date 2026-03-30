@@ -24,5 +24,8 @@ namespace Npp.DotNet.Plugin.Tests
                 Assert.Fail($"{e.GetType().Name}: {e.Message}");
             }
         }
+
+        protected static RuntimeContext _context =
+            AssemblyDefinition.FromFile(Path.Combine(ModulePath, $"{ModuleName}.dll")).RuntimeContext!;
     }
 }
