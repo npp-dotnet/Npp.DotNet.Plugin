@@ -12,6 +12,8 @@ namespace Npp.DotNet.Plugin.Tests.Memory
         private static PEImage? _dll;
         private static ModuleDefinition? _module;
         private static bool _is64bit = true;
+        private static RuntimeContext _context =
+            AssemblyDefinition.FromFile(Path.Combine(ModulePath, $"{ModuleName}.dll")).RuntimeContext!;
 
         /// <summary>
         /// Initializes the static fields of the test class.
