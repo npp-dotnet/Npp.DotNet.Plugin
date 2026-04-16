@@ -10,8 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="AsmResolver.DotNet" Version="6.0.0-rc.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
-    <PackageReference Include="MSTest" Version="4.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageReference Include="MSTest" Version="4.2.1" />
   </ItemGroup>
 
   <ItemGroup>
