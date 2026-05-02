@@ -656,7 +656,8 @@ namespace Npp.DotNet.Plugin
         public enum TabDrawMode
         {
             LONGARROW = 0,
-            STRIKEOUT = 1
+            STRIKEOUT = 1,
+            CONTROLCHAR = 2
         }
 
         /// <summary>

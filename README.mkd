@@ -3,7 +3,7 @@
 
 ## What's in here
 
-This project is a tentative demonstration of the .NET SDK as a potential toolchain for Notepad++ plugin development.
+This project is a tentative demonstration of the .NET SDK as a potential toolchain for Notepad++ [plugin development](doc/BACKGROUND.mkd).
 More concretely, it's a Windows-focused experiment with the [Native AOT] publish-time option introduced in .NET 7.
 
 Only 64-bit targets will be supported.

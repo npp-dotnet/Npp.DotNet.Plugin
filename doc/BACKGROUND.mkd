@@ -1,0 +1,22 @@
+
+*An introduction to Notepad++ plugin development for .NET users*
+
+## What is Notepad++?
+
+[Notepad++](https://notepad-plus-plus.org) is a text editor for Windows with a rich ecosystem of [plugins](https://npp-user-manual.org/docs/plugins).
+
+## Can I develop plugins in (modern) .NET?
+
+Yes! Install the .NET plugin [template package](https://github.com/npp-dotnet/Npp.DotNet.Templates#readme) to get started.
+
+## What alternatives are there?
+
+The one [officially supported plugin template](https://github.com/npp-plugins/plugintemplate#readme) assumes a working knowledge of C++ and the Win32 messaging API.
+
+For years, the only viable option for .NET plugin developers was to target .NET Framework. A compatible runtime is always guaranteed, since the Windows operating system depends on it. Great for end-user experience, less so for developers accustomed to recent C# language features, for whom ".NET" means the [SDK](https://dotnet.microsoft.com) targeting multiple platforms and devices.
+
+The availability of modern .NET frameworks on end-user machines is not the entire problem. Any .NET assembly, regardless of framework, is useless to Notepad++ without modifying the binary to make it "look like" a native executable. Until recently, the only way to hack around this limitation involved running a post-build task provided by Rob Giesecke's unmaintained [MSBuild extension library](https://www.nuget.org/packages/UnmanagedExports). The only [.NET plugin template](https://github.com/molsonkiko/NppCSharpPluginPack) still under active development has upgraded this dependency to a relatively newer one. But the post-processing step remains as critical and error-prone as ever.
+
+Using .NET to build Native AOT targets is currently the best-supported, most user-friendly option. The source code can leverage the latest C# features, and end-users will not have to install a compatible .NET runtime, since the resulting assembly only depends on the system-level C libraries that Notepad++ itself is using.
+
+The drawbacks include the current lack of a fully AOT-compatible [Windows Forms](ISSUES.mkd#windows-forms) package, and spotty third-party support. This will hopefully improve with growing developer adoption.

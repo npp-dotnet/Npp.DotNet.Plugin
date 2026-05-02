@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#if NET6_0_OR_GREATER
+    global using DockedWidgetData = Npp.DotNet.Plugin.Winforms.NppTbData;
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -138,9 +142,19 @@ namespace Npp.DotNet.Plugin.Winforms
     }
 
 
+#if NET6_0_OR_GREATER
     /// <summary>
     /// See <see cref="NppMsg.NPPM_DMMREGASDCKDLG"/>.
     /// </summary>
+    /// <remarks>
+    /// Since <a href="https://github.com/notepad-plus-plus/notepad-plus-plus/commit/7b7e621">8.9.4</a>,
+    /// the type alias <c>DockedWidgetData</c> can be used in place of <see cref="NppTbData"/>.
+    /// </remarks>
+#else
+    /// <summary>
+    /// See <see cref="NppMsg.NPPM_DMMREGASDCKDLG"/>.
+    /// </summary>
+#endif
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct NppTbData
     {

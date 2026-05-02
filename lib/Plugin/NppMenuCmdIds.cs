@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -542,7 +542,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1043,7 +1043,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_CLEANSMARTHILITING = (NOTEPADPLUS_USER_INTERNAL + 68),
         NPPM_INTERNAL_CLEANBRACEMATCH = (NOTEPADPLUS_USER_INTERNAL + 69),
         NPPM_INTERNAL_WINDOWSSESSIONEXIT = (NOTEPADPLUS_USER_INTERNAL + 70),
-        NPPM_INTERNAL_RESTOREFROMTRAY = (NOTEPADPLUS_USER_INTERNAL + 71),
+        NPPM_INTERNAL_RESTOREFROMMINIMIZED = (NOTEPADPLUS_USER_INTERNAL + 71),
         NPPM_INTERNAL_SETNPC = (NOTEPADPLUS_USER_INTERNAL + 72),
         NPPM_INTERNAL_NPCFORMCHANGED = (NOTEPADPLUS_USER_INTERNAL + 73),
         NPPM_INTERNAL_NPCLAUNCHSTYLECONF = (NOTEPADPLUS_USER_INTERNAL + 74),
@@ -1108,7 +1108,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.3</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
