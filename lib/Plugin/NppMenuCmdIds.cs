@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -238,6 +238,7 @@ namespace Npp.DotNet.Plugin
         IDM_VIEW_ZOOMOUT = (IDM_VIEW + 24),
         IDM_VIEW_TAB_SPACE = (IDM_VIEW + 25),
         IDM_VIEW_EOL = (IDM_VIEW + 26),
+        IDM_VIEW_ZOOM_SYNC = (IDM_VIEW + 27),
         IDM_VIEW_UNFOLDALL = (IDM_VIEW + 29),
         IDM_VIEW_FOLD_CURRENT = (IDM_VIEW + 30),
         IDM_VIEW_UNFOLD_CURRENT = (IDM_VIEW + 31),
@@ -542,7 +543,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1108,7 +1109,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.4</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,

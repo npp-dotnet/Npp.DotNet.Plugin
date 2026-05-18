@@ -1210,6 +1210,7 @@ namespace Npp.DotNet.Plugin
             OK = 0,
             FAILURE = 1,
             BADALLOC = 2,
+            OUTSIDE_DOCUMENT = 3,
             WARN_START = 1000,
             WARN_REGEX = 1001
         }
