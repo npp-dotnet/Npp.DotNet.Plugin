@@ -1433,7 +1433,9 @@ namespace Npp.DotNet.Plugin
             CONTENT = 0x1,
             SELECTION = 0x2,
             V_SCROLL = 0x4,
-            H_SCROLL = 0x8
+            H_SCROLL = 0x8,
+            TEXT = 0x10,
+            LINE_COUNT = 0x20
         }
 
         /// <summary>
@@ -1486,7 +1488,18 @@ namespace Npp.DotNet.Plugin
         }
 
 #if !SCI_DISABLE_PROVISIONAL
-        /// <summary>GTK Specific to work around focus and accelerator problems: (Scintilla feature SC_BIDIRECTIONAL_)</summary>
+        /// <summary>GTK Specific to work around focus and accelerator problems: (Scintilla feature SCALE_TECHNIQUE_)</summary>
+        public enum ScaleTechnique
+        {
+            DEFAULT = 0,
+            PIXEL_ALIGNED = 1
+        }
+#endif
+
+#if !SCI_DISABLE_PROVISIONAL
+        /// <summary>
+        /// (Scintilla feature SC_BIDIRECTIONAL_)
+        /// </summary>
         public enum Bidirectional
         {
             DISABLED = 0,

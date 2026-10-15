@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
-    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="MSTest" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +39,7 @@
   <Target Name="BuildUnmanagedLibrary"
           BeforeTargets="CoreCompile"
           Condition="!Exists('$(MSBuildProjectDirectory)\Unmanaged\bin\$(TargetPlatform)\$(Configuration)\Unmanaged.dll')">
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\Unmanaged" 
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\Unmanaged"
           Command="msbuild /v:q /nr:false /t:Build /p:Configuration=$(SharedConfiguration);Platform=$(TargetPlatform)" />
   </Target>
 </Project>

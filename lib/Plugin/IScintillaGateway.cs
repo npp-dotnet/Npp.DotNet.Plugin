@@ -2498,6 +2498,16 @@ namespace Npp.DotNet.Plugin
         void SetILexer(IntPtr ilexer);
 
 #if !SCI_DISABLE_PROVISIONAL
+        /// <inheritdoc cref="ScintillaGateway.SetScaleTechnique"/>
+        void SetScaleTechnique(ScaleTechnique technique);
+#endif
+
+#if !SCI_DISABLE_PROVISIONAL
+        /// <inheritdoc cref="ScintillaGateway.GetScaleTechnique"/>
+        ScaleTechnique GetScaleTechnique();
+#endif
+
+#if !SCI_DISABLE_PROVISIONAL
         /// <inheritdoc cref="ScintillaGateway.GetBidirectional"/>
         Bidirectional GetBidirectional();
 #endif

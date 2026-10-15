@@ -5589,6 +5589,22 @@ namespace Npp.DotNet.Plugin
         }
 
 #if !SCI_DISABLE_PROVISIONAL
+        /// <summary>Set the scale technique (Scintilla feature 2820)</summary>
+        public void SetScaleTechnique(ScaleTechnique technique)
+        {
+            SendMessage(_scintilla, SciMsg.SCI_SETSCALETECHNIQUE, (UIntPtr)technique, Unused);
+        }
+#endif
+
+#if !SCI_DISABLE_PROVISIONAL
+        /// <summary>Get the scale technique (Scintilla feature 2821)</summary>
+        public ScaleTechnique GetScaleTechnique()
+        {
+            return (ScaleTechnique)SendMessage(_scintilla, SciMsg.SCI_GETSCALETECHNIQUE, UnusedW, Unused);
+        }
+#endif
+
+#if !SCI_DISABLE_PROVISIONAL
         /// <summary>Retrieve bidirectional text display state. (Scintilla feature 2708)</summary>
         public Bidirectional GetBidirectional()
         {

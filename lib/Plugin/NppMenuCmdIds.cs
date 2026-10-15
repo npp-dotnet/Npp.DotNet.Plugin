@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -40,7 +40,8 @@ namespace Npp.DotNet.Plugin
         IDM_FILE_CLOSEALL_UNCHANGED = (IDM_FILE + 24),
         IDM_FILE_CONTAININGFOLDERASWORKSPACE = (IDM_FILE + 25),
         IDM_FILE_CLOSEALL_BUT_PINNED = (IDM_FILE + 26),
-        IDM_FILEMENU_LASTONE = IDM_FILE_CLOSEALL_BUT_PINNED,
+        IDM_FILE_OPEN_POWERSHELL = (IDM_FILE + 27),
+        IDM_FILEMENU_LASTONE = IDM_FILE_OPEN_POWERSHELL,
         IDM_FILEMENU_EXISTCMDPOSITION = 22,
         IDM_EDIT = (IDM + 2000),
         IDM_EDIT_CUT = (IDM_EDIT + 1),
@@ -115,8 +116,8 @@ namespace Npp.DotNet.Plugin
         IDM_EDIT_SENTENCECASE_BLEND = (IDM_EDIT + 70),
         IDM_EDIT_INVERTCASE = (IDM_EDIT + 71),
         IDM_EDIT_RANDOMCASE = (IDM_EDIT + 72),
-        IDM_EDIT_OPENASFILE = (IDM_EDIT + 73),
-        IDM_EDIT_OPENINFOLDER = (IDM_EDIT + 74),
+        IDM_EDIT_OPENSELECTEDFILETOEDIT = (IDM_EDIT + 73),
+        IDM_EDIT_OPENSELECTEDFILEFOLDERINEXPLORER = (IDM_EDIT + 74),
         IDM_EDIT_SEARCHONINTERNET = (IDM_EDIT + 75),
         IDM_EDIT_CHANGESEARCHENGINE = (IDM_EDIT + 76),
         IDM_EDIT_REMOVE_CONSECUTIVE_DUP_LINES = (IDM_EDIT + 77),
@@ -474,6 +475,7 @@ namespace Npp.DotNet.Plugin
         IDM_LANG_TOML = (IDM_LANG + 91),
         IDM_LANG_SAS = (IDM_LANG + 92),
         IDM_LANG_ERRORLIST = (IDM_LANG + 93),
+        IDM_LANG_ESCSEQ = (IDM_LANG + 94),
         IDM_LANG_EXTERNAL = (IDM_LANG + 165),
         IDM_LANG_EXTERNAL_LIMIT = (IDM_LANG + 179),
         IDM_LANG_USER = (IDM_LANG + 180),
@@ -516,6 +518,7 @@ namespace Npp.DotNet.Plugin
         IDM_TOOL_SHA512_GENERATEFROMFILE = (IDM_TOOL + 11),
         IDM_TOOL_SHA512_GENERATEINTOCLIPBOARD = (IDM_TOOL + 12),
         IDM_EXECUTE = (IDM + 9000),
+        IDM_EXECUTE_VALIDATE_SHORTCUTSXML = (IDM_EXECUTE + 1),
         IDM_SYSTRAYPOPUP = (IDM + 3100),
         IDM_SYSTRAYPOPUP_ACTIVATE = (IDM_SYSTRAYPOPUP + 1),
         IDM_SYSTRAYPOPUP_NEWDOC = (IDM_SYSTRAYPOPUP + 2),
@@ -543,7 +546,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -961,6 +964,9 @@ namespace Npp.DotNet.Plugin
         IDC_DOSAVEORNOTTEXT = 1761,
         IDD_DOSAVEALLBOX = 1765,
         IDC_DOSAVEALLTEXT = 1766,
+        IDD_NETWORKPATHWARNINGBOX = 1770,
+        IDC_NETWORKPATHWARNINGTEXT = 1771,
+        IDC_BUTTON_SERVERWHITELIST_NOTE = 1772,
         IDD_GOLINE = 2000,
         ID_GOLINE_EDIT = (IDD_GOLINE + 1),
         ID_CURRLINE_EDIT = (IDD_GOLINE + 2),
@@ -1109,7 +1115,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.5</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
@@ -1346,6 +1352,7 @@ namespace Npp.DotNet.Plugin
         IDC_SC_TECHNOLOGY_STATIC = 6363,
         IDC_COMBO_AUTOUPDATE = 6364,
         IDC_AUTOUPDATE_STATIC = 6365,
+        IDC_CHECK_ALOOWSIMLINKFAW = 6366,
         IDD_PREFERENCE_SUB_NEWDOCUMENT = 6400,
         IDC_FORMAT_GB_STATIC = 6401,
         IDC_RADIO_F_WIN = 6402,
@@ -1419,6 +1426,7 @@ namespace Npp.DotNet.Plugin
         IDC_MT_STATIC = 6613,
         IDC_MR_STATIC = 6614,
         IDC_MB_STATIC = 6615,
+        IDC_CHECK_PRINTFORMFEED = 6616,
         IDC_CURRENTLINEMARK_STATIC = 6651,
         IDC_RADIO_CLM_NONE = 6652,
         IDC_RADIO_CLM_HILITE = 6653,
