@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -476,6 +476,7 @@ namespace Npp.DotNet.Plugin
         IDM_LANG_SAS = (IDM_LANG + 92),
         IDM_LANG_ERRORLIST = (IDM_LANG + 93),
         IDM_LANG_ESCSEQ = (IDM_LANG + 94),
+        IDM_LANG_STTXT = (IDM_LANG + 95),
         IDM_LANG_EXTERNAL = (IDM_LANG + 165),
         IDM_LANG_EXTERNAL_LIMIT = (IDM_LANG + 179),
         IDM_LANG_USER = (IDM_LANG + 180),
@@ -546,7 +547,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1092,6 +1093,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_SETTING_TABCOMPACTLABELLEN = (NOTEPADPLUS_USER_INTERNAL + 111),
         NPPM_INTERNAL_INVISIBLECHARSINFINDWHAT = (NOTEPADPLUS_USER_INTERNAL + 112),
         NPPM_INTERNAL_DISABLESELECTEDTEXTDRAGDROP = (NOTEPADPLUS_USER_INTERNAL + 113),
+        NPPM_INTERNAL_INCSEARCHBARPOSITION = (NOTEPADPLUS_USER_INTERNAL + 114),
         SCINTILLA_USER = (WM_USER + 2000),
         MACRO_USER = (WM_USER + 4000),
         WM_MACRODLGRUNMACRO = (MACRO_USER + 02),
@@ -1115,7 +1117,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.8.1</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,
@@ -1516,8 +1518,6 @@ namespace Npp.DotNet.Plugin
         IDD_PREFERENCE_SUB_SEARCHING = 6900,
         IDC_CHECK_MONOSPACEDFONT_FINDDLG = 6902,
         IDC_CHECK_FINDDLG_ALWAYS_VISIBLE = 6903,
-        IDC_CHECK_CONFIRMREPLOPENDOCS = 6904,
-        IDC_CHECK_REPLACEANDSTOP = 6905,
         IDC_CHECK_SHOWONCEPERFOUNDLINE = 6906,
         IDD_FILL_FIND_FIELD_GRP_STATIC = 6907,
         IDC_CHECK_FILL_FIND_FIELD_WITH_SELECTED = 6908,
@@ -1580,5 +1580,10 @@ namespace Npp.DotNet.Plugin
         IDC_RADIO_AUTOINDENT_NONE = 7162,
         IDC_RADIO_AUTOINDENT_BASIC = 7163,
         IDC_RADIO_AUTOINDENT_ADVANCED = 7164,
+        IDC_DIALOG_FONT_GB_STATIC = 7165,
+        IDC_STATIC_DIALOG_FONT_SIZE = 7166,
+        IDC_COMBO_DIALOG_FONT_SIZE = 7167,
+        IDC_STATIC_DIALOG_FONT_NAME = 7168,
+        IDC_COMBO_DIALOG_FONT_NAME = 7169,
     }
 }

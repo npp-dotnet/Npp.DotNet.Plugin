@@ -25,7 +25,7 @@ _TAB = ' ' * 4
 
 def isTypeUnsupported(t):
     """
-    The non-64-bit safe-character range APIs have been removed from the Notepad++ code base:
+    The non-64-bit-safe character range APIs have been removed from the Notepad++ code base:
     https://github.com/notepad-plus-plus/notepad-plus-plus/commit/34677a5
     """
     return t in ['textrange', 'findtext', 'formatrange', 'formatrangefull']
@@ -41,6 +41,9 @@ def translateType(t):
         'colouralpha': 'ColourAlpha',
         'line': 'Position',
         'length': 'Position',
+        # "A graphical position or dimension in pixels. Equivalent to int."
+        # <https://www.scintilla.org/ScintillaDoc.html#Introduction>
+        'pixels': 'int',
         'pointer': 'IntPtr',
         'position': 'Position',
         'textrangefull': 'TextRangeFull',
