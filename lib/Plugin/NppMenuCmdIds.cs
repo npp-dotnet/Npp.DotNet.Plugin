@@ -8,7 +8,7 @@ using static Npp.DotNet.Plugin.Constants;
 
 namespace Npp.DotNet.Plugin
 {
-    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9.1</remarks>
     public enum MenuCmdId : uint
     {
         IDM = 40000,
@@ -547,7 +547,7 @@ namespace Npp.DotNet.Plugin
         IDM_DROPLIST_MRU_FIRST = (IDR_DROPLIST_MENU + 20),
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9.1</remarks>
     public enum Resource : uint
     {
 #if !IDC_STATIC
@@ -1067,6 +1067,7 @@ namespace Npp.DotNet.Plugin
         NPPM_INTERNAL_CHANGESELECTTEXTFORGROUND = (NOTEPADPLUS_USER_INTERNAL + 84),
         NPPM_INTERNAL_DRAWINACTIVETAB = (NOTEPADPLUS_USER_INTERNAL + 85),
         NPPM_INTERNAL_DRAWTABTOPBAR = (NOTEPADPLUS_USER_INTERNAL + 86),
+        NPPM_INTERNAL_FINDDLGHIGHLIGHT = (NOTEPADPLUS_USER_INTERNAL + 87),
         NPPM_INTERNAL_VERTICALTABBAR = (NOTEPADPLUS_USER_INTERNAL + 88),
         NPPM_INTERNAL_MULTILINETABBAR = (NOTEPADPLUS_USER_INTERNAL + 89),
         NPPM_INTERNAL_TOOLBARREDUCE = (NOTEPADPLUS_USER_INTERNAL + 90),
@@ -1117,7 +1118,7 @@ namespace Npp.DotNet.Plugin
         MENUINDEX_LIST = 14,
     }
 
-    /// <remarks>Definitions for Notepad++ v8.9.9</remarks>
+    /// <remarks>Definitions for Notepad++ v8.9.9.1</remarks>
     public enum Preference : uint
     {
         IDD_PREFERENCE_BOX = 6000,

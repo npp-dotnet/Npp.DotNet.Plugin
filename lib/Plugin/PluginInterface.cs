@@ -26,7 +26,9 @@ namespace Npp.DotNet.Plugin
         /// <summary>
         /// Gets an instance of <see cref="IScintillaGateway"/> created from the active Scintilla handle.
         /// </summary>
+#pragma warning disable WFO2000
         public static IScintillaGateway Editor { get => new ScintillaGateway(Utils.GetCurrentScintilla()); }
+#pragma warning restore WFO2000
 
         /// <summary>
         /// Gets an instance of <see cref="NotepadPPGateway"/>.
